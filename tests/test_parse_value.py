@@ -20,5 +20,4 @@ from config_file.parsers.parse_value import parse_value
     ],
 )
 def test_parse_value(test_input, expected):
-    result = parse_value(test_input)
-    assert result == expected
+    assert parse_value(test_input) == expected
