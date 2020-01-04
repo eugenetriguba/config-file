@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+Added
+
+- Parsing of strings to their native values
+
 ## 0.1.0 - 2020-01-04
 
 Added

@@ -31,6 +31,8 @@ flake8 = "^3.7"
 bump2version = "^0.5.11"
 pytest = "^3.0"
 pytest-cov = "^2.8"
+pytest-benchmark = "^3.2.2"
+pytest-profiling = "^1.7.0"
 
 [tool.black]
 line-length = 88
