@@ -30,10 +30,7 @@ def parse_value(value):
         return float(value)
 
     if can_be_parsed_as_bool(value):
-        if type(value) is bool:
-            return bool(value)
-
-        return bool(strtobool(value))
+        return value if type(value) is bool else bool(strtobool(value))
 
     return value
 
