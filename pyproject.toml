@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "config_file"
+version = "0.1.0"
+description = "Manage your configuration files."
+authors = ["Eugene Triguba <eugenetriguba@gmail.com>"]
+readme = "README.rst"
+repository = "https://github.com/eugenetriguba/config_file"
+keywords = ["configuration", "config file", "ini", "json", "toml", "yaml"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+toml = "^0.10.0"
+pyyaml = "^5.2"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^1.20"
+autoflake = "^1.3"
+isort = "^4.3"
+seed-isort-config = "^1.9"
+black = {version = "^18.3-alpha.0", allow-prereleases = true}
+flake8 = "^3.7"
+bump2version = "^0.5.11"
+pytest = "^3.0"
+pytest-cov = "^2.8"
+
+[tool.black]
+line-length = 88
+target_version = ['py38']
+include = '\.pyi?$'
+
+[tool.isort]
+line_length = 88
+multi_line_output = 3
+known_third_party = ["pytest"]
+known_first_party = ["config_file"]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
