@@ -8,8 +8,13 @@
 # Python
 *.egg-info/
 __pycache__/
+
+# Pytest
 .pytest_cache/
 .coverage
+.benchmarks/
+
+# Package Publishing
 dist/
 
 # Pyenv
