@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Added
 
-- Base parser for concrete file format parser implementations
+- Abstract base parser as a contract for concrete file format parser implementations.
+- Exposed `ConfigFile`, `BaseParser`, and `ParsingError` to the Public API. The base
+  parser is exposed to allow future custom extensions of the config file and what it 
+  can parse by its users.
+- `has_section` and `has_key` is now changed to a single `has` method which determines
+   whether you're checking a section or key by the presence of a dot.
+-  `IniParser` to support the ini format. It uses configparser internally, but it is 
+    only exposed through the `ConfigFile` object. 
 
 ## 0.2.0 - 2020-01-04
 
