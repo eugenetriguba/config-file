@@ -8,6 +8,7 @@
 # Python
 *.egg-info/
 __pycache__/
+venv/
 
 # Pytest
 .pytest_cache/
