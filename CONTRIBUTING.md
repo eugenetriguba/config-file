@@ -25,28 +25,28 @@ Here are some guidelines to keep in mind when submitting a pull request:
   on what makes a good entry since this project follows those principles. If you're
   not comfortable with your English, we'd be happy to write it for you.
 
-    - Ensure the tests pass: ``poetry run pytest tests/`` to run all tests.
-        - If you'd like to run with test coverage, pass ``--cov=config_file/`` to pytest.
+- Ensure the tests pass: ``poetry run pytest tests/`` to run all tests.
+    - If you'd like to run with test coverage, pass ``--cov=config_file/`` to pytest.
 
-    - New features should be accompanied with tests for them:
-      - Unit tests are written using [pytest](https://docs.pytest.org/en/latest/).
+- New features should be accompanied with tests for them:
+  - Unit tests are written using [pytest](https://docs.pytest.org/en/latest/).
 
-    - Pre-commit pipeline: We use a pre-commit pipeline to ensure standard code format.
-       - Unused imports are automatically removed using `autoflake <https://github.com/myint/autoflake>`_
-       - The remaining imports are sorted using `isort <https://github.com/timothycrosley/isort>`_. 
-       - All code is automatically formatted with `black <https://github.com/psf/black>`_ 
-       - Lastly, everything is checked by `flake8 <https://gitlab.com/pycqa/flake8>`_. 
-       
-       Make sure to install pre-commit before making commits.
+- Pre-commit pipeline: We use a pre-commit pipeline to ensure standard code format.
+   - Unused imports are automatically removed using `autoflake <https://github.com/myint/autoflake>`_
+   - The remaining imports are sorted using `isort <https://github.com/timothycrosley/isort>`_. 
+   - All code is automatically formatted with `black <https://github.com/psf/black>`_ 
+   - Lastly, everything is checked by `flake8 <https://gitlab.com/pycqa/flake8>`_. 
+   
+   Make sure to install pre-commit before making commits.
 
-      Note: if any of the items had to do any reformatting, sorting, etc., the commit will
-      fail. You'll have to re-add the items they fixed and try again.
+  Note: if any of the items had to do any reformatting, sorting, etc., the commit will
+  fail. You'll have to re-add the items they fixed and try again.
 
-      .. code-block::
+  .. code-block::
 
-        pre-commit install
+    pre-commit install
 
-      If the pipeline is acting oddly, you can skip it with the ``--no-verify`` option to ``git push``.
+  If the pipeline is acting oddly, you can skip it with the ``--no-verify`` option to ``git push``.
 
 To get started, make sure you have poetry installed and run ``poetry install`` and
 ``poetry shell`` to enter the virtual environment.
