@@ -6,7 +6,6 @@ from config_file.parsers.parse_value import parse_value
 
 
 class IniParser(BaseParser):
-
     def __init__(self, file_contents: str):
         """Reads in the file contents into the parser."""
         try:
@@ -27,7 +26,8 @@ class IniParser(BaseParser):
         :param parse_type: Coerces the return value to its native type.
         :return: The value of the key, parsed to its native type if parse_type is True.
 
-        :raises ValueError: if the section_key given is not in a dot format. e.g. 'section1.key'
+        :raises ValueError: if the section_key given is not in a dot format.
+                            e.g. 'section1.key'
         :raises ParsingError: if the specified `section.key` is not found, in an
         invalid format, or if we are unable to coerce the return value to value_type.
         """
