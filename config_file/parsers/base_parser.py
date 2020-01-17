@@ -21,7 +21,8 @@ class BaseParser(ABC):
         It is up to the caller of the parser to read in the file to
         the parser and save the file when they are done using stringify().
         """
-        self.__contents = self.__parse(file_contents)
+        self.contents = file_contents
+        self.parse(self.contents)
 
     @abstractmethod
     def get(self, key, parse_type=True):
@@ -41,7 +42,7 @@ class BaseParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def delete(self, key):
+    def delete(self, section_key):
         """Deletes a key/value pair or entire sections."""
         raise NotImplementedError
 
@@ -54,21 +55,43 @@ class BaseParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def has_section(self) -> bool:
-        """Check if a section or sub-section in the file exists."""
+    def has(self, section_key: str) -> bool:
+        """
+        Check if a section, sub-section, or key exists in the file
+        using a section.key format.
+
+        Some formats, like JSON, do not have sections and therefore,
+        it would only be checking if
+        """
         raise NotImplementedError
 
     @abstractmethod
-    def has_key(self) -> bool:
-        """Check if a key in the file exists."""
-
-    @abstractmethod
-    def __parse(self, file_contents: str):
+    def parse(self, file_contents: str):
         """
         Parse the file_contents into an internal representation
-        the given parser can work with.
+        the given parser can work with. It should not return anything
+        if you're going to be using the super() constructor.
         """
         raise NotImplementedError
+
+    @staticmethod
+    def _split_on_dot(line: str, all_dots=False):
+        """
+        Split a string on the first dot (.).
+
+        :param line: The line ot split on.
+        :param all_dots: If the line should be split on all the dots. Defaults to
+                         False and only splits on the first occurrence of one.
+
+        :raises ValueError: if the line does not have a dot.
+        """
+        if "." not in line:
+            raise ValueError(
+                "section_key must contain the section and key separated by a dot. "
+                + "e.g. 'section.key'"
+            )
+
+        return line.split(".") if all_dots else line.rsplit(".", 1)
 
 
 class ParsingError(Exception):
