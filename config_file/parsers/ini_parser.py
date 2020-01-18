@@ -3,19 +3,21 @@ from io import StringIO
 
 from config_file.parsers.base_parser import BaseParser, ParsingError
 from config_file.parsers.parse_value import parse_value
+from config_file.utils import split_on_dot
 
 
 class IniParser(BaseParser):
     def __init__(self, file_contents: str):
-        """Reads in the file contents into the parser."""
-        try:
-            self.parser = configparser.ConfigParser()
-            super().__init__(file_contents)
-        except configparser.Error as error:
-            raise ParsingError(error)
+        """Reads in the file contents into the configparser."""
+        super().__init__(file_contents)
 
     def parse(self, file_contents: str):
-        self.parser.read_string(file_contents)
+        try:
+            parser = configparser.ConfigParser()
+            parser.read_string(file_contents)
+            return parser
+        except configparser.Error as error:
+            raise ParsingError(error)
 
     def get(self, section_key, parse_type=True):
         """
@@ -26,15 +28,15 @@ class IniParser(BaseParser):
         :param parse_type: Coerces the return value to its native type.
         :return: The value of the key, parsed to its native type if parse_type is True.
 
-        :raises ValueError: if the section_key given is not in a dot format.
-                            e.g. 'section1.key'
+        :raises ValueError: if the section_key given is not in a dot format. e.g.
+                            'section1.key'
         :raises ParsingError: if the specified `section.key` is not found, in an
         invalid format, or if we are unable to coerce the return value to value_type.
         """
-        section, key = self._split_on_dot(section_key)
+        section, key = split_on_dot(section_key, only_last_dot=True)
 
         try:
-            value = self.parser.get(section, key)
+            value = self.parsed_content.get(section, key)
             return parse_value(value) if parse_type else value
         except configparser.Error as error:
             raise ParsingError(error.message)
@@ -53,12 +55,12 @@ class IniParser(BaseParser):
 
         :raises ValueError: If there is no dot (.) in section_key
         """
-        section, key = self._split_on_dot(section_key)
+        section, key = split_on_dot(section_key, only_last_dot=True)
 
-        if value is not None and not self.parser.has_section(section):
-            self.parser.add_section(section)
+        if value is not None and not self.parsed_content.has_section(section):
+            self.parsed_content.add_section(section)
 
-        self.parser.set(section, key, value)
+        self.parsed_content.set(section, key, value)
         return True
 
     def delete(self, section_key):
@@ -75,31 +77,31 @@ class IniParser(BaseParser):
         :raise ValueError: If the section or key does not exist in the config file.
         """
         if "." not in section_key:
-            if not self.parser.has_section(section_key):
+            if not self.parsed_content.has_section(section_key):
                 raise ValueError(
                     f"Cannot delete {section_key} because it is not in the config file."
                 )
 
-            self.parser.remove_section(section_key)
+            self.parsed_content.remove_section(section_key)
             return True
 
-        section, key = self._split_on_dot(section_key)
-        if key not in self.parser[section]:
+        section, key = split_on_dot(section_key, only_last_dot=True)
+        if key not in self.parsed_content[section]:
             raise ValueError(
                 f"Cannot delete {section}.{key} because {key} is not in {section}."
             )
 
-        self.parser.remove_option(section, key)
+        self.parsed_content.remove_option(section, key)
         return True
 
     def stringify(self) -> str:
         buffer = StringIO()
-        self.parser.write(buffer)
+        self.parsed_content.write(buffer)
         return buffer.getvalue()
 
     def has(self, section_key: str) -> bool:
         if "." not in section_key:
-            return self.parser.has_section(section_key)
+            return self.parsed_content.has_section(section_key)
 
-        section, key = self._split_on_dot(section_key)
-        return self.parser.has_option(section, key)
+        section, key = split_on_dot(section_key, only_last_dot=True)
+        return self.parsed_content.has_option(section, key)

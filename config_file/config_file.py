@@ -1,7 +1,9 @@
+import inspect
 from pathlib import Path
 
 from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
+from config_file.utils import split_on_dot
 
 
 class ConfigFile:
@@ -21,10 +23,10 @@ class ConfigFile:
         return Path(file_path)
 
     def __determine_parser(self, file_path: str, parser):
-        if isinstance(parser, BaseParser):
+        if isinstance(parser, BaseParser) and not inspect.isabstract(parser):
             return parser(self.contents)
 
-        file_type = self._split_on_dot(file_path, all_dots=True)[-1]
+        file_type = split_on_dot(file_path)[-1]
         if file_type == "ini":
             return IniParser(self.contents)
         else:
