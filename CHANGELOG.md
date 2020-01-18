@@ -14,7 +14,7 @@ Fixed
    and then adds the key/value pair. It would still be parsed correctly when retrieving
    it.
 
-## 0.3.2 - 2020-01-17
+## 0.3.3 - 2020-01-18 - 2020-01-17
 
 Changed
 
