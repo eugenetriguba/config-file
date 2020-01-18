@@ -1,11 +1,10 @@
 from pathlib import Path
 
-from config_file.parsers.ini_parser import IniParser
 from config_file.parsers.base_parser import BaseParser
+from config_file.parsers.ini_parser import IniParser
 
 
 class ConfigFile:
-
     def __init__(self, file_path: str, parser=None):
         self.path = self.__create_config_path(file_path)
 
@@ -22,7 +21,7 @@ class ConfigFile:
         return Path(file_path)
 
     def __determine_parser(self, file_path: str, parser):
-        if isinstance(BaseParser, parser):
+        if isinstance(parser, BaseParser):
             return parser(self.contents)
 
         file_type = self._split_on_dot(file_path, all_dots=True)[-1]
@@ -66,6 +65,3 @@ class ConfigFile:
         it would only be checking if the section
         """
         return self.parser.has(section_key)
-
-
-
