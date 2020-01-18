@@ -2,6 +2,7 @@
 
 > Manage and manipulate your configuration files
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3539a38f4b764e88ba255f005f4473e6)](https://app.codacy.com/manual/eugenetriguba/config_file?utm_source=github.com&utm_medium=referral&utm_content=eugenetriguba/config_file&utm_campaign=Badge_Grade_Dashboard)
 [![Python 3.8.0|](https://img.shields.io/badge/python-3.8.0-blue.svg)](https://www.python.org/downloads/release/python-380/) 
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
 [![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
