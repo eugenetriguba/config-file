@@ -60,6 +60,9 @@ class IniParser(BaseParser):
         if value is not None and not self.parsed_content.has_section(section):
             self.parsed_content.add_section(section)
 
+        if not isinstance(value, str):
+            value = str(value)
+
         self.parsed_content.set(section, key, value)
         return True
 
