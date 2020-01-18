@@ -21,7 +21,7 @@ class ConfigFile:
         return Path(file_path)
 
     def __determine_parser(self, file_path: str, parser):
-        if isinstance(BaseParser, parser):
+        if isinstance(parser, BaseParser):
             return parser(self.contents)
 
         file_type = self._split_on_dot(file_path, all_dots=True)[-1]
