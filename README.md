@@ -15,9 +15,9 @@ YAML, and TOML configuration files. For the time being, it only supports INI.
 
 With applications I was building, I found myself frequently having to use some sort of configuration folder with an object that modeled the configuration file. I did this to help more easily manipulate my configuration. However, I found myself needing this sort of thing for several different applications and would end up rewriting something similar. So ended up deciding to create a package out of it so I could focus more on the application I was building instead.
 
-## Why not just use configparser, ConfigObj, etc.?
+## Why not just use configparser, ConfigObj, etc.
 
-I wanted something a bit cleaner and simpler to use than configparser. The ini parser uses configparser under the hood, but it provides some niceties such as automatically parsing configuration values into their native types when you retrieve them. However, I also wanted something more flexible, and ini files aren't the only common configuration format. That is why Config File uses an adapter pattern to swap in and out the right parser for various file types you give it. This allows you to use the same API for all of your configuration needs. 
+I wanted something a bit cleaner to use than configparser. The ini parser uses configparser under the hood, but it provides some niceties such as automatically parsing configuration values into their native types when you retrieve them. However, I also wanted something more flexible, and ini files aren't the only common configuration format. That is why Config File uses an adapter pattern to swap in and out the right parser for various file types you give it. This allows you to use the same API for all of your configuration needs. 
 
 ## Installation
 ```bash
