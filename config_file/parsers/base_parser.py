@@ -22,7 +22,7 @@ class BaseParser(ABC):
         the parser and save the file when they are done using stringify().
         """
         self.contents = file_contents
-        self.parse(self.contents)
+        self.parsed_content = self.parse(self.contents)
 
     @abstractmethod
     def get(self, key, parse_type=True):
@@ -73,25 +73,6 @@ class BaseParser(ABC):
         if you're going to be using the super() constructor.
         """
         raise NotImplementedError
-
-    @staticmethod
-    def _split_on_dot(line: str, all_dots=False):
-        """
-        Split a string on the first dot (.).
-
-        :param line: The line ot split on.
-        :param all_dots: If the line should be split on all the dots. Defaults to
-                         False and only splits on the first occurrence of one.
-
-        :raises ValueError: if the line does not have a dot.
-        """
-        if "." not in line:
-            raise ValueError(
-                "section_key must contain the section and key separated by a dot. "
-                + "e.g. 'section.key'"
-            )
-
-        return line.split(".") if all_dots else line.rsplit(".", 1)
 
 
 class ParsingError(Exception):
