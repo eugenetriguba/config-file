@@ -6,6 +6,7 @@
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
 [![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 [![Build Status](https://travis-ci.com/eugenetriguba/config_file.svg?branch=master)](https://travis-ci.com/eugenetriguba/config_file)
+[![Codecov](https://codecov.io/gh/eugenetriguba/config_file/branch/master/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config_file)
 
 > This python package is currently a work in progress and is in a pre-alpha phase. The API is liable to break until v1.
 
