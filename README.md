@@ -20,6 +20,8 @@ $ pip install config_file
 
 ## Example
 
+The `config_file` package exposes `ConfigFile`, `ParsingError`, and `BaseParser` to the public API.
+
 ### Sample Configuration File
 
 `config.ini`
@@ -120,3 +122,9 @@ config.reset()
 config.reset(original_file_path="~/some_other_directory/this_is_actually_the_original.ini")
 >>> True
 ```
+
+## Using your own parser
+
+> This feature is a work in-progress and has not been tested yet.
+
+You can still use config file, even if you don't use one of our supported configuration formats. The `ConfigFile` object swaps in the parser it needs based on the file format. However, the constructor takes in an optional `parser` argument that you can use to supply your own custom parser. The only requirement is that the parser must be a concrete implementation of `BaseParser`. 
