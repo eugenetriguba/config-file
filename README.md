@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
 [![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 [![Build Status](https://travis-ci.com/eugenetriguba/config_file.svg?branch=master)](https://travis-ci.com/eugenetriguba/config_file)
-[![Codecov](https://codecov.io/gh/eugenetriguba/config_file/branch/master/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config_file)
+[![Codecov](https://codecov.io/gh/eugenetriguba/config_file/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config_file)
 
 > This python package is currently a work in progress and is in a pre-alpha phase. The API is liable to break until v1.
 
@@ -18,7 +18,9 @@ YAML, and TOML configuration files. For the time being, it only supports INI.
 $ pip install config_file
 ```
 
-## Examples
+## Example
+
+### Sample Configuration File
 
 `config.ini`
 ```ini
@@ -29,23 +31,24 @@ today_index = 0
 quarter_hours_passed = 0.25
 ```
 
-`example.py`
+### Create a ConfigFile
 ```python
 from config_file import ConfigFile
 
 config = ConfigFile("~/.config/test/config.ini")
+```
 
-# Output your config file as a string
+### Output your config file as a string
+```python
 config.stringify()
 >>> '[calendar]\ntoday = monday\nstart_week_on_sunday = false\ntoday_index = 0\nquarter_hours_passed = 0.25\n\n'
+```
 
-# Retrieve values with a section.key format
+### Retrieve values
+A section.key format is used for retrieving and setting values.
+```python
 config.get("calendar.today")
 >>> 'monday'
-
-# Values from the config file are automatically parsed
-config.get("calendar.start_week_on_sunday")
->>> False
 
 # Values from the config file are automatically parsed
 config.get("calendar.start_week_on_sunday")
@@ -54,8 +57,10 @@ config.get("calendar.start_week_on_sunday")
 # Unless you don't want them to be parsed
 config.get("calendar.today_index", parse_type=False)
 >>> '0'
+```
 
-# The dot syntax is also used to set values. True is returned on success.
+### Set values
+```python
 config.set("calendar.today_index", 20)
 >>> True
 config.stringify()
@@ -66,39 +71,52 @@ config.set("week.tuesday_index", 2)
 >>> True
 config.stringify()
 >>> '[calendar]\ntoday = monday\nstart_week_on_sunday = false\ntoday_index = 20\nquarter_hours_passed = 0.25\n\n[week]\ntuesday_index = 2\n\n'
+```
 
-# Delete can delete an entire section or just a key/value pair.
+# Delete sections or key/value pairs.
+```python
 config.delete('week')
 >>> True
 config.stringify()
 >>> '[calendar]\ntoday = monday\nstart_week_on_sunday = false\ntoday_index = 20\nquarter_hours_passed = 0.25\n\n'
 
-# Delete can delete an entire section or just a key/value pair.
 config.delete('calendar.today')
 >>> True
 config.stringify()
 >>> '[calendar]\nstart_week_on_sunday = false\ntoday_index = 20\nquarter_hours_passed = 0.25\n\n'
+```
 
-# You can also just check if the file has a particular section or key.
+
+### Check whether you have a particular section or key
+```python
 config.has('calendar')
 >>> True
+
 config.has('week')
 >>> False
+
 config.has('calendar.start_week_on_sunday')
 >>> True
+```
 
-# The file is only written back out when you call save()
+### Save when you're done
+The contents are only written back out when you call `save()`.
+```python
 config.save()
 >>> True
+```
 
-# You can also reset the file back to its original state. The current configuration file 
-# would be deleted and replaced by a copy of the original. By default, since our passed in
-# config file was at path `~/.config/test/config.ini`, `reset()` will look for 
-# `~/.config/test/config.original.ini`
+### Reset the file back to its original 
+
+The current configuration file would be deleted and replaced by a copy of the original. 
+By default, since our passed in config file was at path `~/.config/test/config.ini`, `reset()` 
+will look for `~/.config/test/config.original.ini`.
+
+```python
 config.reset()
 >>> True
 
-# Or you can specify the file path explicitly
+# But you can also specify the original config file explicitly.
 config.reset(original_file_path="~/some_other_directory/this_is_actually_the_original.ini")
 >>> True
 ```
