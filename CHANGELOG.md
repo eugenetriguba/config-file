@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+  - Change Travis CI to lint all files as well as run the tests.
+  - Add `reset()` and `save()` methods to `ConfigFile`. This allows you to reset your
+    configuration file to an "original state," given the original config file path. 
+    However, say you have a `config/config.json` file. Then it will automatically try 
+    to look for `config/config.original.json` if no file path is specified. The `save()`
+    method should be called after your changes to the config file. It will write them
+    back out.
+  - Raise test coverage to 93% (`BaseParser` is abstract so it isn't tested and some
+    methods in `ConfigFile` simply use the same method in the parser so it doesn't make
+    sense to test those methods.)
+
 ## 0.3.3
 
 Fixed
