@@ -33,6 +33,7 @@ class IniParser(BaseParser):
         :raises ParsingError: if the specified `section.key` is not found, in an
         invalid format, or if we are unable to coerce the return value to value_type.
         """
+        # TODO: Support for retrieving entire sections instead of just key/values
         section, key = split_on_dot(section_key, only_last_dot=True)
 
         try:
