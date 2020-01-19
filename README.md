@@ -73,7 +73,7 @@ config.stringify()
 >>> '[calendar]\ntoday = monday\nstart_week_on_sunday = false\ntoday_index = 20\nquarter_hours_passed = 0.25\n\n[week]\ntuesday_index = 2\n\n'
 ```
 
-# Delete sections or key/value pairs.
+### Delete sections or key/value pairs.
 ```python
 config.delete('week')
 >>> True
