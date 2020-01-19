@@ -12,14 +12,6 @@
 Config File allows you to use the same simple API for manipulating INI, JSON, 
 YAML, and TOML configuration files. For the time being, it only supports INI.
 
-## Motivation
-
-With applications I was building, I found myself frequently having to use some sort of configuration folder with an object that modeled the configuration file. I did this to help more easily manipulate my configuration. However, I found myself needing this sort of thing for several different applications and would end up rewriting something similar. So ended up deciding to create a package out of it so I could focus more on the application I was building instead.
-
-## Why not just use configparser, ConfigObj, etc.
-
-I wanted something a bit cleaner to use than configparser. The ini parser uses configparser under the hood, but it provides some niceties such as automatically parsing configuration values into their native types when you retrieve them. However, I also wanted something more flexible, and ini files aren't the only common configuration format. That is why Config File uses an adapter pattern to swap in and out the right parser for various file types you give it. This allows you to use the same API for all of your configuration needs. 
-
 ## Installation
 ```bash
 $ pip install config_file
@@ -92,5 +84,20 @@ config.has('calendar')
 config.has('week')
 >>> False
 config.has('calendar.start_week_on_sunday')
+>>> True
+
+# The file is only written back out when you call save()
+config.save()
+>>> True
+
+# You can also reset the file back to its original state. The current configuration file 
+# would be deleted and replaced by a copy of the original. By default, since our passed in
+# config file was at path `~/.config/test/config.ini`, `reset()` will look for 
+# `~/.config/test/config.original.ini`
+config.reset()
+>>> True
+
+# Or you can specify the file path explicitly
+config.reset(original_file_path="~/some_other_directory/this_is_actually_the_original.ini")
 >>> True
 ```

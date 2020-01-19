@@ -8,6 +8,11 @@ def split_on_dot(line: str, only_last_dot=False):
     :raises ValueError: if the line does not have a dot.
     """
     if "." not in line:
+        # TODO: This is used in the parser for section.keys where a more specific
+        # error message would be nice, but it is only used more generically to, say,
+        # split a file path. We may just have to insert some try-catches to catch the
+        # ValueError and insert a more specific error message or create a custom error
+        # for this method?
         raise ValueError(
             "section_key must contain the section and key separated by a dot. "
             + "e.g. 'section.key'"
