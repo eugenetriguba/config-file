@@ -18,9 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     method should be called after your changes to the config file. It will write them
     back out.
     
-  - Raise test coverage to 93% (`BaseParser` is abstract so it isn't tested and some
-    methods in `ConfigFile` simply use the same method in the parser so it doesn't make
-    sense to test those methods.)
+  - Raise test coverage to 93%.
 
 ## 0.3.3 - 2020-01-18
 
