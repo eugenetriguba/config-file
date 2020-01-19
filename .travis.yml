@@ -11,5 +11,3 @@ matrix:
       script: tox
       env:
         TOXENV: py38
-      after_success:
-        - codecov
