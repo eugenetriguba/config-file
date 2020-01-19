@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     to look for `config/config.original.json` if no file path is specified. The `save()`
     method should be called after your changes to the config file. It will write them
     back out.
+    
   - Raise test coverage to 93% (`BaseParser` is abstract so it isn't tested and some
     methods in `ConfigFile` simply use the same method in the parser so it doesn't make
     sense to test those methods.)
