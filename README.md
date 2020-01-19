@@ -46,19 +46,19 @@ config.stringify()
 >>> '[calendar]\ntoday = monday\nstart_week_on_sunday = false\ntoday_index = 0\nquarter_hours_passed = 0.25\n\n'
 ```
 
-### Retrieve values
+### Retrieve values or sections
 A section.key format is used for retrieving and setting values.
 ```python
-config.get("calendar.today")
->>> 'monday'
-
 # Values from the config file are automatically parsed
 config.get("calendar.start_week_on_sunday")
 >>> False
 
 # Unless you don't want them to be parsed
-config.get("calendar.today_index", parse_type=False)
->>> '0'
+config.get("calendar.start_week_on_sunday", parse_type=False)
+>>> 'false'
+
+config.get("calendar")
+>>> {'today': 'monday', 'start_week_on_sunday': False, 'today_index': 0, 'quarter_hours_passed': 0.25}
 ```
 
 ### Set values

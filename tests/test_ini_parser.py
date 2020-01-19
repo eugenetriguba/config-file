@@ -20,6 +20,16 @@ def test_incorrect_ini_formats(ini_file):
         ("test_section.strkey", "blah", False),
         ("test_section.boolkey", "false", False),
         ("test_section.floatkey", "5.3", False),
+        (
+            "test_section",
+            {"intkey": "5", "strkey": "blah", "boolkey": "false", "floatkey": "5.3"},
+            False,
+        ),
+        (
+            "test_section",
+            {"intkey": 5, "strkey": "blah", "boolkey": False, "floatkey": 5.3},
+            True,
+        ),
     ],
 )
 def test_that_ini_parser_can_get_values(section_key, expected_value, parse_type):
