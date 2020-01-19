@@ -1,0 +1,15 @@
+language: python
+
+stages:
+  - test
+
+matrix:
+  include:
+    - stage: test
+      python: 3.8
+      install: pip install --upgrade pip tox poetry codecov
+      script: tox
+      env:
+        TOXENV: py38
+      after_success:
+        - codecov

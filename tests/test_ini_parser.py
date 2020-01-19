@@ -20,6 +20,16 @@ def test_incorrect_ini_formats(ini_file):
         ("test_section.strkey", "blah", False),
         ("test_section.boolkey", "false", False),
         ("test_section.floatkey", "5.3", False),
+        (
+            "test_section",
+            {"intkey": "5", "strkey": "blah", "boolkey": "false", "floatkey": "5.3"},
+            False,
+        ),
+        (
+            "test_section",
+            {"intkey": 5, "strkey": "blah", "boolkey": False, "floatkey": 5.3},
+            True,
+        ),
     ],
 )
 def test_that_ini_parser_can_get_values(section_key, expected_value, parse_type):
@@ -35,17 +45,26 @@ floatkey = 5.3
 
 
 @pytest.mark.parametrize(
+    "test_input", ["invalid.invalid_key"],
+)
+def test_that_getting_unknown_sections_or_keys_throws_errors(test_input):
+    with pytest.raises(ParsingError):
+        IniParser("").get(test_input)
+
+
+@pytest.mark.parametrize(
     "section_key,value,expected_value",
     [
         ("test.key1", "different value", "[test]\nkey1 = different value\n\n"),
-        ("test.key2", 5, "[test]\nkey1 = different value\nkey2 = 5\n\n"),
-        ("test2.key", False, "[test]\nkey1 = value1\n[test2]\nkey = False\n\n"),
+        ("test.key2", 5, "[test]\nkey1 = value1\nkey2 = 5\n\n"),
+        ("test2.key", False, "[test]\nkey1 = value1\n\n[test2]\nkey = False\n\n"),
     ],
 )
 def test_that_ini_parser_can_set_values(section_key, value, expected_value):
     ini_file = """[test]\nkey1 = value1\n\n"""
     parser = IniParser(ini_file)
-    assert parser.stringify() == ini_file
+    parser.set(section_key, value)
+    assert parser.stringify() == expected_value
 
 
 @pytest.mark.parametrize(

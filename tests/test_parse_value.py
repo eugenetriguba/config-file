@@ -1,6 +1,6 @@
 import pytest
 
-from config_file.parsers.parse_value import parse_value
+from config_file.parsers.parse_value import can_be_parsed_as_bool, parse_value
 
 
 @pytest.mark.parametrize(
@@ -21,3 +21,12 @@ from config_file.parsers.parse_value import parse_value
 )
 def test_parse_value(test_input, expected):
     assert parse_value(test_input) == expected
+
+
+def test_can_be_parsed_as_bool():
+    """
+    This is the section not being covered in the parse_value.py
+    file from test_parse_value, but I don't think it's reachable
+    from using it.
+    """
+    assert can_be_parsed_as_bool(5) is False

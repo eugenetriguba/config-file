@@ -33,13 +33,26 @@ class IniParser(BaseParser):
         :raises ParsingError: if the specified `section.key` is not found, in an
         invalid format, or if we are unable to coerce the return value to value_type.
         """
-        section, key = split_on_dot(section_key, only_last_dot=True)
+        if "." not in section_key:
+            return self.__retrieve_section(section_key, parse_type)
 
         try:
+            section, key = split_on_dot(section_key, only_last_dot=True)
             value = self.parsed_content.get(section, key)
             return parse_value(value) if parse_type else value
         except configparser.Error as error:
             raise ParsingError(error.message)
+
+    def __retrieve_section(self, section, parse_type):
+        items = dict(self.parsed_content.items(section))
+
+        if not parse_type:
+            return items
+
+        for item in items:
+            items[item] = parse_value(items[item])
+
+        return items
 
     def set(self, section_key, value):
         """
