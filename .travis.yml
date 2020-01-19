@@ -1,17 +1,10 @@
 language: python
 
 stages:
-  - lint
   - test
 
 matrix:
   include:
-    - stage: lint
-      install:
-        - pip install pre-commit
-        - pre-commit install
-      script:
-        - pre-commit run --all-files
     - stage: test
       python: 3.8
       install: pip install --upgrade pip tox poetry

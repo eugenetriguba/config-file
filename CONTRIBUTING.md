@@ -53,8 +53,7 @@ Here are some guidelines to keep in mind when submitting a pull request:
 - CI Pipeline: There is a CI pipeline that is run by Travis CI on commits to master and
   on pull requests.
   
-  - All it does is ensure that all the tests pass and that all the files adhere to the 
-    standard format (`pre-commit run --all-files`).
+  - All it does is ensure that all the tests pass.
 
 To get started, make sure you have poetry installed and run ``poetry install`` and
 ``poetry shell`` to enter the virtual environment.
