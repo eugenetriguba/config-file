@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-  - Change Travis CI to lint all files as well as run the tests.
   - Add `reset()` and `save()` methods to `ConfigFile`. This allows you to reset your
     configuration file to an "original state," given the original config file path. 
     However, say you have a `config/config.json` file. Then it will automatically try 
