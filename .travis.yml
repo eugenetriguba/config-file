@@ -4,7 +4,7 @@ stages:
   - lint
   - test
 
-jobs:
+matrix:
   include:
     - stage: lint
       install:
@@ -12,13 +12,9 @@ jobs:
         - pre-commit install-hooks
       script:
         - pre-commit run --all-files
-
-matrix:
-  include:
-    - python: 3.8
+    - stage: test
+      python: 3.8
+      install: pip install --upgrade pip tox poetry
+      script: tox
       env:
         TOXENV: py38
-
-install: pip install --upgrade pip tox poetry
-
-script:	tox
