@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     methods in `ConfigFile` simply use the same method in the parser so it doesn't make
     sense to test those methods.)
 
-## 0.3.3 - 2020-01-18 - 2020-01-17
+## 0.3.3 - 2020-01-18
 
 Changed
 
