@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changed
 
-  - Bumped down python version requirement to 3.6.
+  - Bumped down python version requirement to 3.6 and now test 3.6, 3.7, and 3.8 on CI.
 
 ## 0.5.0 - 2020-01-19
 
