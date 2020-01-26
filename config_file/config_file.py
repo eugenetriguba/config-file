@@ -118,7 +118,11 @@ class ConfigFile:
         if not Path(original_file_path).exists():
             raise OSError(f"The {original_file_path} file to reset to does not exist.")
 
-        Path(self.path).expanduser().unlink(missing_ok=True)
+        try:
+            Path(self.path).expanduser().unlink()
+        except OSError:
+            pass
+
         copyfile(original_file_path, self.path)
 
         self.contents = self.__read_config_file()
