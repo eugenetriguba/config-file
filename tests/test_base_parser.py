@@ -22,7 +22,10 @@ class ConcreteParser(BaseParser):
     def stringify(self) -> str:
         super().stringify()
 
-    def parse(self, file_contents: str):
+    def parse(self, file_contents: str, call_super=False):
+        if call_super:
+            super().parse(file_contents)
+
         return file_contents
 
 
@@ -39,6 +42,7 @@ def test_that_base_parser_can_not_be_instantiated():
         (ConcreteParser("").delete, ""),
         (ConcreteParser("").stringify, None),
         (ConcreteParser("").has, ""),
+        (ConcreteParser("").parse, "call super"),
     ],
 )
 def test_that_base_parser_raises_not_implemented_errors(function, args):
@@ -47,5 +51,7 @@ def test_that_base_parser_raises_not_implemented_errors(function, args):
             function()
         elif type(args) is tuple:
             function(*args)
+        elif args == "call super":
+            function(args, call_super=True)
         else:
             function(args)
