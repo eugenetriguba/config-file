@@ -22,7 +22,7 @@ def test_that_config_file_initializes_correctly(tmp_path, file_contents, file_na
     "file_contents, file_name, original_file_name",
     [("[calendar]\nsunday_index = 0\n\n", "config.ini", "config.original.ini")],
 )
-def test_that_config_file_can_reset(
+def test_that_config_file_can_restore_the_original(
     tmpdir, file_contents, file_name, original_file_name
 ):
     config_path = tmpdir / file_name
@@ -33,7 +33,7 @@ def test_that_config_file_can_reset(
 
     config = ConfigFile(str(config_path))
     config.set("calendar.sunday_index", 0)
-    config.reset()
+    config.restore_original()
     assert config.stringify() == ConfigFile(str(original_config_path)).stringify()
     assert config_path.read_text(encoding="utf-8") == original_config_path.read_text(
         encoding="utf-8"

@@ -102,24 +102,25 @@ config.has('calendar.start_week_on_sunday')
 ```
 
 ### Save when you're done
-The contents are only written back out when you call `save()`.
+The contents are only written back out when you call `save()`. `set()` and `delete()` both
+modify the contents of the file and 
 ```python
 config.save()
 >>> True
 ```
 
-### Reset the file back to its original 
+### Restore the file back to its original 
 
 The current configuration file would be deleted and replaced by a copy of the original. 
-By default, since our passed in config file was at path `~/.config/test/config.ini`, `reset()` 
-will look for `~/.config/test/config.original.ini`.
+By default, since our passed in config file was at path `~/.config/test/config.ini`, 
+`restore_original()` will look for `~/.config/test/config.original.ini`.
 
 ```python
-config.reset()
+config.restore_original()
 >>> True
 
 # But you can also specify the original config file explicitly.
-config.reset(original_file_path="~/some_other_directory/this_is_actually_the_original.ini")
+config.restore_original(original_file_path="~/some_other_directory/this_is_actually_the_original.ini")
 >>> True
 ```
 

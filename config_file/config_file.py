@@ -96,11 +96,11 @@ class ConfigFile:
         """
         return self.parser.has(section_key)
 
-    def reset(self, original_file_path=None):
+    def restore_original(self, original_file_path=None):
         """
-        Resets the config file by deleting it and copying the original back
-        in its place. The contents of this config file are then set to the
-        newly reset config file.
+        Restores the original the config file by deleting it and copying the original
+        back in its place. The internal contents of this config file object are then set
+        to the newly reset config file.
 
         :param original_file_path: The path to the original config file to reset it to.
         If this is not provided and, say, your configuration file is config.json, the
