@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changed
 
-  - BREAKING: The `reset()` method on `ConfigFile` is now called `restore_original()`. 
+  - The `reset()` method on `ConfigFile` is now called `restore_original()`. 
     The behavior is the same. This was done to better describe what exactly that method
     is doing. Since the file is not written back out with every `set()` or `delete()`
     and calling `save()` explicitly is required, `reset()` may have been confused with
