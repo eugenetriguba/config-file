@@ -102,8 +102,8 @@ config.has('calendar.start_week_on_sunday')
 ```
 
 ### Save when you're done
-The contents are only written back out when you call `save()`. `set()` and `delete()` both
-modify the contents of the file and 
+Write the contents of the file back out. `set()` and `delete()` both modify the contents 
+of the file and require a call to `save()` to write those changes back out.
 ```python
 config.save()
 >>> True
