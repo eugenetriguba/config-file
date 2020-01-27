@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+Fixed
+
+  - Support for using custom parsers with `ConfigFile` with the `parser` optional 
+    argument. This was technically supported before, but it was not tested and found
+    to not actually use the passed in parser once tested.
+
 Changed
 
   - The `reset()` method on `ConfigFile` is now called `restore_original()`. 

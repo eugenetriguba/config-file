@@ -2,7 +2,6 @@ import inspect
 from pathlib import Path, PurePath
 from shutil import copyfile
 
-from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
 from config_file.utils import split_on_dot
 
@@ -47,7 +46,7 @@ class ConfigFile:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
-        if isinstance(parser, BaseParser) and not inspect.isabstract(parser):
+        if parser is not None and not inspect.isabstract(parser):
             return parser(self.contents)
 
         file_type = split_on_dot(file_path, only_last_dot=True)[-1]
@@ -116,15 +115,12 @@ class ConfigFile:
             )
 
         if not Path(original_file_path).exists():
-            raise OSError(f"The {original_file_path} file to reset to does not exist.")
+            raise OSError(
+                f"The {original_file_path} file to restore to does not exist."
+            )
 
-        try:
-            Path(self.path).expanduser().unlink()
-        except OSError:
-            pass
-
+        Path(self.path).expanduser().unlink()
         copyfile(original_file_path, self.path)
-
         self.contents = self.__read_config_file()
         self.parser.parsed_content = self.parser.parse(self.contents)
 
