@@ -1,5 +1,7 @@
 import json
 
+from nested_lookup import get_occurrence_of_key
+
 from config_file.parsers.base_parser import BaseParser, ParsingError
 
 
@@ -27,17 +29,4 @@ class JsonParser(BaseParser):
         return json.dumps(self.parsed_content)
 
     def has(self, search_key: str) -> bool:
-        return self._search(self.parsed_content, search_key)
-
-    def _search(self, data: dict, search_item: str):
-        for key, value in data.items():
-            if search_item in data:
-                return True
-            elif not isinstance(value, dict):
-                continue
-            elif search_item in value:
-                return True
-            else:
-                self._search(value, search_item)
-
-        return False
+        return get_occurrence_of_key(self.parsed_content, key=search_key) > 0

@@ -230,6 +230,17 @@ python-versions = ">=3.5"
 version = "8.1.0"
 
 [[package]]
+category = "main"
+description = "Python functions for working with deeply nested documents (lists and dicts)"
+name = "nested-lookup"
+optional = false
+python-versions = "*"
+version = "0.2.19"
+
+[package.dependencies]
+six = "*"
+
+[[package]]
 category = "dev"
 description = "Node.js virtual environment builder"
 name = "nodeenv"
@@ -397,7 +408,7 @@ version = "1.9.4"
 "aspy.refactor-imports" = "*"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -440,7 +451,7 @@ more-itertools = "*"
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 
 [metadata]
-content-hash = "b85256d1b940200e79b69f7af58bd0c8137a2942f8ff6772b5ac60dcf7555441"
+content-hash = "ab716116b837537d4ad85fb75967837df60685eca3f171d9d8745e34989a84dd"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -558,6 +569,9 @@ mccabe = [
 more-itertools = [
     {file = "more-itertools-8.1.0.tar.gz", hash = "sha256:c468adec578380b6281a114cb8a5db34eb1116277da92d7c46f904f0b52d3288"},
     {file = "more_itertools-8.1.0-py3-none-any.whl", hash = "sha256:1a2a32c72400d365000412fe08eb4a24ebee89997c18d3d147544f70f5403b39"},
+]
+nested-lookup = [
+    {file = "nested-lookup-0.2.19.tar.gz", hash = "sha256:5383ee1911a8257b217084eedfc31248f634c2c62b17bee8fc87fece1af3b2e4"},
 ]
 nodeenv = [
     {file = "nodeenv-1.3.4-py2.py3-none-any.whl", hash = "sha256:561057acd4ae3809e665a9aaaf214afff110bbb6a6d5c8a96121aea6878408b3"},
