@@ -62,3 +62,9 @@ test_json = {
 def test_that_json_parser_can_find_keys(test_input, expected_result):
     parser = JsonParser(json.dumps(test_json))
     assert parser.has(test_input) == expected_result
+
+
+def test_that_json_parser_can_stringify():
+    json_str = '{"test": 5, "blah": true}'
+    parser = JsonParser(json_str)
+    assert parser.stringify() == json_str
