@@ -61,7 +61,9 @@ class JsonParser(BaseParser):
         Retrieve values using a dot syntax.
 
         :param key: The key to retrieve. e.g. 'foo.bar.boo'
+
         :param parse_type: Whether you'd like the type parsed into its native one.
+
         :param retrieve_all: Specify whether you'd like to recursively receive
         all values that match the given key. Returned as a list.
         e.g. 'foo' would retrieve all values that have the key 'foo', anywhere

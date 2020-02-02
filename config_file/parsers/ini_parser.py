@@ -61,10 +61,12 @@ class IniParser(BaseParser):
         to it.
 
         :param section_key: The key to set from the config file. e.g. 'section1.key'
+
         :param value: The value to set the key to. It can be any type that can
                       be converted to a string.
 
         :return: True if the setting was successful.
+
         :raises ValueError: If there is no dot (.) in section_key
         """
         section, key = split_on_dot(section_key, only_last_dot=True)
@@ -87,7 +89,6 @@ class IniParser(BaseParser):
         to delete the entire section.
 
         :return: True if the deletion succeeded.
-        :rtype: boolean
 
         :raise ValueError: If the section or key does not exist in the config file.
         """
