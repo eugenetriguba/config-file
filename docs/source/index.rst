@@ -1,15 +1,17 @@
-.. Config File documentation master file, created by
-   sphinx-quickstart on Sun Feb  2 15:08:37 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Config File Documentation
+=========================
 
-Welcome to Config File's documentation!
-=======================================
+Config File is a package that allows you to easily manipulate your configuration
+files whether they are in INI, JSON, YAML, TOML, or even XML.
+
+**Table of Contents:**
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
+   getting-started
+   api-reference
+   license
 
 
 Indices and tables

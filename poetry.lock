@@ -159,17 +159,6 @@ version = "0.4.3"
 
 [[package]]
 category = "dev"
-description = "Python parser for the CommonMark Markdown spec"
-name = "commonmark"
-optional = false
-python-versions = "*"
-version = "0.9.1"
-
-[package.extras]
-test = ["flake8 (3.7.8)", "hypothesis (3.55.3)"]
-
-[[package]]
-category = "dev"
 description = "Code coverage measurement for Python"
 name = "coverage"
 optional = false
@@ -476,19 +465,6 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 version = "5.3"
 
 [[package]]
-category = "dev"
-description = "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects."
-name = "recommonmark"
-optional = false
-python-versions = "*"
-version = "0.6.0"
-
-[package.dependencies]
-commonmark = ">=0.8.1"
-docutils = ">=0.11"
-sphinx = ">=1.3.1"
-
-[[package]]
 category = "main"
 description = "Python HTTP for Humans."
 name = "requests"
@@ -690,7 +666,7 @@ more-itertools = "*"
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 
 [metadata]
-content-hash = "6f9e4a7f9772a53e1df51e4a2adacfd3a1efacf42a8b0468a48b7b2fa7ebffcc"
+content-hash = "41f7048a3693045fee50d3fbd0701ef5c0cec5b0577a42ea294193e5b1bbf834"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -756,10 +732,6 @@ click = [
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
-]
-commonmark = [
-    {file = "commonmark-0.9.1-py2.py3-none-any.whl", hash = "sha256:da2f38c92590f83de410ba1a3cbceafbc74fee9def35f9251ba9a971d6d66fd9"},
-    {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
 ]
 coverage = [
     {file = "coverage-5.0.3-cp27-cp27m-macosx_10_12_x86_64.whl", hash = "sha256:cc1109f54a14d940b8512ee9f1c3975c181bbb200306c6d8b87d93376538782f"},
@@ -934,10 +906,6 @@ pyyaml = [
     {file = "PyYAML-5.3-cp38-cp38-win32.whl", hash = "sha256:70024e02197337533eef7b85b068212420f950319cc8c580261963aefc75f811"},
     {file = "PyYAML-5.3-cp38-cp38-win_amd64.whl", hash = "sha256:cb1f2f5e426dc9f07a7681419fe39cee823bb74f723f36f70399123f439e9b20"},
     {file = "PyYAML-5.3.tar.gz", hash = "sha256:e9f45bd5b92c7974e59bcd2dcc8631a6b6cc380a904725fce7bc08872e691615"},
-]
-recommonmark = [
-    {file = "recommonmark-0.6.0-py2.py3-none-any.whl", hash = "sha256:2ec4207a574289355d5b6ae4ae4abb29043346ca12cdd5f07d374dc5987d2852"},
-    {file = "recommonmark-0.6.0.tar.gz", hash = "sha256:29cd4faeb6c5268c633634f2d69aef9431e0f4d347f90659fd0aab20e541efeb"},
 ]
 requests = [
     {file = "requests-2.22.0-py2.py3-none-any.whl", hash = "sha256:9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"},
