@@ -18,7 +18,7 @@ JSON.
 
 ## Installation
 ```bash
-$ pip install config_file
+$ pip install config-file
 ```
 
 ## Example
