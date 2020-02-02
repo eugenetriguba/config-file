@@ -3,6 +3,8 @@ import json
 from nested_lookup import get_occurrence_of_key
 
 from config_file.parsers.base_parser import BaseParser, ParsingError
+from config_file.parsers.parse_value import parse_value
+from config_file.utils import split_on_dot
 
 
 class JsonParser(BaseParser):
@@ -17,7 +19,13 @@ class JsonParser(BaseParser):
             raise ParsingError(error)
 
     def get(self, section_key, parse_type=True):
-        pass
+        split_keys = split_on_dot(section_key)
+
+        result = self.parsed_content
+        for key in split_keys:
+            result = result[key]
+
+        return parse_value(result) if parse_type else result
 
     def set(self, section_key, value):
         pass

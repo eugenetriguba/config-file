@@ -32,6 +32,14 @@ def parse_value(value):
     if can_be_parsed_as_bool(value):
         return value if type(value) is bool else bool(strtobool(value))
 
+    if type(value) is dict:
+        parsed = {}
+
+        for item in value:
+            parsed[item] = parse_value(value[item])
+
+        return parsed
+
     return value
 
 
