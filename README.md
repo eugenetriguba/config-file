@@ -8,10 +8,13 @@
 [![Build Status](https://travis-ci.com/eugenetriguba/config_file.svg?branch=master)](https://travis-ci.com/eugenetriguba/config_file)
 [![Codecov](https://codecov.io/gh/eugenetriguba/config_file/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config_file)
 
-> This python package is currently a work in progress and is in a pre-alpha phase. The API is liable to break until v1.
+> This python package is currently in rapid development and is in a pre-alpha phase. 
+> The API is liable to break until v1 so if you're going to use it, pinning the version
+> is recommended. All notable changes are kept track of in the changelog. 
 
 Config File allows you to use the same simple API for manipulating INI, JSON, 
-YAML, and TOML configuration files. For the time being, it only supports INI.
+YAML, and TOML configuration files. For the time being, it only supports INI and
+JSON. 
 
 ## Installation
 ```bash

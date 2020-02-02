@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -91,6 +92,13 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
         ),
+        (
+            "calendar.sunday_index",
+            0,
+            False,
+            "config.json",
+            json.dumps({"calendar": {"sunday_index": 0}}),
+        ),
     ],
 )
 def test_that_config_file_can_get(
@@ -108,6 +116,9 @@ def test_that_config_file_can_get(
         ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.sunday_index", True),
         ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.blah", False),
         ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar", True),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "calendar", True),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "blah", False),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "sunday_index", True),
     ],
 )
 def test_that_config_file_can_find_sections_and_keys(
@@ -127,6 +138,12 @@ def test_that_config_file_can_find_sections_and_keys(
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
             "[calendar]\n\n",
+        ),
+        (
+            "calendar.sunday_index",
+            "config.json",
+            json.dumps({"calendar": {"sunday_index": 0}}),
+            json.dumps({"calendar": {}}),
         ),
     ],
 )

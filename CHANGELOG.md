@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+Added
+
+  - More type hints were added to the `ConfigFile` object and `IniParser`.
+  - `nested_lookup` dependency to help with modifying deeply nested structures 
+    (JSON + YAML)
+  - `JsonParser` so you can now specify `.json` files to be parsed.
+  
+Changed
+
+  - The original content of the passed in file is now called `content` 
+    instead of `contents`. This is for consistency since the parsed version is
+    called `parsed_content`.
+
 ## 0.7.0 - 2020-01-27
 
 Fixed

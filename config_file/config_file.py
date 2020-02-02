@@ -4,6 +4,7 @@ from shutil import copyfile
 
 from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
+from config_file.parsers.json_parser import JsonParser
 from config_file.utils import split_on_dot
 
 
@@ -53,6 +54,8 @@ class ConfigFile:
         file_type = split_on_dot(file_path, only_last_dot=True)[-1]
         if file_type == "ini":
             return IniParser(self.contents)
+        elif file_type == "json":
+            return JsonParser(self.contents)
         else:
             raise ValueError(
                 f"File path contains an unsupported or "
