@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Added
 
-  - More type hints were added to the `ConfigFile` object and `IniParser`.
+  - More type hints to `ConfigFile` and `IniParser`.
   - `nested_lookup` dependency to help with modifying deeply nested structures 
     (JSON + YAML)
   - `JsonParser` so you can now specify `.json` files to be parsed.
