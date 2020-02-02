@@ -40,6 +40,14 @@ def parse_value(value):
 
         return parsed
 
+    if type(value) is list:
+        parsed = []
+
+        for item in value:
+            parsed.append(parse_value(item))
+
+        return parsed
+
     return value
 
 
