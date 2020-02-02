@@ -19,7 +19,7 @@ class IniParser(BaseParser):
         except configparser.Error as error:
             raise ParsingError(error)
 
-    def get(self, section_key, parse_type=True):
+    def get(self, section_key: str, parse_type: bool = True):
         """
         Read the value of `section.key` of the config file.
 
@@ -54,18 +54,17 @@ class IniParser(BaseParser):
 
         return items
 
-    def set(self, section_key, value):
+    def set(self, section_key: str, value) -> bool:
         """
         Sets the value of 'section.key' of the config file. If the specified section
         is not in the configuration file, it will be created before adding the key
         to it.
 
         :param section_key: The key to set from the config file. e.g. 'section1.key'
-        :param value: The value to set the key to.
+        :param value: The value to set the key to. It can be any type that can
+                      be converted to a string.
 
         :return: True if the setting was successful.
-        :rtype: boolean
-
         :raises ValueError: If there is no dot (.) in section_key
         """
         section, key = split_on_dot(section_key, only_last_dot=True)
@@ -79,7 +78,7 @@ class IniParser(BaseParser):
         self.parsed_content.set(section, key, value)
         return True
 
-    def delete(self, section_key):
+    def delete(self, section_key: str) -> bool:
         """
         Deletes a key or an entire section.
 

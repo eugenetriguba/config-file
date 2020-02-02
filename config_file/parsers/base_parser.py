@@ -21,8 +21,8 @@ class BaseParser(ABC):
         It is up to the caller of the parser to read in the file to
         the parser and save the file when they are done using stringify().
         """
-        self.contents = file_contents
-        self.parsed_content = self.parse(self.contents)
+        self.content = file_contents
+        self.parsed_content = self.parse(self.content)
 
     @abstractmethod
     def get(self, key, parse_type=True):
@@ -37,12 +37,12 @@ class BaseParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set(self, key, value):
+    def set(self, key, value) -> bool:
         """Sets the value of a key."""
         raise NotImplementedError
 
     @abstractmethod
-    def delete(self, section_key):
+    def delete(self, section_key) -> bool:
         """Deletes a key/value pair or entire sections."""
         raise NotImplementedError
 
