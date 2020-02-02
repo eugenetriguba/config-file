@@ -2,12 +2,13 @@ import inspect
 from pathlib import Path, PurePath
 from shutil import copyfile
 
+from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
 from config_file.utils import split_on_dot
 
 
 class ConfigFile:
-    def __init__(self, file_path, parser=None):
+    def __init__(self, file_path, parser: BaseParser = None):
         """
         Saves the config file path and expands it if needed, reads in
         the file contents, and determines what parser should be used for
@@ -25,7 +26,7 @@ class ConfigFile:
         self.parser = self.__determine_parser(file_path, parser)
 
     @staticmethod
-    def __create_config_path(file_path, original=False) -> str:
+    def __create_config_path(file_path, original: bool = False) -> str:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -42,7 +43,7 @@ class ConfigFile:
 
         return file_path
 
-    def __determine_parser(self, file_path, parser):
+    def __determine_parser(self, file_path, parser: BaseParser):
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -62,7 +63,7 @@ class ConfigFile:
         with open(self.path, "r") as file:
             return file.read()
 
-    def get(self, key, parse_type=True):
+    def get(self, key: str, parse_type: bool = True):
         """
         Retrieve the value of a key in its native type.
         This means the string 'true' will be parsed back as the
@@ -73,11 +74,11 @@ class ConfigFile:
         """
         return self.parser.get(key, parse_type=parse_type)
 
-    def set(self, key, value):
+    def set(self, key: str, value):
         """Sets the value of a key."""
         return self.parser.set(key, value)
 
-    def delete(self, section_key):
+    def delete(self, section_key: str):
         """Deletes a key/value pair or entire sections."""
         return self.parser.delete(section_key)
 
