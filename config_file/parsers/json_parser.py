@@ -16,17 +16,9 @@ class JsonParser(BaseParser):
     """
     The JsonParser allows use of json files with ConfigFile. The syntax it
     supports is a bit more flexible than the IniParser.
-
-    Since you can have deeply nested structures with JSON, the JsonParser supports
-    a catch all where you can get/set/delete all occurrences of a particular
-    key. This is the default behavior if you only specify a single word key.
-
-    If there is a '.' in the key, it is assumed you want to use the dot syntax
-    then.
-
-    If no '.' is in the key parameter and we have specified we're only
-    trying to fetch a top level item with 'top_level_only=True', the parser
-    only retrieve the key in the top most level.
+    
+    By default, the dot syntax is used. However, if you'd like to get/set/delete all
+    of a particular key, you can specify so with an optional parameter.
 
     Example:
 
