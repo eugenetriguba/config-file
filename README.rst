@@ -28,7 +28,7 @@ Installation
    :target: https://pypi.org/project/black/
 .. |Documentation Status| image:: https://readthedocs.org/projects/config-file/badge/?version=latest
    :target: https://config-file.readthedocs.io/en/latest/?badge=latest
-.. |Build Status| image:: https://travis-ci.com/eugenetriguba/config_file.svg?branch=master
-   :target: https://travis-ci.com/eugenetriguba/config_file
-.. |Codecov| image:: https://codecov.io/gh/eugenetriguba/config_file/graph/badge.svg
-   :target: https://codecov.io/gh/eugenetriguba/config_file
+.. |Build Status| image:: https://travis-ci.com/eugenetriguba/config-file.svg?branch=master
+   :target: https://travis-ci.com/eugenetriguba/config-file
+.. |Codecov| image:: https://codecov.io/gh/eugenetriguba/config-file/graph/badge.svg
+   :target: https://codecov.io/gh/eugenetriguba/config-file
