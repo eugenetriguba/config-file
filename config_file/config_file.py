@@ -2,7 +2,7 @@ import inspect
 from pathlib import Path, PurePath
 from shutil import copyfile
 
-from config_file.parsers.base_parser import BaseParser
+from config_file.parsers.base_parser import BaseParser, ParsingError
 from config_file.parsers.ini_parser import IniParser
 from config_file.parsers.json_parser import JsonParser
 from config_file.utils import split_on_dot
@@ -66,7 +66,7 @@ class ConfigFile:
         with open(self.path, "r") as file:
             return file.read()
 
-    def get(self, key: str, parse_type: bool = True):
+    def get(self, key: str, parse_type: bool = True, default=None):
         """
         Retrieve the value of a key in its native type.
         This means the string 'true' will be parsed back as the
@@ -75,6 +75,12 @@ class ConfigFile:
         If parse_type is set to False, all values will be returned
         back as strings.
         """
+        if default is not None:
+            try:
+                return self.parser.get(key, parse_type=parse_type)
+            except ParsingError:
+                return default
+
         return self.parser.get(key, parse_type=parse_type)
 
     def set(self, key: str, value):

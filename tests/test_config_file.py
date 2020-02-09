@@ -76,12 +76,13 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
 
 
 @pytest.mark.parametrize(
-    "section_key, value, parse_type, file_name, file_contents",
+    "section_key, value, parse_type, default, file_name, file_contents",
     [
         (
             "calendar.sunday_index",
             0,
             True,
+            False,
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
         ),
@@ -89,6 +90,7 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "calendar.sunday_index",
             "0",
             False,
+            False,
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
         ),
@@ -96,18 +98,27 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "calendar.sunday_index",
             0,
             False,
+            False,
             "config.json",
             json.dumps({"calendar": {"sunday_index": 0}}),
+        ),
+        (
+            "calendar.missing",
+            "my default value",
+            False,
+            "my default value",
+            "config.json",
+            json.dumps({"calendar": 5}),
         ),
     ],
 )
 def test_that_config_file_can_get(
-    tmpdir, section_key, value, parse_type, file_name, file_contents
+    tmpdir, section_key, value, parse_type, file_name, file_contents, default
 ):
     config_path = tmpdir / file_name
     config_path.write_text(file_contents, encoding="utf-8")
     config = ConfigFile(str(config_path))
-    assert config.get(section_key, parse_type=parse_type) == value
+    assert config.get(section_key, parse_type=parse_type, default=default) == value
 
 
 @pytest.mark.parametrize(

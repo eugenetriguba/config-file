@@ -76,8 +76,17 @@ class JsonParser(BaseParser):
         elif "." in key:
             split_keys = split_on_dot(key)
             result = self.parsed_content
-            for key in split_keys:
-                result = result[key]
+
+            # Used so we can more precisely specify what key is causing the error.
+            key_for_error = None
+            try:
+                for key in split_keys:
+                    key_for_error = key
+                    result = result[key]
+            except TypeError:
+                raise ParsingError(
+                    f"Cannot get {key} because {key_for_error} is not subscriptable."
+                )
         else:
             result = self.parsed_content[key]
 
