@@ -7,8 +7,8 @@ class ConcreteParser(BaseParser):
     def __init__(self, file_contents):
         super().__init__(file_contents)
 
-    def get(self, key, parse_type=True):
-        super().get(key, parse_type=parse_type)
+    def get(self, key, parse_types=True):
+        super().get(key, parse_types=parse_types)
 
     def set(self, key, value):
         super().set(key, value)

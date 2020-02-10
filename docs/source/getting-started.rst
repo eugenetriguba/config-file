@@ -49,7 +49,7 @@ A section.key format is used for retrieving and setting values.
    >>> False
 
    # Unless you don't want them to be parsed
-   config.get("calendar.start_week_on_sunday", parse_type=False)
+   config.get("calendar.start_week_on_sunday", parse_types=False)
    >>> 'false'
 
    config.get("calendar")

@@ -41,7 +41,7 @@ floatkey = 5.3
 
 """
     parser = IniParser(ini_file)
-    assert parser.get(section_key, parse_type=parse_type) == expected_value
+    assert parser.get(section_key, parse_types=parse_type) == expected_value
 
 
 @pytest.mark.parametrize(

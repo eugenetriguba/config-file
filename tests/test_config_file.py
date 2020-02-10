@@ -76,12 +76,13 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
 
 
 @pytest.mark.parametrize(
-    "section_key, value, parse_type, default, file_name, file_contents",
+    "section_key, value, parse_type, return_type, default, file_name, file_contents",
     [
         (
             "calendar.sunday_index",
             0,
             True,
+            None,
             False,
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
@@ -90,6 +91,7 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "calendar.sunday_index",
             "0",
             False,
+            None,
             False,
             "config.ini",
             "[calendar]\nsunday_index = 0\n\n",
@@ -98,6 +100,7 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "calendar.sunday_index",
             0,
             False,
+            None,
             False,
             "config.json",
             json.dumps({"calendar": {"sunday_index": 0}}),
@@ -106,19 +109,41 @@ def test_that_config_file_can_save(tmpdir, file_contents, file_name):
             "calendar.missing",
             "my default value",
             False,
+            None,
             "my default value",
             "config.json",
             json.dumps({"calendar": 5}),
         ),
+        (
+            "calendar.sunday_index",
+            0,
+            False,
+            int,
+            False,
+            "config.ini",
+            "[calendar]\nsunday_index = 0\n\n",
+        ),
     ],
 )
 def test_that_config_file_can_get(
-    tmpdir, section_key, value, parse_type, file_name, file_contents, default
+    tmpdir,
+    section_key,
+    value,
+    return_type,
+    parse_type,
+    file_name,
+    file_contents,
+    default,
 ):
     config_path = tmpdir / file_name
     config_path.write_text(file_contents, encoding="utf-8")
     config = ConfigFile(str(config_path))
-    assert config.get(section_key, parse_type=parse_type, default=default) == value
+
+    ret_val = config.get(section_key, parse_types=parse_type, default=default)
+    if return_type is not None:
+        assert return_type(ret_val) == value
+    else:
+        assert ret_val == value
 
 
 @pytest.mark.parametrize(
@@ -183,7 +208,7 @@ def test_that_custom_parser_can_be_used(tmpdir):
         def __init__(self, file_contents):
             super().__init__(file_contents)
 
-        def get(self, key, parse_type=True):
+        def get(self, key, parse_types=True):
             return key
 
         def set(self, key, value):

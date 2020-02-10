@@ -11,6 +11,22 @@ Added
 
   - `default` optional parameter to the `get()` method of `ConfigFile`. 
     The allows a default value to be fallen back to if the given key is missing.
+    
+  - `return_type` optional parameter to `get()` method of `ConfigFile`. This
+     allows you to coerce the return type to one of your choosing by feeding it
+     the return value.
+
+Changed
+
+  - Automatic type parsing is now off by default. This is because of the addition of
+    the `return_type` optional parameter. After using the package more, I think
+    the explicitness of specifying the type you're after or that you'd like to 
+    automatically parse the type to one of the basic types is more maintainable.
+    However, I think the option to automatically parse or parse a whole section of 
+    values is still a useful one.
+    
+  - The `parse_type` parameter to `ConfigFile`'s `get()` mothod is now cakked 
+    `parse_types`.
 
 ## 0.8.0 - 2020-02-02
 

@@ -19,14 +19,14 @@ class IniParser(BaseParser):
         except configparser.Error as error:
             raise ParsingError(error)
 
-    def get(self, section_key: str, parse_type: bool = True):
+    def get(self, section_key: str, parse_types: bool = False):
         """
         Read the value of `section.key` of the config file.
 
         :param section_key: The section and key to read from in the config file.
         e.g. 'section1.key2'
-        :param parse_type: Coerces the return value to its native type.
-        :return: The value of the key, parsed to its native type if parse_type is True.
+        :param parse_types: Coerces the return value to its native type.
+        :return: The value of the key, parsed to its native type if parse_types is True.
 
         :raises ValueError: if the section_key given is not in a dot format. e.g.
                             'section1.key'
@@ -34,19 +34,19 @@ class IniParser(BaseParser):
         invalid format, or if we are unable to coerce the return value to value_type.
         """
         if "." not in section_key:
-            return self.__retrieve_section(section_key, parse_type)
+            return self.__retrieve_section(section_key, parse_types)
 
         try:
             section, key = split_on_dot(section_key, only_last_dot=True)
             value = self.parsed_content.get(section, key)
-            return parse_value(value) if parse_type else value
+            return parse_value(value) if parse_types else value
         except configparser.Error as error:
             raise ParsingError(error.message)
 
-    def __retrieve_section(self, section, parse_type):
+    def __retrieve_section(self, section, parse_types):
         items = dict(self.parsed_content.items(section))
 
-        if not parse_type:
+        if not parse_types:
             return items
 
         for item in items:

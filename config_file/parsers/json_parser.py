@@ -16,7 +16,7 @@ class JsonParser(BaseParser):
     """
     The JsonParser allows use of json files with ConfigFile. The syntax it
     supports is a bit more flexible than the IniParser.
-    
+
     By default, the dot syntax is used. However, if you'd like to get/set/delete all
     of a particular key, you can specify so with an optional parameter.
 
@@ -48,13 +48,13 @@ class JsonParser(BaseParser):
         except json.decoder.JSONDecodeError as error:
             raise ParsingError(error)
 
-    def get(self, key: str, parse_type: bool = True, retrieve_all: bool = False):
+    def get(self, key: str, parse_types: bool = False, retrieve_all: bool = False):
         """
         Retrieve values using a dot syntax.
 
         :param key: The key to retrieve. e.g. 'foo.bar.boo'
 
-        :param parse_type: Whether you'd like the type parsed into its native one.
+        :param parse_types: Whether you'd like the type parsed into its native one.
 
         :param retrieve_all: Specify whether you'd like to recursively receive
         all values that match the given key. Returned as a list.
@@ -82,7 +82,7 @@ class JsonParser(BaseParser):
         else:
             result = self.parsed_content[key]
 
-        return parse_value(result) if parse_type else result
+        return parse_value(result) if parse_types else result
 
     def set(self, key: str, value, set_all: bool = False):
         if set_all:

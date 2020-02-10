@@ -121,7 +121,7 @@ def test_that_json_parser_can_get_keys(
     test_json, section_key, parse_type, expected_result
 ):
     parser = JsonParser(json.dumps(test_json))
-    assert parser.get(section_key, parse_type=parse_type) == expected_result
+    assert parser.get(section_key, parse_types=parse_type) == expected_result
 
 
 @pytest.mark.parametrize(

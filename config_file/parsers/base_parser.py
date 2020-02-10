@@ -25,13 +25,13 @@ class BaseParser(ABC):
         self.parsed_content = self.parse(self.content)
 
     @abstractmethod
-    def get(self, key, parse_type=True):
+    def get(self, key, parse_types=False):
         """
         Retrieve the value of a key in its native type.
         This means the string 'true' will be parsed back as the
         boolean True.
 
-        If parse_type is set to False, all values will be returned
+        If parse_types is set to False, all values will be returned
         back as strings.
         """
         raise NotImplementedError

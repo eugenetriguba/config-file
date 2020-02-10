@@ -25,8 +25,7 @@ Here are some guidelines to keep in mind when submitting a pull request:
   on what makes a good entry since this project follows those principles. If you're
   not comfortable with your English, we'd be happy to write it for you.
 
-- Ensure the tests pass: ``poetry run pytest tests/`` to run all tests.
-    - If you'd like to run with test coverage, pass ``--cov=config_file/`` to pytest.
+- Ensure the tests pass: ``poetry run task test`` to run all tests.
 
 - New features should be accompanied with tests for them:
   - Unit tests are written using [pytest](https://docs.pytest.org/en/latest/).

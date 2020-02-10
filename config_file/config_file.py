@@ -66,22 +66,29 @@ class ConfigFile:
         with open(self.path, "r") as file:
             return file.read()
 
-    def get(self, key: str, parse_type: bool = True, default=None):
+    def get(self, key: str, parse_types: bool = False, return_type=None, default=None):
         """
-        Retrieve the value of a key in its native type.
-        This means the string 'true' will be parsed back as the
-        boolean True.
+        Retrieve the value of a key.
 
-        If parse_type is set to False, all values will be returned
-        back as strings.
+        :param key: The key to retrieve.
+        :param parse_type: Automatically parse ints, floats, booleans, dicts, and lists.
+                           This recursively parses all types in whatever you're
+                           retrieving, not just a single type. e.g. If you are
+                           retrieving a section, all values in that section with be
+                           parsed.
+        :param return_type: The type to coerce the return value to.
+        :param default: The default value to return if the value of the key is empty.
+
+        :return: The value of the key.
         """
         if default is not None:
             try:
-                return self.parser.get(key, parse_type=parse_type)
+                return self.parser.get(key, parse_types=parse_types)
             except ParsingError:
                 return default
 
-        return self.parser.get(key, parse_type=parse_type)
+        key_value = self.parser.get(key, parse_types=parse_types)
+        return return_type(key_value) if return_type else key_value
 
     def set(self, key: str, value):
         """Sets the value of a key."""
