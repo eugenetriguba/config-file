@@ -71,8 +71,8 @@ class ConfigFile:
         Retrieve the value of a key.
 
         :param key: The key to retrieve.
-        :param parse_type: Automatically parse ints, floats, booleans, dicts, and lists.
-                           This recursively parses all types in whatever you're
+        :param parse_types: Automatically parse ints, floats, booleans, dicts, and
+                           lists. This recursively parses all types in whatever you're
                            retrieving, not just a single type. e.g. If you are
                            retrieving a section, all values in that section with be
                            parsed.
