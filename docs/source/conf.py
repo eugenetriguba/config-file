@@ -23,7 +23,7 @@ copyright = "2020, Eugene Triguba"
 author = "Eugene Triguba"
 
 # The full version, including alpha/beta/rc tags
-release = "0.8.0"
+release = "0.9.0"
 
 
 # -- General configuration ---------------------------------------------------
