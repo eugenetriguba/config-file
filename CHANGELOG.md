@@ -25,7 +25,7 @@ Changed
     However, I think the option to automatically parse or parse a whole section of 
     values is still a useful one.
     
-  - The `parse_type` parameter to `ConfigFile`'s `get()` mothod is now cakked 
+  - The `parse_type` parameter to `ConfigFile`'s `get()` method is now called 
     `parse_types`.
 
 ## 0.8.0 - 2020-02-02
