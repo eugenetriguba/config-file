@@ -5,11 +5,6 @@ Config File
 
 |Python Verison| |Version| |Style| |Documentation Status| |Build Status| |Codecov|
 
-   This python package is currently in rapid development and is in a
-   pre-alpha phase. The API is liable to break until v1 so if you're
-   going to use it, pinning the version is recommended. All notable
-   changes are kept track of in the changelog.
-
 Config File allows you to use the same simple API for manipulating INI,
 JSON, YAML, and TOML configuration files. For the time being, it only
 supports INI and JSON.
