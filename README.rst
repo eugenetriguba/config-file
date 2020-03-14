@@ -9,6 +9,8 @@ Config File allows you to use the same simple API for manipulating INI,
 JSON, YAML, and TOML configuration files. For the time being, it only
 supports INI and JSON.
 
+Full documentation is available at https://config-file.readthedocs.io
+
 Installation
 ------------
 
