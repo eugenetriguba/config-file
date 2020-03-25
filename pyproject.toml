@@ -32,7 +32,7 @@ isort = "^4.3"
 seed-isort-config = "^1.9"
 black = {version = "^18.3-alpha.0", allow-prereleases = true}
 flake8 = "^3.7"
-bump2version = "^0.5.11"
+bump2version = "^1.0.0"
 pytest = "^3.0"
 pytest-cov = "^2.8"
 sphinx = "^2.3.1"
