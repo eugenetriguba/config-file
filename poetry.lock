@@ -540,8 +540,8 @@ category = "dev"
 description = "Statically populate the `known_third_party` `isort` setting."
 name = "seed-isort-config"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "1.9.4"
+python-versions = ">=3.6"
+version = "2.0.0"
 
 [package.dependencies]
 "aspy.refactor-imports" = "*"
@@ -767,7 +767,11 @@ toml = ["toml"]
 yaml = ["pyyaml"]
 
 [metadata]
+<<<<<<< HEAD
 content-hash = "08e43891b71c2bd97878564d8084ce7950165cfcccea39d0ad362363de3055c3"
+=======
+content-hash = "fced424bfdd158ae7a514dc9b7ac6f3b32029ab17ce7ace3e1561518d4ae95ad"
+>>>>>>> 49f9997bd16eb6bb74b1d98540481f0fd0ba949a
 python-versions = "^3.6"
 
 [metadata.files]
@@ -1052,8 +1056,8 @@ requests = [
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
 seed-isort-config = [
-    {file = "seed_isort_config-1.9.4-py2.py3-none-any.whl", hash = "sha256:81f7adf8dd0bc24e03d0f5eef87561e170757fc7a36050c01e4c29d150757783"},
-    {file = "seed_isort_config-1.9.4.tar.gz", hash = "sha256:cecccb911b8d01ecdca16e17d083bf4cd78e928db4d7906125b0373b81f1c7ec"},
+    {file = "seed_isort_config-2.0.0-py2.py3-none-any.whl", hash = "sha256:e03e91ba6ad3d7e598ac59d792e60f5452ed395a36c058335b79d625a5f7cb7e"},
+    {file = "seed_isort_config-2.0.0.tar.gz", hash = "sha256:98656281c241becb5a942da4db47f267808eef0f1fae7904e27eeebf7a5ee660"},
 ]
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
