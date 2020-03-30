@@ -11,6 +11,21 @@ Changed
 
   - `toml` and `pyyaml` are now optional extra dependencies. This allows you to
     not have to install them if you aren't using them.
+    
+  - `retrieve_all` in `JsonParser`'s `get` method is now called `get_all` for 
+     consistency. It isn't publicly available yet. The thought is to write a custom
+     ini parser first that supports multiple of the same keys and subsections.
+     This way you can have the `get_all`, `set_all`, `delete_all`, etc. methods
+     for all file type parsers. I would have to weight if that added complexity 
+     of not using the built-in configparser and roll our own for some added 
+     features is worth it or see if there are ways to work around it with 
+     configparser that are ideal.
+
+Fixed
+
+  - You can now specify a default and still coerce your return type. Previously,
+    if you specified a default, there was no logic in that branch to coerce your
+    return type as well.
 
 
 ## 0.9.0 - 2020-02-09

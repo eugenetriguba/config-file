@@ -81,13 +81,14 @@ class ConfigFile:
 
         :return: The value of the key.
         """
-        if default is not None:
+        if default is None:
+            key_value = self.parser.get(key, parse_types=parse_types)
+        else:
             try:
-                return self.parser.get(key, parse_types=parse_types)
+                key_value = self.parser.get(key, parse_types=parse_types)
             except ParsingError:
                 return default
 
-        key_value = self.parser.get(key, parse_types=parse_types)
         return return_type(key_value) if return_type else key_value
 
     def set(self, key: str, value):

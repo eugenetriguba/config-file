@@ -22,20 +22,20 @@ class JsonParser(BaseParser):
 
     Example:
 
-        >>> json = {
-        >>>    "key1": {
-        >>>        "key2": "foo",
-        >>>        "key1": "bar"
-        >>>    },
-        >>>    "foo": "bar"
-        >>> }
-        >>> parser = JsonParser(json.dumps(json))
-        >>> parser.get('key1')
-        { "key2": "foo", "key1": "bar" }
-        >>> parser.get('key1.key2')
-        "foo"
-        >>> parser.get('key1', retrieve_all=True)
-        [{ "key2": "foo", "key1": "bar" }, "bar"]
+        json = {
+           "key1": {
+               "key2": "foo",
+               "key1": "bar"
+           },
+           "foo": "bar"
+        }
+        parser = JsonParser(json.dumps(json))
+        parser.get('key1')
+        >>> { "key2": "foo", "key1": "bar" }
+        parser.get('key1.key2')
+        >>> "foo"
+        parser.get('key1', get_all=True)
+        >>> [{ "key2": "foo", "key1": "bar" }, "bar"]
     """
 
     def __init__(self, file_contents: str):
@@ -48,7 +48,7 @@ class JsonParser(BaseParser):
         except json.decoder.JSONDecodeError as error:
             raise ParsingError(error)
 
-    def get(self, key: str, parse_types: bool = False, retrieve_all: bool = False):
+    def get(self, key: str, parse_types: bool = False, get_all: bool = False):
         """
         Retrieve values using a dot syntax.
 
@@ -56,14 +56,14 @@ class JsonParser(BaseParser):
 
         :param parse_types: Whether you'd like the type parsed into its native one.
 
-        :param retrieve_all: Specify whether you'd like to recursively receive
+        :param get_all: Specify whether you'd like to recursively receive
         all values that match the given key. Returned as a list.
         e.g. 'foo' would retrieve all values that have the key 'foo', anywhere
         in the json.
 
         :return: the value of the given key
         """
-        if retrieve_all:
+        if get_all:
             result = nested_lookup(key, self.parsed_content)
         elif "." in key:
             split_keys = split_on_dot(key)

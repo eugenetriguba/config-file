@@ -162,7 +162,7 @@ def test_that_json_parser_can_delete_keys(key, test_json, expected_json):
 )
 def test_that_json_parser_can_retrieve_all_keys(test_json, key, expected_output):
     parser = JsonParser(json.dumps(test_json))
-    assert parser.get(key, retrieve_all=True) == expected_output
+    assert parser.get(key, get_all=True) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -179,7 +179,7 @@ def test_that_json_parser_can_retrieve_all_keys(test_json, key, expected_output)
 def test_that_json_parser_can_set_all_keys(test_json, key, value, expected_output):
     parser = JsonParser(json.dumps(test_json))
     parser.set(key, value, set_all=True)
-    assert parser.get(key, retrieve_all=True) == expected_output
+    assert parser.get(key, get_all=True) == expected_output
 
 
 @pytest.mark.parametrize(
