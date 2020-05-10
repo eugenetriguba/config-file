@@ -2,7 +2,7 @@ Config File Documentation
 =========================
 
 Config File is a package that allows you to easily manipulate your configuration
-files whether they are in INI, JSON, YAML, TOML, or even XML.
+files whether they are in INI, JSON, YAML, or TOML.
 
 **Table of Contents:**
 
