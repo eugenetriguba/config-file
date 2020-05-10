@@ -1,6 +1,6 @@
 # Config File
 
-> Manage and manipulate your configuration files
+> Modify configuration files of variosu formats with the sample API
 
 ![Python Version](https://img.shields.io/pypi/pyversions/config-file.svg)
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
