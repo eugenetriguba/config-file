@@ -12,9 +12,8 @@
 ## About Config File
 
 The Config File project is designed to allow you to easily manipulate your 
-configuration files with the same simple API. for manipulating INI,
-JSON, YAML, and TOML configuration files. For the time being, it only
-supports INI and JSON.
+configuration files with the same simple API whether they are in INI,
+JSON, YAML, or TOML. For the time being, it only supports INI and JSON.
 
 ## Installation
 
