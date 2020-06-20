@@ -147,7 +147,7 @@ def test_that_config_file_can_get(
 def test_that_config_file_can_find_sections_and_keys(
     tmpdir, file_extension, file_contents, section_key, expected_result
 ):
-    config_path = tmpdir / "config.{}".format(file_extension)
+    config_path = tmpdir / f"config.{file_extension}"
     config_path.write_text(file_contents, encoding="utf-8")
     config = ConfigFile(str(config_path))
     assert config.has(section_key) == expected_result
