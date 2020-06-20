@@ -27,6 +27,9 @@ jobs:
           pip install poetry codecov requests
           poetry install -v -E toml -E yaml
 
+      - name: Run linter
+        uses: pre-commit/action@v2.0.0
+
       - name: Run tests
         run: |
           poetry run task test_ci
