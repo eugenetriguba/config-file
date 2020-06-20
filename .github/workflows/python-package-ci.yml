@@ -27,12 +27,8 @@ jobs:
           pip install poetry codecov requests
           poetry install -v -E toml -E yaml
 
-      - name: Run linter
-        uses: pre-commit/action@v2.0.0
-
       - name: Run tests
-        run: |
-          poetry run task test_ci
+        run: poetry run task test_ci
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -44,5 +40,4 @@ jobs:
           fail_ci_if_error: true
 
       - name: Build Package
-        run: |
-          poetry build
+        run: poetry build
