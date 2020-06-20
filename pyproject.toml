@@ -19,8 +19,11 @@ classifiers = [
 ]
 
 [tool.taskipy.tasks]
-test = "poetry run pytest -v --cov=config_file/ --cov-report term-missing tests/"
+test = "task test_cov -- -v --cov-report term-missing"
+test_cov = "task pytest -- --cov=config_file/"
+test_ci = "task test_cov -- --cov-report=xml"
 lint = "poetry run pre-commit run --all"
+pytest = "poetry run pytest tests/"
 
 [tool.poetry.dependencies]
 python = "^3.6"
