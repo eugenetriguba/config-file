@@ -18,7 +18,7 @@ Changed
 - Errors have been moved to `exceptions.py`.
 - The `get_all`, `set_all`, and `delete_all` optional parameter options in `JsonParser` have
   been renamed to just `all`. This shouldn't have any effect since `JsonParser` is not intended
-  to be used directly, and that option is not in `ConfigFile`.
+  to be used directly, and that option was not in `ConfigFile`.
 - `path`, `parser`, and `contents` on the `ConfigFile` are now all properties and can only be retrieved.
 - `restore_original` in `ConfigFile` now raises a `FileNotFoundError` instead of an `OSError` if the original
   file path does not exist.

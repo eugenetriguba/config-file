@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class BaseParser(ABC):
@@ -25,7 +26,7 @@ class BaseParser(ABC):
         self.parsed_content = self.parse(self.content)
 
     @abstractmethod
-    def get(self, key, parse_types=False):
+    def get(self, key: str, parse_types: bool = False, all: bool = False):
         """
         Retrieve the value of a key in its native type.
         This means the string 'true' will be parsed back as the
@@ -37,12 +38,12 @@ class BaseParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set(self, key, value) -> bool:
+    def set(self, key: str, value: Any) -> bool:
         """Sets the value of a key."""
         raise NotImplementedError
 
     @abstractmethod
-    def delete(self, section_key) -> bool:
+    def delete(self, section_key: str) -> bool:
         """Deletes a key/value pair or entire sections."""
         raise NotImplementedError
 
@@ -66,10 +67,9 @@ class BaseParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def parse(self, file_contents: str):
+    def parse(self, file_contents: str) -> Any:
         """
         Parse the file_contents into an internal representation
-        the given parser can work with. It should not return anything
-        if you're going to be using the super() constructor.
+        the given parser can work with.
         """
         raise NotImplementedError

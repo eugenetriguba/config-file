@@ -83,6 +83,7 @@ class ConfigFile:
         parse_types: bool = False,
         return_type: Any = None,
         default: Any = None,
+        all: bool = False,
     ) -> Any:
         """
         Retrieve the value of a key.
