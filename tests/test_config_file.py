@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from config_file import ConfigFile, BaseParser
+from config_file import BaseParser, ConfigFile
 
 
 @pytest.mark.parametrize(
@@ -14,7 +14,7 @@ def test_that_config_file_initializes_correctly(tmp_path, file_contents, file_na
     temp.write_text(file_contents)
 
     config = ConfigFile(temp)
-    assert config.path == str(temp)
+    assert config.path == temp
     assert config.contents == temp.read_text()
     assert isinstance(config.parser, BaseParser)
 
@@ -26,39 +26,27 @@ def test_that_config_file_initializes_correctly(tmp_path, file_contents, file_na
 def test_that_config_file_can_restore_the_original(
     tmpdir, file_contents, file_name, original_file_name
 ):
-    config_path = tmpdir / file_name
+    config_path = Path(tmpdir / file_name)
     config_path.write_text(file_contents, encoding="utf-8")
-
-    original_config_path = tmpdir / original_file_name
+    original_config_path = Path(tmpdir / original_file_name)
     original_config_path.write_text(file_contents, encoding="utf-8")
 
-    config = ConfigFile(str(config_path))
-    config.set("calendar.sunday_index", 0)
+    config = ConfigFile(config_path)
+    config.set("calendar.sunday_index", 5)
     config.restore_original()
-    assert config.stringify() == ConfigFile(str(original_config_path)).stringify()
-    assert config_path.read_text(encoding="utf-8") == original_config_path.read_text(
-        encoding="utf-8"
-    )
+
+    assert config.stringify() == ConfigFile(original_config_path).stringify()
 
 
-@pytest.mark.parametrize(
-    "file_extension, specify_original_config_path", [("ini", False), ("ini", True)]
-)
-def test_missing_config_files_during_restore(
-    tmpdir, file_extension, specify_original_config_path
-):
-    with pytest.raises(OSError):
-        temp_path = tmpdir / "config.{}".format(file_extension)
-        temp_path.write("")
-        config = ConfigFile(str(temp_path))
+def test_missing_config_files_during_restore(tmpdir):
+    config_path = Path(tmpdir / "config.ini")
+    config_path.write_text("")
+    config = ConfigFile(config_path)
 
-        if specify_original_config_path:
-            specify_original_config_path = "does_not_exist.{}".format(file_extension)
-        else:
-            config.path = "does_not_exist.{}".format(file_extension)
-            specify_original_config_path = None
+    with pytest.raises(FileNotFoundError) as error:
+        config.restore_original(original_file_path="jhklasdfhjlkasjej")
 
-        config.restore_original(original_file_path=specify_original_config_path)
+    assert "file to restore to does not exist" in str(error)
 
 
 @pytest.mark.parametrize(
@@ -228,6 +216,7 @@ def test_that_custom_parser_can_be_used(tmpdir):
     config_path = tmpdir / "config.conf"
     config_path.write_text("", encoding="utf-8")
     config = ConfigFile(str(config_path), parser=CustomParser)
+
     assert isinstance(config.parser, CustomParser)
     assert config.get("key") == "key"
     assert config.set("key", "value") == ("key", "value")
@@ -242,6 +231,6 @@ def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
 
     try:
         Path(config_path).expanduser().touch()
-        assert ConfigFile(config_path).path == str(Path.home() / config_name)
+        assert ConfigFile(config_path).path == Path.home() / config_name
     finally:
         Path(config_path).expanduser().unlink()

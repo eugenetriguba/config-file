@@ -1,18 +1,18 @@
 import inspect
-from pathlib import Path, PurePath
+from pathlib import Path
 from shutil import copyfile
 from typing import Type, Union
 
+from config_file.exceptions import ParsingError
 from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
 from config_file.parsers.json_parser import JsonParser
-from config_file.utils import split_on_dot
-from config_file.exceptions import ParsingError
+from config_file.utils import read_file, split_on_dot
 
 
 class ConfigFile:
     def __init__(
-        self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None
+        self, file_path: Type[Union[str, Path]], parser: Type[BaseParser] = None
     ) -> None:
         """
         Saves the config file path and expands it if needed, reads in
@@ -25,19 +25,29 @@ class ConfigFile:
         :raises ValueError: If the specified file path does not have an extension
                             that is supported or it is a directory.
         """
-        self.path = self.__create_config_path(file_path)
-        self.contents = self.__read_config_file()
-        self.parser = self.__determine_parser(file_path, parser)
+        if type(file_path) is not Path:
+            file_path = Path(file_path)
+
+        self.__path = self.__create_config_path(file_path)
+        self.__contents = read_file(self.__path)
+        self.__parser = self.__determine_parser(file_path, parser)
+
+    @property
+    def path(self) -> Path:
+        return self.__path
+
+    @property
+    def contents(self) -> str:
+        return self.__contents
+
+    @property
+    def parser(self) -> Type[BaseParser]:
+        return self.__parser
 
     @staticmethod
-    def __create_config_path(
-        file_path: Type[Union[str, PurePath]], original: bool = False
-    ) -> str:
-        if isinstance(file_path, PurePath):
-            file_path = str(file_path)
-
-        if len(file_path) > 1 and file_path[0] == "~":
-            return str(Path(file_path).expanduser())
+    def __create_config_path(file_path: Path, original: bool = False) -> str:
+        if len(file_path.parts) >= 1 and file_path.parts[0] == "~":
+            return file_path.expanduser()
 
         if original:
             file_parts = split_on_dot(file_path, only_last_dot=True)
@@ -52,29 +62,20 @@ class ConfigFile:
         return file_path
 
     def __determine_parser(
-        self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None
+        self, file_path: Path, parser: Type[BaseParser] = None
     ) -> BaseParser:
-        if isinstance(file_path, PurePath):
-            file_path = str(file_path)
-
         if parser is not None and not inspect.isabstract(parser):
-            return parser(self.contents)
+            return parser(self.__contents)
 
         file_type = split_on_dot(file_path, only_last_dot=True)[-1]
         if file_type == "ini":
-            return IniParser(self.contents)
+            return IniParser(self.__contents)
         elif file_type == "json":
-            return JsonParser(self.contents)
+            return JsonParser(self.__contents)
         else:
             raise ValueError(
-                "File path contains an unsupported or unrecognized file type: {}".format(
-                    file_path
-                )
+                "File path contains an unrecognized file type: {}".format(file_path)
             )
-
-    def __read_config_file(self):
-        with open(self.path, "r") as file:
-            return file.read()
 
     def get(self, key: str, parse_types: bool = False, return_type=None, default=None):
         """
@@ -92,10 +93,10 @@ class ConfigFile:
         :return: The value of the key.
         """
         if default is None:
-            key_value = self.parser.get(key, parse_types=parse_types)
+            key_value = self.__parser.get(key, parse_types=parse_types)
         else:
             try:
-                key_value = self.parser.get(key, parse_types=parse_types)
+                key_value = self.__parser.get(key, parse_types=parse_types)
             except ParsingError:
                 return default
 
@@ -103,15 +104,15 @@ class ConfigFile:
 
     def set(self, key: str, value):
         """Sets the value of a key."""
-        return self.parser.set(key, value)
+        return self.__parser.set(key, value)
 
     def delete(self, section_key: str):
         """Deletes a key/value pair or entire sections."""
-        return self.parser.delete(section_key)
+        return self.__parser.delete(section_key)
 
     def stringify(self) -> str:
         """Convert the parsed internal representation of the file back into a string."""
-        return self.parser.stringify()
+        return self.__parser.stringify()
 
     def has(self, section_key: str) -> bool:
         """
@@ -121,7 +122,7 @@ class ConfigFile:
         Some formats, like JSON, do not have sections and therefore,
         it would only be checking if the key exists.
         """
-        return self.parser.has(section_key)
+        return self.__parser.has(section_key)
 
     def restore_original(self, original_file_path=None):
         """
@@ -134,23 +135,22 @@ class ConfigFile:
         method would look for a config.original.json in the same folder by default.
 
         :return: True if the reset succeeded
-        :raises OSError: If the original configuration file is not present or if an
-                         error occurred when trying to copy the file.
+        :raises FileNotFoundError: If the original configuration file does not exist
+        :raises OSError: If self.path is not writable
+        :raises SameFileError: If self.path and original_file_path are the same file.
         """
         if original_file_path is None:
-            original_file_path = self.__create_config_path(
-                str(self.path), original=True
-            )
+            original_file_path = self.__create_config_path(self.__path, original=True)
 
         if not Path(original_file_path).exists():
-            raise OSError(
+            raise FileNotFoundError(
                 "The {} file to restore to does not exist.".format(original_file_path)
             )
 
-        Path(self.path).expanduser().unlink()
-        copyfile(original_file_path, self.path)
-        self.contents = self.__read_config_file()
-        self.parser.parsed_content = self.parser.parse(self.contents)
+        self.__path.expanduser().unlink()
+        copyfile(original_file_path, self.__path)
+        self.__contents = read_file(self.path)
+        self.__parser.parsed_content = self.__parser.parse(self.__contents)
 
         return True
 
@@ -159,7 +159,7 @@ class ConfigFile:
         Save the configuration changes by writing the file out to the specified path
         :return: True if the save succeeded.
         """
-        with open(self.path, "w") as config_file:
-            config_file.write(self.parser.stringify())
+        with open(self.__path, "w") as config_file:
+            config_file.write(self.__parser.stringify())
 
         return True
