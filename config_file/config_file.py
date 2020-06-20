@@ -11,7 +11,9 @@ from config_file.exceptions import ParsingError
 
 
 class ConfigFile:
-    def __init__(self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None) -> None:
+    def __init__(
+        self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None
+    ) -> None:
         """
         Saves the config file path and expands it if needed, reads in
         the file contents, and determines what parser should be used for
@@ -28,7 +30,9 @@ class ConfigFile:
         self.parser = self.__determine_parser(file_path, parser)
 
     @staticmethod
-    def __create_config_path(file_path: Type[Union[str, PurePath]], original: bool = False) -> str:
+    def __create_config_path(
+        file_path: Type[Union[str, PurePath]], original: bool = False
+    ) -> str:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -41,11 +45,15 @@ class ConfigFile:
             file_path = ".".join(file_parts)
 
         if Path(file_path).is_dir():
-            raise ValueError("The specified config file ({}) is a directory.".format(file_path))
+            raise ValueError(
+                "The specified config file ({}) is a directory.".format(file_path)
+            )
 
         return file_path
 
-    def __determine_parser(self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser]) -> BaseParser:
+    def __determine_parser(
+        self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None
+    ) -> BaseParser:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -59,7 +67,9 @@ class ConfigFile:
             return JsonParser(self.contents)
         else:
             raise ValueError(
-                "File path contains an unsupported or unrecognized file type: {}".format(file_path)
+                "File path contains an unsupported or unrecognized file type: {}".format(
+                    file_path
+                )
             )
 
     def __read_config_file(self):
