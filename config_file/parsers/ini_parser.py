@@ -1,10 +1,10 @@
 import configparser
 from io import StringIO
 
+from config_file.exceptions import ParsingError
 from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.parse_value import parse_value
 from config_file.utils import split_on_dot
-from config_file.exceptions import ParsingError
 
 
 class IniParser(BaseParser):
@@ -96,7 +96,7 @@ class IniParser(BaseParser):
         if "." not in section_key:
             if not self.parsed_content.has_section(section_key):
                 raise ValueError(
-                    "Cannot delete {} because it is not in the config file.".format(section_key)
+                    f"Cannot delete {section_key} because it is not in the config file."
                 )
 
             self.parsed_content.remove_section(section_key)
@@ -105,7 +105,7 @@ class IniParser(BaseParser):
         section, key = split_on_dot(section_key, only_last_dot=True)
         if key not in self.parsed_content[section]:
             raise ValueError(
-                "Cannot delete {section}.{key} because {key} is not in {section}.".format(section = section, key = key)
+                f"Cannot delete {section}.{key} because {key} is not in {section}."
             )
 
         self.parsed_content.remove_option(section, key)

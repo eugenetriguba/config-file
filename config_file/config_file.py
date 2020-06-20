@@ -55,9 +55,7 @@ class ConfigFile:
             file_path = ".".join(file_parts)
 
         if Path(file_path).is_dir():
-            raise ValueError(
-                "The specified config file ({}) is a directory.".format(file_path)
-            )
+            raise ValueError(f"The specified config file ({file_path}) is a directory.")
 
         return file_path
 
@@ -74,7 +72,7 @@ class ConfigFile:
             return JsonParser(self.__contents)
         else:
             raise ValueError(
-                "File path contains an unrecognized file type: {}".format(file_path)
+                f"File path contains an unrecognized file type: {file_path}"
             )
 
     def get(self, key: str, parse_types: bool = False, return_type=None, default=None):
@@ -91,6 +89,8 @@ class ConfigFile:
         :param default: The default value to return if the value of the key is empty.
 
         :return: The value of the key.
+
+        :raises ValueError: If the value is not able to be coerced into return_type
         """
         if default is None:
             key_value = self.__parser.get(key, parse_types=parse_types)
@@ -144,7 +144,7 @@ class ConfigFile:
 
         if not Path(original_file_path).exists():
             raise FileNotFoundError(
-                "The {} file to restore to does not exist.".format(original_file_path)
+                f"The {original_file_path} file to restore to does not exist."
             )
 
         self.__path.expanduser().unlink()
