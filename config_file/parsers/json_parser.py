@@ -7,10 +7,10 @@ from nested_lookup import (
     nested_update,
 )
 
+from config_file.exceptions import ParsingError
 from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.parse_value import parse_value
 from config_file.utils import split_on_dot
-from config_file.exceptions import ParsingError
 
 
 class JsonParser(BaseParser):
@@ -78,7 +78,7 @@ class JsonParser(BaseParser):
                     result = result[key]
             except TypeError:
                 raise ParsingError(
-                    "Cannot get {} because {} is not subscriptable.".format(key, key_for_error)
+                    f"Cannot get {key} because {key_for_error} is not subscriptable."
                 )
         else:
             result = self.parsed_content[key]

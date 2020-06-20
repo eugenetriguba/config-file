@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Added
 
-- Support for Python 3.5 by removing use of f-strings from codebase.
 - A generic `ConfigFileError`.
 - More type hints from `typings` have been added to `ConfigFile` for better type information.
 
