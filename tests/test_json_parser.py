@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from config_file.parsers.json_parser import JsonParser
 from config_file.exceptions import ParsingError
+from config_file.parsers.json_parser import JsonParser
 
 
 @pytest.mark.parametrize("test_json", ["{'test': }", "[section]\nblah = value\n\n"])

@@ -73,4 +73,3 @@ class BaseParser(ABC):
         if you're going to be using the super() constructor.
         """
         raise NotImplementedError
-

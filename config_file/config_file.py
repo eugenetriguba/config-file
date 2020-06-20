@@ -1,7 +1,7 @@
 import inspect
-from pathlib import Path
+from pathlib import Path, PurePath
 from shutil import copyfile
-from typing import Type, Union
+from typing import Any, Type, Union
 
 from config_file.exceptions import ParsingError
 from config_file.parsers.base_parser import BaseParser
@@ -12,7 +12,9 @@ from config_file.utils import read_file, split_on_dot
 
 class ConfigFile:
     def __init__(
-        self, file_path: Type[Union[str, Path]], parser: Type[BaseParser] = None
+        self,
+        file_path: Type[Union[str, Type[PurePath]]],
+        parser: Type[BaseParser] = None,
     ) -> None:
         """
         Saves the config file path and expands it if needed, reads in
@@ -33,7 +35,7 @@ class ConfigFile:
         self.__parser = self.__determine_parser(file_path, parser)
 
     @property
-    def path(self) -> Path:
+    def path(self) -> Type[PurePath]:
         return self.__path
 
     @property
@@ -45,7 +47,7 @@ class ConfigFile:
         return self.__parser
 
     @staticmethod
-    def __create_config_path(file_path: Path, original: bool = False) -> str:
+    def __create_config_path(file_path: Type[PurePath], original: bool = False) -> str:
         if len(file_path.parts) >= 1 and file_path.parts[0] == "~":
             return file_path.expanduser()
 
@@ -60,7 +62,7 @@ class ConfigFile:
         return file_path
 
     def __determine_parser(
-        self, file_path: Path, parser: Type[BaseParser] = None
+        self, file_path: Type[PurePath], parser: Type[BaseParser] = None
     ) -> BaseParser:
         if parser is not None and not inspect.isabstract(parser):
             return parser(self.__contents)
@@ -75,7 +77,13 @@ class ConfigFile:
                 f"File path contains an unrecognized file type: {file_path}"
             )
 
-    def get(self, key: str, parse_types: bool = False, return_type=None, default=None):
+    def get(
+        self,
+        key: str,
+        parse_types: bool = False,
+        return_type: Any = None,
+        default: Any = None,
+    ) -> Any:
         """
         Retrieve the value of a key.
 
@@ -102,7 +110,7 @@ class ConfigFile:
 
         return return_type(key_value) if return_type else key_value
 
-    def set(self, key: str, value):
+    def set(self, key: str, value: Any) -> bool:
         """Sets the value of a key."""
         return self.__parser.set(key, value)
 
@@ -124,7 +132,7 @@ class ConfigFile:
         """
         return self.__parser.has(section_key)
 
-    def restore_original(self, original_file_path=None):
+    def restore_original(self, original_file_path: Union[str, Type[PurePath]] = None):
         """
         Restores the original the config file by deleting it and copying the original
         back in its place. The internal contents of this config file object are then set
@@ -154,7 +162,7 @@ class ConfigFile:
 
         return True
 
-    def save(self):
+    def save(self) -> bool:
         """
         Save the configuration changes by writing the file out to the specified path
         :return: True if the save succeeded.

@@ -1,7 +1,7 @@
 import pytest
 
-from config_file.parsers.ini_parser import IniParser
 from config_file.exceptions import ParsingError
+from config_file.parsers.ini_parser import IniParser
 
 
 @pytest.mark.parametrize("ini_file", ["blahblahblah", "{ 'key1': 5 }"])
