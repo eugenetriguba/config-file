@@ -74,6 +74,3 @@ class BaseParser(ABC):
         """
         raise NotImplementedError
 
-
-class ParsingError(Exception):
-    """Unable to parse the configuration file"""

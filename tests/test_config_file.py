@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from config_file.config_file import ConfigFile
-from config_file.parsers.base_parser import BaseParser
+from config_file import ConfigFile, BaseParser
 
 
 @pytest.mark.parametrize(
@@ -49,14 +48,14 @@ def test_missing_config_files_during_restore(
     tmpdir, file_extension, specify_original_config_path
 ):
     with pytest.raises(OSError):
-        temp_path = tmpdir / f"config.{file_extension}"
+        temp_path = tmpdir / "config.{}".format(file_extension)
         temp_path.write("")
         config = ConfigFile(str(temp_path))
 
         if specify_original_config_path:
-            specify_original_config_path = f"does_not_exist.{file_extension}"
+            specify_original_config_path = "does_not_exist.{}".format(file_extension)
         else:
-            config.path = f"does_not_exist.{file_extension}"
+            config.path = "does_not_exist.{}".format(file_extension)
             specify_original_config_path = None
 
         config.restore_original(original_file_path=specify_original_config_path)
@@ -160,7 +159,7 @@ def test_that_config_file_can_get(
 def test_that_config_file_can_find_sections_and_keys(
     tmpdir, file_extension, file_contents, section_key, expected_result
 ):
-    config_path = tmpdir / f"config.{file_extension}"
+    config_path = tmpdir / "config.{}".format(file_extension)
     config_path.write_text(file_contents, encoding="utf-8")
     config = ConfigFile(str(config_path))
     assert config.has(section_key) == expected_result

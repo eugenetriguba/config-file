@@ -1,15 +1,17 @@
 import inspect
 from pathlib import Path, PurePath
 from shutil import copyfile
+from typing import Type, Union
 
-from config_file.parsers.base_parser import BaseParser, ParsingError
+from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.ini_parser import IniParser
 from config_file.parsers.json_parser import JsonParser
 from config_file.utils import split_on_dot
+from config_file.exceptions import ParsingError
 
 
 class ConfigFile:
-    def __init__(self, file_path, parser: BaseParser = None):
+    def __init__(self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser] = None) -> None:
         """
         Saves the config file path and expands it if needed, reads in
         the file contents, and determines what parser should be used for
@@ -17,7 +19,6 @@ class ConfigFile:
 
         :param file_path: The path to your configuration file.
         :param parser: A custom parser you'd like used for your config file.
-                      It must be a concrete implementation of BaseParser.
 
         :raises ValueError: If the specified file path does not have an extension
                             that is supported or it is a directory.
@@ -27,7 +28,7 @@ class ConfigFile:
         self.parser = self.__determine_parser(file_path, parser)
 
     @staticmethod
-    def __create_config_path(file_path, original: bool = False) -> str:
+    def __create_config_path(file_path: Type[Union[str, PurePath]], original: bool = False) -> str:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -40,11 +41,11 @@ class ConfigFile:
             file_path = ".".join(file_parts)
 
         if Path(file_path).is_dir():
-            raise ValueError(f"The specified config file ({file_path}) is a directory.")
+            raise ValueError("The specified config file ({}) is a directory.".format(file_path))
 
         return file_path
 
-    def __determine_parser(self, file_path, parser: BaseParser):
+    def __determine_parser(self, file_path: Type[Union[str, PurePath]], parser: Type[BaseParser]) -> BaseParser:
         if isinstance(file_path, PurePath):
             file_path = str(file_path)
 
@@ -58,8 +59,7 @@ class ConfigFile:
             return JsonParser(self.contents)
         else:
             raise ValueError(
-                f"File path contains an unsupported or "
-                f"unrecognized file type: {file_path}"
+                "File path contains an unsupported or unrecognized file type: {}".format(file_path)
             )
 
     def __read_config_file(self):
@@ -134,7 +134,7 @@ class ConfigFile:
 
         if not Path(original_file_path).exists():
             raise OSError(
-                f"The {original_file_path} file to restore to does not exist."
+                "The {} file to restore to does not exist.".format(original_file_path)
             )
 
         Path(self.path).expanduser().unlink()

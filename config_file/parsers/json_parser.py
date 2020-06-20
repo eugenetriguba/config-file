@@ -7,9 +7,10 @@ from nested_lookup import (
     nested_update,
 )
 
-from config_file.parsers.base_parser import BaseParser, ParsingError
+from config_file.parsers.base_parser import BaseParser
 from config_file.parsers.parse_value import parse_value
 from config_file.utils import split_on_dot
+from config_file.exceptions import ParsingError
 
 
 class JsonParser(BaseParser):
@@ -34,7 +35,7 @@ class JsonParser(BaseParser):
         >>> { "key2": "foo", "key1": "bar" }
         parser.get('key1.key2')
         >>> "foo"
-        parser.get('key1', get_all=True)
+        parser.get('key1', all=True)
         >>> [{ "key2": "foo", "key1": "bar" }, "bar"]
     """
 
@@ -48,7 +49,7 @@ class JsonParser(BaseParser):
         except json.decoder.JSONDecodeError as error:
             raise ParsingError(error)
 
-    def get(self, key: str, parse_types: bool = False, get_all: bool = False):
+    def get(self, key: str, parse_types: bool = False, all: bool = False):
         """
         Retrieve values using a dot syntax.
 
@@ -56,14 +57,14 @@ class JsonParser(BaseParser):
 
         :param parse_types: Whether you'd like the type parsed into its native one.
 
-        :param get_all: Specify whether you'd like to recursively receive
+        :param all: Specify whether you'd like to recursively receive
         all values that match the given key. Returned as a list.
         e.g. 'foo' would retrieve all values that have the key 'foo', anywhere
         in the json.
 
         :return: the value of the given key
         """
-        if get_all:
+        if all:
             result = nested_lookup(key, self.parsed_content)
         elif "." in key:
             split_keys = split_on_dot(key)
@@ -77,15 +78,15 @@ class JsonParser(BaseParser):
                     result = result[key]
             except TypeError:
                 raise ParsingError(
-                    f"Cannot get {key} because {key_for_error} is not subscriptable."
+                    "Cannot get {} because {} is not subscriptable.".format(key, key_for_error)
                 )
         else:
             result = self.parsed_content[key]
 
         return parse_value(result) if parse_types else result
 
-    def set(self, key: str, value, set_all: bool = False):
-        if set_all:
+    def set(self, key: str, value, all: bool = False):
+        if all:
             nested_update(self.parsed_content, key, value, in_place=True)
         elif "." in key:
             indexes = split_on_dot(key)
@@ -103,8 +104,8 @@ class JsonParser(BaseParser):
 
         return True
 
-    def delete(self, key, delete_all: bool = False):
-        if delete_all:
+    def delete(self, key, all: bool = False):
+        if all:
             nested_delete(self.parsed_content, key, in_place=True)
         elif "." in key:
             indexes = split_on_dot(key)
