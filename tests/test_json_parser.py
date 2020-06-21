@@ -6,155 +6,124 @@ from config_file.exceptions import ParsingError
 from config_file.parsers.json_parser import JsonParser
 
 
-@pytest.mark.parametrize("test_json", ["{'test': }", "[section]\nblah = value\n\n"])
-def test_invalid_json(test_json):
+def test_invalid_json(templated_parser):
     with pytest.raises(ParsingError):
-        JsonParser(test_json)
+        templated_parser("json", "invalid")
 
 
-def test_that_json_parser_can_stringify():
-    json_str = '{"test": 5, "blah": true}'
-    parser = JsonParser(json_str)
-    assert parser.stringify() == json_str
-
-
-@pytest.mark.parametrize(
-    "test_input,expected_result",
-    [
-        ("glossary", True),
-        ("title", True),
-        ("example glossary", False),
-        ("GlossDiv", True),
-        ("title", True),
-        ("5", False),
-        ("GlossList", True),
-        ("GlossEntry", True),
-        ("ID", True),
-        ("false", False),
-        ("GlossTerm", True),
-        ("Standard Generalized Markup Language", False),
-        ("Acronym", True),
-        ("ISO 8879:1986", False),
-        ("GlossDef", True),
-        ("para", True),
-        (
-            "A meta-markup language, used to create markup languages "
-            "such as DocBook.",
-            False,
-        ),
-        ("GlossSeeAlso", True),
-        ("GML", False),
-        ("XML", False),
-        ("GlossSee", True),
-        ("5.5", False),
-    ],
-)
-def test_that_json_parser_can_find_keys(test_input, expected_result):
-    test_json = {
-        "glossary": {
-            "title": "example glossary",
-            "GlossDiv": {
-                "title": "5",
-                "GlossList": {
-                    "GlossEntry": {
-                        "ID": "false",
-                        "SortAs": "SGML",
-                        "GlossTerm": "Standard Generalized Markup Language",
-                        "Acronym": "SGML",
-                        "Abbrev": "ISO 8879:1986",
-                        "GlossDef": {
-                            "para": "A meta-markup language, used to create markup "
-                            + "languages such as DocBook.",
-                            "GlossSeeAlso": ["GML", "XML"],
-                        },
-                        "GlossSee": "5.5",
-                    }
-                },
-            },
-        }
-    }
-
-    parser = JsonParser(json.dumps(test_json))
-    assert parser.has(test_input) == expected_result
+def test_that_json_parser_can_stringify(template_and_parser):
+    template, parser = template_and_parser("json")
+    assert parser.stringify() == template.read_text()
 
 
 @pytest.mark.parametrize(
-    "test_json, section_key, parse_type, expected_result",
+    "key",
     [
-        (
-            {"glossary": {"title": "example glossary"}},
-            "glossary.title",
-            False,
-            "example glossary",
-        ),
-        (
-            {"glossary": {"title": "example glossary"}},
-            "glossary.title",
-            True,
-            "example glossary",
-        ),
-        (
-            {"glossary": {"title": "example glossary", "dict": {"blah": "5"}}},
-            "glossary.dict",
-            False,
-            {"blah": "5"},
-        ),
-        (
-            {"glossary": {"title": "example glossary", "dict": {"blah": "5"}}},
-            "glossary.dict",
-            True,
-            {"blah": 5},
-        ),
-        (
-            {
-                "glossary": {
-                    "title": "example glossary",
-                    "dict": {"blah": "5", "second": {"third": "5"}},
-                }
-            },
-            "glossary.dict",
-            True,
-            {"blah": 5, "second": {"third": 5}},
-        ),
+        "glossary",
+        "title",
+        "GlossDiv",
+        "title",
+        "GlossList",
+        "GlossEntry",
+        "ID",
+        "GlossTerm",
+        "Acronym",
+        "GlossDef",
+        "para",
+        "GlossSeeAlso",
+        "GlossSee",
     ],
 )
-def test_that_json_parser_can_get_keys(
-    test_json, section_key, parse_type, expected_result
+def test_that_json_parser_can_find_keys(key, templated_parser):
+    parser = templated_parser("json", "glossary")
+    assert parser.has(key)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "str_value",
+        "5",
+        "false",
+        "Standard Generalized Markup Language",
+        "ISO 8879:1986",
+        "A meta-markup language, used to create markup languages such as DocBook.",
+        "GML",
+        "XML",
+        "5.5",
+    ],
+)
+def test_that_json_parser_does_not_find_value_with_has(value, templated_parser):
+    parser = templated_parser("json", "glossary")
+    assert not parser.has(value)
+
+
+@pytest.mark.parametrize(
+    "key, value",
+    [
+        ("glossary.title", "str_value"),
+        ("glossary.dict", {"key": "str_value", "str_number": "5"}),
+    ],
+)
+def test_that_json_parser_can_get_keys_without_parsing_types(
+    templated_parser, key, value
 ):
-    parser = JsonParser(json.dumps(test_json))
-    assert parser.get(section_key, parse_types=parse_type) == expected_result
+    parser = templated_parser("json", "glossary")
+    assert parser.get(key) == value
+
+
+@pytest.mark.parametrize(
+    "key, value",
+    [
+        ("glossary.title", "str_value"),
+        ("glossary.dict.str_number", 5),
+        (
+            "glossary.dict_within_dict",
+            {
+                "str_number": 16,
+                "another_dict": {"str_bool": False, "list_of_values": [5, False, True]},
+            },
+        ),
+    ],
+)
+def test_that_json_parser_can_get_keys_with_parsing_types(templated_parser, key, value):
+    parser = templated_parser("json", "glossary")
+    assert parser.get(key, parse_types=True) == value
 
 
 @pytest.mark.parametrize(
     "key, value", [("zip", "zipzip"), ("foo.bar.foobar", 5), ("foo.baz", "bar")]
 )
-def test_that_json_parser_can_set_keys(key, value):
-    test_json = {
-        "foo": {
-            "baz": 5,
-            "boo": "4.4",
-            "bar": {"test_key": "foobar", "foobar": {"test": True}},
-        },
-        "bar": {"baz": 10},
-        "zip": "piz",
-    }
+def test_that_json_parser_can_set_keys(templated_parser, key, value):
+    parser = templated_parser("json")
 
-    parser = JsonParser(json.dumps(test_json))
+    # test_json = {
+    #     "foo": {
+    #         "baz": 5,
+    #         "boo": "4.4",
+    #         "bar": {"test_key": "foobar", "foobar": {"test": True}},
+    #     },
+    #     "bar": {"baz": 10},
+    #     "zip": "piz",
+    # }
+    # parser = JsonParser(json.dumps(test_json))
+
     parser.set(key, value)
     assert parser.get(key) == value
 
 
 @pytest.mark.parametrize(
-    "key, test_json, expected_json",
-    [
-        ("foo", {"foo": "bar", "baz": 5}, {"baz": 5}),
-        ("foo.bar", {"foo": {"bar": 5}}, {"foo": {}}),
-    ],
+    "key",
+    ["glossary", "dict_within_dict", "glossary.GlossDiv.GlossList.GlossEntry.Abbrev"],
 )
-def test_that_json_parser_can_delete_keys(key, test_json, expected_json):
-    parser = JsonParser(json.dumps(test_json))
+def test_that_json_parser_can_delete_keys(
+    template_and_parser, key, test_json, expected_json
+):
+    template, parser = template_and_parser("json", "glossary")
+
     parser.delete(key)
-    assert parser.stringify() == json.dumps(expected_json)
+
+    assert parser.stringify() == template.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize(

@@ -5,61 +5,98 @@ import pytest
 
 from config_file import BaseParser, ConfigFile
 
-
-@pytest.mark.parametrize(
-    "file_contents, file_name", [("[calendar]\nsunday_index = 0\n\n", "config.ini")]
-)
-def test_that_config_file_initializes_correctly(tmp_path, file_contents, file_name):
-    temp = tmp_path / file_name
-    temp.write_text(file_contents)
-
-    config = ConfigFile(temp)
-    assert config.path == temp
-    assert config.contents == temp.read_text()
-    assert isinstance(config.parser, BaseParser)
+SUPPORTED_FILE_TYPES = ["ini", "json"]
 
 
-@pytest.mark.parametrize(
-    "file_contents, file_name, original_file_name",
-    [("[calendar]\nsunday_index = 0\n\n", "config.ini", "config.original.ini")],
-)
+@pytest.fixture(params=SUPPORTED_FILE_TYPES)
+def template_and_config_file(request, template_file):
+    def func(template_name: str = "default", parser: BaseParser = None):
+        template = template_file(request.param, template_name)
+        return (template, ConfigFile(template, parser=parser))
+
+    return func
+
+
+@pytest.fixture
+def templated_config_file(template_and_config_file):
+    def func(template_name: str = "default", parser: BaseParser = None):
+        return template_and_config_file(template_name, parser)[1]
+
+    return func
+
+
+def test_that_config_file_is_initialized_correctly(template_and_config_file):
+    template_file, config = template_and_config_file()
+
+    assert config.path == template_file
+    assert config.stringify() == template_file.read_text()
+    assert isinstance(config._ConfigFile__parser, BaseParser)
+
+
+def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
+    config_name = "temp.ini"
+    config_path = "~/" + config_name
+
+    try:
+        Path(config_path).expanduser().touch()
+        assert ConfigFile(config_path).path == Path.home() / config_name
+    finally:
+        Path(config_path).expanduser().unlink()
+
+
+@pytest.mark.skip(msg="needs fixing up")
+@pytest.mark.parametrize("path", ["", "invalid", "invalid.conf"])
+def test_invalid_config_paths(path):
+    with pytest.raises(ValueError):
+        ConfigFile(path)
+
+
+def test_that_config_file_can_save(template_and_config_file):
+    template_file, config = template_and_config_file()
+
+    config.set("header_one.number_key", 25)
+    config.save()
+
+    assert config.stringify() == template_file.read_text()
+
+
 def test_that_config_file_can_restore_the_original(
-    tmpdir, file_contents, file_name, original_file_name
+    templated_config_file, template_original_file
 ):
-    config_path = Path(tmpdir / file_name)
-    config_path.write_text(file_contents, encoding="utf-8")
-    original_config_path = Path(tmpdir / original_file_name)
-    original_config_path.write_text(file_contents, encoding="utf-8")
+    config = templated_config_file()
+    original_file = template_original_file(config.path)
 
-    config = ConfigFile(config_path)
-    config.set("calendar.sunday_index", 5)
+    config.set("header_one.number_key", 5)
     config.restore_original()
 
-    assert config.stringify() == ConfigFile(original_config_path).stringify()
+    assert config.stringify() == original_file.read_text()
 
 
-def test_missing_config_files_during_restore(tmpdir):
-    config_path = Path(tmpdir / "config.ini")
-    config_path.write_text("")
-    config = ConfigFile(config_path)
+def test_missing_config_file_during_restore(templated_config_file):
+    config = templated_config_file()
 
     with pytest.raises(FileNotFoundError) as error:
-        config.restore_original(original_file_path="jhklasdfhjlkasjej")
+        config.restore_original()
 
     assert "file to restore to does not exist" in str(error)
 
 
 @pytest.mark.parametrize(
-    "file_contents, file_name", [("[calendar]\nsunday_index = 0\n\n", "config.ini")]
+    "file_extension, file_contents, section_key, expected_result",
+    [
+        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.sunday_index", True),
+        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.blah", False),
+        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar", True),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "calendar", True),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "blah", False),
+        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "sunday_index", True),
+    ],
 )
-def test_that_config_file_can_save(tmpdir, file_contents, file_name):
-    config_path = tmpdir / file_name
-    config_path.write_text(file_contents, encoding="utf-8")
-
-    config = ConfigFile(str(config_path))
-    config.set("calendar.sunday_index", 1)
-    config.save()
-    assert config.stringify() == Path(config_path).read_text(encoding="utf-8")
+def test_that_config_file_can_find_sections_and_keys(
+    tmp_file, file_extension, file_contents, section_key, expected_result
+):
+    config = ConfigFile(tmp_file(f"file.{file_extension}", file_contents))
+    assert config.has(section_key) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -124,7 +161,7 @@ def test_that_config_file_can_get(
 ):
     config_path = tmpdir / file_name
     config_path.write_text(file_contents, encoding="utf-8")
-    config = ConfigFile(str(config_path))
+    config = ConfigFile(config_path)
 
     ret_val = config.get(section_key, parse_types=parse_type, default=default)
     if return_type is not None:
@@ -133,67 +170,21 @@ def test_that_config_file_can_get(
         assert ret_val == value
 
 
-@pytest.mark.parametrize(
-    "file_extension, file_contents, section_key, expected_result",
-    [
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.sunday_index", True),
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.blah", False),
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar", True),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "calendar", True),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "blah", False),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "sunday_index", True),
-    ],
-)
-def test_that_config_file_can_find_sections_and_keys(
-    tmpdir, file_extension, file_contents, section_key, expected_result
-):
-    config_path = tmpdir / f"config.{file_extension}"
-    config_path.write_text(file_contents, encoding="utf-8")
-    config = ConfigFile(str(config_path))
-    assert config.has(section_key) == expected_result
+def test_that_config_file_can_delete(templated_config_file):
+    config = templated_config_file()
+
+    config.delete("header_one.number_key")
+
+    assert config.has("header_one.number_key") is False
 
 
-@pytest.mark.parametrize(
-    "section_key, file_name, file_contents, deleted_file_contents",
-    [
-        (
-            "calendar.sunday_index",
-            "config.ini",
-            "[calendar]\nsunday_index = 0\n\n",
-            "[calendar]\n\n",
-        ),
-        (
-            "calendar.sunday_index",
-            "config.json",
-            json.dumps({"calendar": {"sunday_index": 0}}),
-            json.dumps({"calendar": {}}),
-        ),
-    ],
-)
-def test_that_config_file_can_delete(
-    tmpdir, section_key, file_name, file_contents, deleted_file_contents
-):
-    config_path = tmpdir / file_name
-    config_path.write_text(file_contents, encoding="utf-8")
-    config = ConfigFile(str(config_path))
-    config.delete(section_key)
-    assert config.stringify() == deleted_file_contents
-
-
-@pytest.mark.parametrize(
-    "path, is_dir", [("invalid", False), ("invalid", True), ("invalid.conf", False)]
-)
-def test_invalid_config_paths(tmpdir, path, is_dir):
-    with pytest.raises(ValueError):
-        temp_path = tmpdir / path
-        temp_path.write("")
-        ConfigFile(str(tmpdir)) if is_dir else ConfigFile(str(temp_path))
-
-
-def test_that_custom_parser_can_be_used(tmpdir):
+def test_that_custom_parser_can_be_used(template_and_config_file):
     class CustomParser(BaseParser):
         def __init__(self, file_contents):
             super().__init__(file_contents)
+
+        def parse(self, file_contents: str):
+            return file_contents
 
         def get(self, key, parse_types=True):
             return key
@@ -210,27 +201,11 @@ def test_that_custom_parser_can_be_used(tmpdir):
         def stringify(self) -> str:
             return str(self.parsed_content)
 
-        def parse(self, file_contents: str):
-            return file_contents
+    template_file, config = template_and_config_file(parser=CustomParser)
 
-    config_path = tmpdir / "config.conf"
-    config_path.write_text("", encoding="utf-8")
-    config = ConfigFile(str(config_path), parser=CustomParser)
-
-    assert isinstance(config.parser, CustomParser)
+    assert isinstance(config._ConfigFile__parser, CustomParser)
     assert config.get("key") == "key"
     assert config.set("key", "value") == ("key", "value")
     assert config.delete("section_key") == "section_key"
     assert config.has("blah")
-    assert config.stringify() == ""
-
-
-def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
-    config_name = "fjlajbkfdajfdioanfks.ini"
-    config_path = "~/" + config_name
-
-    try:
-        Path(config_path).expanduser().touch()
-        assert ConfigFile(config_path).path == Path.home() / config_name
-    finally:
-        Path(config_path).expanduser().unlink()
+    assert config.stringify() == template_file.read_text()

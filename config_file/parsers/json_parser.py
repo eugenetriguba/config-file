@@ -124,7 +124,7 @@ class JsonParser(BaseParser):
         return True
 
     def stringify(self) -> str:
-        return json.dumps(self.parsed_content)
+        return json.dumps(self.parsed_content, indent=4)
 
     def has(self, search_key: str) -> bool:
         return get_occurrence_of_key(self.parsed_content, key=search_key) > 0

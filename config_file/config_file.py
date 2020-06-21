@@ -4,10 +4,8 @@ from shutil import copyfile
 from typing import Any, Type, Union
 
 from config_file.exceptions import ParsingError
-from config_file.parsers.base_parser import BaseParser
-from config_file.parsers.ini_parser import IniParser
-from config_file.parsers.json_parser import JsonParser
-from config_file.utils import read_file, split_on_dot
+from config_file.parsers import BaseParser, IniParser, JsonParser
+from config_file.utils import create_config_path, read_file, split_on_dot
 
 
 class ConfigFile:
@@ -30,36 +28,13 @@ class ConfigFile:
         if type(file_path) is not Path:
             file_path = Path(file_path)
 
-        self.__path = self.__create_config_path(file_path)
+        self.__path = create_config_path(file_path)
         self.__contents = read_file(self.__path)
         self.__parser = self.__determine_parser(file_path, parser)
 
     @property
     def path(self) -> Type[PurePath]:
         return self.__path
-
-    @property
-    def contents(self) -> str:
-        return self.__contents
-
-    @property
-    def parser(self) -> Type[BaseParser]:
-        return self.__parser
-
-    @staticmethod
-    def __create_config_path(file_path: Type[PurePath], original: bool = False) -> str:
-        if len(file_path.parts) >= 1 and file_path.parts[0] == "~":
-            return file_path.expanduser()
-
-        if original:
-            file_parts = split_on_dot(file_path, only_last_dot=True)
-            file_parts.insert(-1, "original")
-            file_path = ".".join(file_parts)
-
-        if Path(file_path).is_dir():
-            raise ValueError(f"The specified config file ({file_path}) is a directory.")
-
-        return file_path
 
     def __determine_parser(
         self, file_path: Type[PurePath], parser: Type[BaseParser] = None
@@ -149,7 +124,7 @@ class ConfigFile:
         :raises SameFileError: If self.path and original_file_path are the same file.
         """
         if original_file_path is None:
-            original_file_path = self.__create_config_path(self.__path, original=True)
+            original_file_path = create_config_path(self.__path, original=True)
 
         if not Path(original_file_path).exists():
             raise FileNotFoundError(

@@ -1,0 +1,35 @@
+{
+    "glossary": {
+        "title": "str_value",
+        "GlossDiv": {
+            "title": "5",
+            "GlossList": {
+                "GlossEntry": {
+                    "ID": "false",
+                    "SortAs": "SGML",
+                    "GlossTerm": "Standard Generalized Markup Language",
+                    "Acronym": "SGML",
+                    "Abbrev": "ISO 8879:1986",
+                    "GlossDef": {
+                        "para": "A meta-markup language, used to create markup languages such as DocBook.",
+                        "GlossSeeAlso": ["GML", "XML"]
+                    },
+                    "GlossSee": "5.5"
+                }
+            }
+        },
+        "dict": {
+            "key": "str_value",
+            "str_number": "5"
+        },
+        "dict_within_dict": {
+            "str_number": "16",
+            "another_dict": {
+                "str_bool": "false",
+                "list_of_values": [
+                    "5", "false", "trUe"
+                ]
+            }
+        }
+    }
+}
