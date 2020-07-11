@@ -1,6 +1,6 @@
 import pytest
 
-from config_file import BaseParser
+from config_file.parsers import BaseParser
 
 
 class ConcreteParser(BaseParser):

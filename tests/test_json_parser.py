@@ -3,7 +3,7 @@ import json
 import pytest
 
 from config_file.exceptions import ParsingError
-from config_file.parsers.json_parser import JsonParser
+from config_file.parsers import JsonParser
 
 
 def test_invalid_json(templated_parser):

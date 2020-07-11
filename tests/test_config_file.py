@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from config_file import BaseParser, ConfigFile
+from config_file.config_file import ConfigFile
+from config_file.parsers import BaseParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json"]
 
