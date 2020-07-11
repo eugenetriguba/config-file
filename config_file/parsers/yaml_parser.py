@@ -1,0 +1,4 @@
+
+
+class YamlParser:
+    pass
