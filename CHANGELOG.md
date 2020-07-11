@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-Added
+### Added
 
 - A generic `ConfigFileError`.
 - More type hints from `typings` have been added to `ConfigFile` for better type information.
+- `YamlParser` and `TomlParser`. This means `ConfigFile` can now accept yaml and toml files,
+  as long as `PyYaml` is also installed if you're trying to use a yaml file and `toml` is
+  installed if you're trying to use a toml file.
 
-Changed
+### Changed
 
 - `ParsingError` now inherits from `ConfigFileError` rather than `Exception`.
 - Errors have been moved to `exceptions.py`.
@@ -26,7 +29,7 @@ Changed
 
 ## 0.10.0 - 2020-05-10
 
-Changed
+### Changed
 
 - `toml` and `pyyaml` are now optional extra dependencies. This allows you to
   not have to install them if you aren't using them.
@@ -40,7 +43,7 @@ Changed
   features is worth it or see if there are ways to work around it with
   configparser that are ideal.
 
-Fixed
+### Fixed
 
 - You can now specify a default and still coerce your return type. Previously,
   if you specified a default, there was no logic in that branch to coerce your
@@ -48,7 +51,7 @@ Fixed
 
 ## 0.9.0 - 2020-02-09
 
-Added
+### Added
 
 - `default` optional parameter to the `get()` method of `ConfigFile`.
   The allows a default value to be fallen back to if the given key is missing.
@@ -57,7 +60,7 @@ Added
   allows you to coerce the return type to one of your choosing by feeding it
   the return value.
 
-Changed
+### Changed
 
 - Automatic type parsing is now off by default. This is because of the addition of
   the `return_type` optional parameter. After using the package more, I think
@@ -71,14 +74,14 @@ Changed
 
 ## 0.8.0 - 2020-02-02
 
-Added
+### Added
 
 - More type hints to `ConfigFile` and `IniParser`.
 - `nested_lookup` dependency to help with modifying deeply nested structures
   (JSON + YAML)
 - `JsonParser` so you can now specify `.json` files to be parsed.
 
-Changed
+### Changed
 
 - The original content of the passed in file is now called `content`
   instead of `contents`. This is for consistency since the parsed version is
@@ -86,13 +89,13 @@ Changed
 
 ## 0.7.0 - 2020-01-27
 
-Fixed
+### Fixed
 
 - Support for using custom parsers with `ConfigFile` with the `parser` optional
   argument. This was technically supported before, but it was not tested and found
   to not actually use the passed in parser once tested.
 
-Changed
+### Changed
 
 - The `reset()` method on `ConfigFile` is now called `restore_original()`.
   The behavior is the same. This was done to better describe what exactly that method
@@ -103,19 +106,19 @@ Changed
 
 ## 0.6.0 - 2020-01-24
 
-Changed
+### Changed
 
 - Bumped down python version requirement to 3.6 and now test 3.6, 3.7, and 3.8 on CI.
 
 ## 0.5.0 - 2020-01-19
 
-Added
+### Added
 
 - Support for retrieving entire sections as a `dict` with `get()`.
 
 ## 0.4.0 - 2020-01-19
 
-Added
+### Added
 
 - `reset()` and `save()` methods to `ConfigFile`. This allows you to reset your
   configuration file to an "original state," given the original config file path.
@@ -128,12 +131,12 @@ Added
 
 ## 0.3.3 - 2020-01-18
 
-Changed
+### Changed
 
 - `_split_on_dot` is no longer in base parser (now in a utils file). Also, the default
   behavior is now to split on every dot and split on only the last dot if specified
 
-Fixed
+### Fixed
 
 - `ConfigFile` was trying to use `_split_on_dot`, but it no longer inherited from base parser.
 
@@ -144,13 +147,13 @@ Fixed
 
 ## 0.3.1 - 2020-01-17
 
-Fixed
+### Fixed
 
 - `isinstance` call for `BaseParser` to be correctly used.
 
 ## 0.3.0 - 2020-01-17
 
-Added
+### Added
 
 - Abstract base parser as a contract for concrete file format parser implementations.
 
@@ -166,24 +169,10 @@ Added
 
 ## 0.2.0 - 2020-01-04
 
-Added
+### Added
 
 - Parsing of strings to their native values
 
 ## 0.1.0 - 2020-01-04
 
-Added
-
-- Created the config_file package with only the version inside it
-
-- toml and pyyaml to dependencies
-
-- Pre-commit pipeline with autoflake, isort, black, and flake8
-
-- MIT license
-
-- Contributing guidelines
-
-- bump2version for easily upgrading versions of config file
-
-- pytest to dev dependencies for testing later on
+  - Initial Release
