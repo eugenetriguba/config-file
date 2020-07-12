@@ -12,7 +12,7 @@ class BaseParser(ABC):
     """
 
     @abstractmethod
-    def __init__(self, file_contents: str):
+    def __init__(self, file_contents: str) -> None:
         """
         All parsers will take in the file as a string, parse
         them internally to their own representation that they
@@ -26,7 +26,7 @@ class BaseParser(ABC):
         self.parsed_content = self.parse(self.content)
 
     @abstractmethod
-    def get(self, key: str, parse_types: bool = False, all: bool = False):
+    def get(self, key: str, parse_types: bool = False, all: bool = False) -> Any:
         """
         Retrieve the value of a key in its native type.
         This means the string 'true' will be parsed back as the
