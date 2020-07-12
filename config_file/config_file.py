@@ -25,7 +25,7 @@ class ConfigFile:
         :raises ValueError: If the specified file path does not have an extension
                             that is supported or it is a directory.
         """
-        if type(file_path) is not Path:
+        if not isinstance(file_path, Path):
             file_path = Path(file_path)
 
         self.__path = create_config_path(file_path)
@@ -38,7 +38,7 @@ class ConfigFile:
 
     def __determine_parser(
         self, file_path: Type[PurePath], parser: Type[BaseParser] = None
-    ) -> BaseParser:
+    ) -> Type[BaseParser]:
         if parser is not None and not inspect.isabstract(parser):
             return parser(self.__contents)
 
@@ -90,7 +90,7 @@ class ConfigFile:
         """Sets the value of a key."""
         return self.__parser.set(key, value)
 
-    def delete(self, section_key: str):
+    def delete(self, section_key: str) -> bool:
         """Deletes a key/value pair or entire sections."""
         return self.__parser.delete(section_key)
 
@@ -108,7 +108,7 @@ class ConfigFile:
         """
         return self.__parser.has(section_key)
 
-    def restore_original(self, original_file_path: Union[str, Type[PurePath]] = None):
+    def restore_original(self, original_file_path: Union[str, Type[PurePath]] = None) -> bool:
         """
         Restores the original the config file by deleting it and copying the original
         back in its place. The internal contents of this config file object are then set
@@ -133,7 +133,7 @@ class ConfigFile:
 
         self.__path.expanduser().unlink()
         copyfile(original_file_path, self.__path)
-        self.__contents = read_file(self.path)
+        self.__contents = read_file(self.__path)
         self.__parser.parsed_content = self.__parser.parse(self.__contents)
 
         return True
