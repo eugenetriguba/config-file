@@ -17,7 +17,7 @@ JSON, YAML, or TOML. For the time being, it only supports INI and JSON.
 
 ## Installation
 
-Config File is available to download through PyPI using pip.
+Config File is available to download through PyPI.
 
 ```bash
 $ pip install config-file
@@ -27,6 +27,24 @@ If you want to manipulate YAML and TOML, you'll want to download the extras as w
 
 ```bash
 $ pip install config-file[yaml, toml]
+```
+
+You can also use Poetry.
+
+```bash
+$ poetry install config-file -E yaml -E toml
+```
+
+If you use ZSH as your shell, brackets (`[]`) are used for glob matching
+and you'll have to put the package name in quotes if you're downloading
+the extras too.
+
+```zsh
+% pip install 'config-file[yaml, toml]'
+
+OR
+
+% noglob pip install config-file[yaml, toml]
 ```
 
 ## Usage

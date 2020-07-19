@@ -1,0 +1,11 @@
+__pycache__*
+.pytest_cache*
+*.pyc
+.coverage
+build/*
+dist/*
+nested_lookup.egg-info/*
+.cache
+.vscode
+git_commit.sh
+venv
