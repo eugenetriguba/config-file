@@ -23,28 +23,18 @@ Config File is available to download through PyPI.
 $ pip install config-file
 ```
 
+### Installing Extras
+
 If you want to manipulate YAML and TOML, you'll want to download the extras as well.
 
 ```bash
 $ pip install config-file[yaml, toml]
 ```
 
-You can also use Poetry.
+You can also use [Poetry](https://python-poetry.org).
 
 ```bash
 $ poetry install config-file -E yaml -E toml
-```
-
-If you use ZSH as your shell, brackets (`[]`) are used for glob matching
-so you can work around that if installing extras in one of the following
-ways.
-
-```zsh
-% pip install 'config-file[yaml, toml]'
-```
-
-```zsh
-% noglob pip install config-file[yaml, toml]
 ```
 
 ## Usage
