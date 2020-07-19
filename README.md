@@ -36,14 +36,14 @@ $ poetry install config-file -E yaml -E toml
 ```
 
 If you use ZSH as your shell, brackets (`[]`) are used for glob matching
-and you'll have to put the package name in quotes if you're downloading
-the extras too.
+so you can work around that if installing extras in one of the following
+ways.
 
 ```zsh
 % pip install 'config-file[yaml, toml]'
+```
 
-OR
-
+```zsh
 % noglob pip install config-file[yaml, toml]
 ```
 
