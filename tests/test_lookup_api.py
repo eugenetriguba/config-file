@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from nested_lookup import nested_lookup, nested_update
-from nested_lookup import nested_delete, nested_alter
+from config_file.nested_lookup import nested_lookup, nested_update
+from config_file.nested_lookup import nested_delete, nested_alter
 
 
 class BaseLookUpApi(TestCase):

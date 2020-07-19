@@ -1,5 +1,3 @@
-from six import iteritems
-
 from collections import defaultdict
 
 
@@ -29,7 +27,7 @@ def _nested_lookup(key, document, wild=False, with_keys=False):
                 yield result
 
     if isinstance(document, dict):
-        for k, v in iteritems(document):
+        for k, v in document.items():
             if key == k or (wild and _is_case_insensitive_substring(key, k)):
                 if with_keys:
                     yield k, v
@@ -61,7 +59,7 @@ def get_all_keys(dictionary):
             for list_items in document:
                 recrusion(document=list_items)
         elif isinstance(document, dict):
-            for key, value in iteritems(document):
+            for key, value in document.items():
                 result_list.append(key)
                 recrusion(document=value)
         return
@@ -148,7 +146,7 @@ def _recursion(dictionary, item, keyword, occurrence, with_values=False):
         occurrence[0] += list(dictionary.values()).count(keyword)
         if with_values:
             values_list.append(dictionary)
-    for key, value in iteritems(dictionary):
+    for key, value in dictionary.items():
         if isinstance(value, dict):
             _recursion(value, item, keyword, occurrence, with_values)
         elif isinstance(value, list):

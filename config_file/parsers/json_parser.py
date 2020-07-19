@@ -1,6 +1,6 @@
 import json
 
-from nested_lookup import (
+from config_file.nested_lookup import (
     get_occurrence_of_key,
     nested_delete,
     nested_lookup,
@@ -8,8 +8,7 @@ from nested_lookup import (
 )
 
 from config_file.exceptions import ParsingError
-from config_file.parsers.base_parser import BaseParser
-from config_file.parsers.parse_value import parse_value
+from config_file.parsers import BaseParser, parse_value
 from config_file.utils import split_on_dot
 
 
@@ -70,15 +69,14 @@ class JsonParser(BaseParser):
             split_keys = split_on_dot(key)
             result = self.parsed_content
 
-            # Used so we can more precisely specify what key is causing the error.
-            key_for_error = None
+            key_causing_error = None
             try:
                 for key in split_keys:
-                    key_for_error = key
+                    key_causing_error = key
                     result = result[key]
             except TypeError:
                 raise ParsingError(
-                    f"Cannot get {key} because {key_for_error} is not subscriptable."
+                    f"Cannot get {key} because {key_causing_error} is not subscriptable."
                 )
         else:
             result = self.parsed_content[key]

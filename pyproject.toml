@@ -5,9 +5,10 @@ description = "Modify configuration files of various formats with the same simpl
 authors = ["Eugene Triguba <eugenetriguba@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/eugenetriguba/config_file"
-keywords = ["configuration", "config file", "ini", "json", "toml", "yaml"]
+documentation = "https://config-file.readthedocs.io/"
+keywords = ["configuration", "ini", "json", "toml", "yaml"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -27,7 +28,6 @@ pytest = "poetry run pytest tests/"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-nested-lookup = "^0.2.21"
 toml = { version = "^0.10.0", optional = true }
 pyyaml = { version = "^5.3.1", optional = true }
 
@@ -59,7 +59,7 @@ include = '\.pyi?$'
 line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
-known_third_party = ["nested_lookup", "pytest"]
+known_third_party = ["pytest", "pyyaml", "toml"]
 known_first_party = ["config_file"]
 
 [build-system]

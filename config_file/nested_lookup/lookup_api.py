@@ -1,7 +1,7 @@
 import copy
 import warnings
-from six import iteritems
-from nested_lookup import nested_lookup
+
+from .nested_lookup import nested_lookup
 
 
 def nested_delete(document, key, in_place=False):
@@ -26,7 +26,7 @@ def _nested_delete(document, key):
     elif isinstance(document, dict):
         if document.get(key):
             del document[key]
-        for dict_key, dict_value in iteritems(document):
+        for dict_key, dict_value in document.items():
             _nested_delete(document=dict_value, key=key)
     return document
 
@@ -34,16 +34,21 @@ def _nested_delete(document, key):
 def nested_update(document, key, value, in_place=False, treat_as_element=True):
     """
     Method to update a key->value pair in a nested document
+
     Args:
         document: Might be List of Dicts (or) Dict of Lists (or)
             Dict of List of Dicts etc...
+
         key: Key to update the value
+
         value: Value to set
+
         in_place (bool):
             True: modify the dict in place;
             False: create a deep copy of the dict and modify it
             Defaults to False
-        treat_list_element (bool):
+
+        treat_as_element (bool):
             True: if a list is provided as "value", the function trys
                 to match the list elements to the occurences of the key.
                 If the key occures more often than the provided list has
@@ -51,6 +56,7 @@ def nested_update(document, key, value, in_place=False, treat_as_element=True):
             False: the provided list is treated as one scalar value and
                 will be set as value to every key that matches.
             Defaults to True (because of backwards portability of the package).
+
     Return:
         Returns a document that has updated key, value pair.
     """
@@ -89,7 +95,7 @@ def _nested_update(document, key, value):
                 document=list_items, key=key, value=value
             )
     elif isinstance(document, dict):
-        for dict_key, dict_value in iteritems(document):
+        for dict_key, dict_value in document.items():
             if dict_key == key:
                 document[key] = value[0]
                 if len(value) > 1:

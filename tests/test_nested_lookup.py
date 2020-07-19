@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from nested_lookup import (
+from config_file.nested_lookup import (
     nested_lookup,
     get_all_keys,
     get_occurrence_of_key,
