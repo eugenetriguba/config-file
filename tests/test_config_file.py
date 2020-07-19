@@ -4,14 +4,14 @@ from pathlib import Path
 import pytest
 
 from config_file.config_file import ConfigFile
-from config_file.parsers import BaseParser
+from config_file.parsers import AbstractParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json"]
 
 
 @pytest.fixture(params=SUPPORTED_FILE_TYPES)
 def template_and_config_file(request, template_file):
-    def func(template_name: str = "default", parser: BaseParser = None):
+    def func(template_name: str = "default", parser: AbstractParser = None):
         template = template_file(request.param, template_name)
         return (template, ConfigFile(template, parser=parser))
 
@@ -20,7 +20,7 @@ def template_and_config_file(request, template_file):
 
 @pytest.fixture
 def templated_config_file(template_and_config_file):
-    def func(template_name: str = "default", parser: BaseParser = None):
+    def func(template_name: str = "default", parser: AbstractParser = None):
         return template_and_config_file(template_name, parser)[1]
 
     return func
@@ -31,7 +31,7 @@ def test_that_config_file_is_initialized_correctly(template_and_config_file):
 
     assert config.path == template_file
     assert config.stringify() == template_file.read_text()
-    assert isinstance(config._ConfigFile__parser, BaseParser)
+    assert isinstance(config._ConfigFile__parser, AbstractParser)
 
 
 def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
@@ -180,7 +180,7 @@ def test_that_config_file_can_delete(templated_config_file):
 
 
 def test_that_custom_parser_can_be_used(template_and_config_file):
-    class CustomParser(BaseParser):
+    class CustomParser(AbstractParser):
         def __init__(self, file_contents):
             super().__init__(file_contents)
 

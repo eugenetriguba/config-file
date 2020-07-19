@@ -59,7 +59,7 @@ include = '\.pyi?$'
 line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
-known_third_party = ["pytest", "pyyaml", "toml"]
+known_third_party = ["pytest"]
 known_first_party = ["config_file"]
 
 [build-system]

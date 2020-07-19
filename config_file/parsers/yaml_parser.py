@@ -1,4 +1,5 @@
-from config_file.parsers import BaseParser
+from config_file.parsers import AbstractParser
 
-class YamlParser(BaseParser):
+
+class YamlParser(AbstractParser):
     pass

@@ -4,7 +4,7 @@ from shutil import copyfile
 from typing import Any, Type, Union
 
 from config_file.exceptions import ParsingError
-from config_file.parsers import BaseParser, IniParser, JsonParser
+from config_file.parsers import AbstractParser, IniParser, JsonParser
 from config_file.utils import create_config_path, read_file, split_on_dot
 
 
@@ -12,7 +12,7 @@ class ConfigFile:
     def __init__(
         self,
         file_path: Type[Union[str, Type[PurePath]]],
-        parser: Type[BaseParser] = None,
+        parser: Type[AbstractParser] = None,
     ) -> None:
         """
         Saves the config file path and expands it if needed, reads in
@@ -37,8 +37,8 @@ class ConfigFile:
         return self.__path
 
     def __determine_parser(
-        self, file_path: Type[PurePath], parser: Type[BaseParser] = None
-    ) -> Type[BaseParser]:
+        self, file_path: Type[PurePath], parser: Type[AbstractParser] = None
+    ) -> Type[AbstractParser]:
         if parser is not None and not inspect.isabstract(parser):
             return parser(self.__contents)
 
@@ -108,7 +108,9 @@ class ConfigFile:
         """
         return self.__parser.has(section_key)
 
-    def restore_original(self, original_file_path: Union[str, Type[PurePath]] = None) -> bool:
+    def restore_original(
+        self, original_file_path: Union[str, Type[PurePath]] = None
+    ) -> bool:
         """
         Restores the original the config file by deleting it and copying the original
         back in its place. The internal contents of this config file object are then set

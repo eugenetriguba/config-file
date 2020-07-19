@@ -3,7 +3,7 @@ from typing import Callable, Type
 
 import pytest
 
-from config_file.parsers import BaseParser, IniParser, JsonParser
+from config_file.parsers import AbstractParser, IniParser, JsonParser
 from config_file.utils import create_config_path
 
 
@@ -47,7 +47,7 @@ def template_original_file() -> Callable[[Path], Path]:
 def template_and_parser(template_file: Callable[[str, str], Path]) -> tuple:
     def func(
         file_type: str, template_name: str = "default"
-    ) -> Callable[[str, str], Type[BaseParser]]:
+    ) -> Callable[[str, str], Type[AbstractParser]]:
         test_file = template_file(file_type, template_name)
         text = test_file.read_text(encoding="utf-8")
 
@@ -60,8 +60,8 @@ def template_and_parser(template_file: Callable[[str, str], Path]) -> tuple:
 
 
 @pytest.fixture
-def templated_parser(template_and_parser) -> Callable[[str, str], Type[BaseParser]]:
-    def func(file_type: str, template_name: str = "default") -> Type[BaseParser]:
+def templated_parser(template_and_parser) -> Callable[[str, str], Type[AbstractParser]]:
+    def func(file_type: str, template_name: str = "default") -> Type[AbstractParser]:
         return template_and_parser(file_type, template_name)[1]
 
     return func

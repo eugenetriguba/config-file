@@ -2,12 +2,12 @@ import configparser
 from io import StringIO
 
 from config_file.exceptions import ParsingError
-from config_file.parsers.base_parser import BaseParser
+from config_file.parsers.abstract_parser import AbstractParser
 from config_file.parsers.parse_value import parse_value
 from config_file.utils import split_on_dot
 
 
-class IniParser(BaseParser):
+class IniParser(AbstractParser):
     def __init__(self, file_contents: str):
         """Reads in the file contents into the configparser."""
         super().__init__(file_contents)

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 
-class BaseParser(ABC):
+class AbstractParser(ABC):
     """
     The abstract base parser for all other parsers to implement.
 
@@ -24,6 +24,14 @@ class BaseParser(ABC):
         """
         self.content = file_contents
         self.parsed_content = self.parse(self.content)
+
+    @abstractmethod
+    def parse(self, file_contents: str) -> Any:
+        """
+        Parse the file_contents into an internal representation
+        the given parser can work with.
+        """
+        raise NotImplementedError
 
     @abstractmethod
     def get(self, key: str, parse_types: bool = False, all: bool = False) -> Any:
@@ -62,14 +70,6 @@ class BaseParser(ABC):
         using a section.key format.
 
         Some formats, like JSON, do not have sections and therefore,
-        it would only be checking if
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def parse(self, file_contents: str) -> Any:
-        """
-        Parse the file_contents into an internal representation
-        the given parser can work with.
+        it would only be checking if a certain key exists.
         """
         raise NotImplementedError

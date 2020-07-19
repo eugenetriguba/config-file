@@ -1,9 +1,9 @@
 import pytest
 
-from config_file.parsers import BaseParser
+from config_file.parsers import AbstractParser
 
 
-class ConcreteParser(BaseParser):
+class ConcreteParser(AbstractParser):
     def __init__(self, file_contents):
         super().__init__(file_contents)
 
@@ -31,7 +31,7 @@ class ConcreteParser(BaseParser):
 
 def test_that_base_parser_can_not_be_instantiated():
     with pytest.raises(TypeError):
-        BaseParser("")
+        AbstractParser("")
 
 
 @pytest.mark.parametrize(

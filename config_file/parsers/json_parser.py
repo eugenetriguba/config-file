@@ -1,18 +1,17 @@
 import json
 
+from config_file.exceptions import ParsingError
 from config_file.nested_lookup import (
     get_occurrence_of_key,
     nested_delete,
     nested_lookup,
     nested_update,
 )
-
-from config_file.exceptions import ParsingError
-from config_file.parsers import BaseParser, parse_value
+from config_file.parsers import AbstractParser, parse_value
 from config_file.utils import split_on_dot
 
 
-class JsonParser(BaseParser):
+class JsonParser(AbstractParser):
     """
     The JsonParser allows use of json files with ConfigFile. The syntax it
     supports is a bit more flexible than the IniParser.
@@ -76,7 +75,8 @@ class JsonParser(BaseParser):
                     result = result[key]
             except TypeError:
                 raise ParsingError(
-                    f"Cannot get {key} because {key_causing_error} is not subscriptable."
+                    f"Cannot get {key} because {key_causing_error} "
+                    "is not subscriptable."
                 )
         else:
             result = self.parsed_content[key]
