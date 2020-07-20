@@ -8,10 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -24,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install poetry codecov requests
-          poetry install -v -E toml -E yaml
+          pip install poetry codecov requests pytest pytest-cov taskipy
+          poetry install --no-dev -vvv -E toml -E yaml
 
       - name: Run tests
         run: poetry run task test_ci
