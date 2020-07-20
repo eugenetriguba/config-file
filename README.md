@@ -12,8 +12,8 @@
 ## About Config File
 
 The Config File project is designed to allow you to easily manipulate your
-configuration files with the same simple API whether they are in INI,
-JSON, YAML, or TOML. For the time being, it only supports INI and JSON.
+configuration files with the same simple API whether they are in INI, JSON,
+YAML, or TOML.
 
 ## Installation
 
@@ -52,6 +52,8 @@ third_key = true
 Then we can manipulate it as follows.
 
 ```python
+from pathlib import Path
+
 from config_file import ConfigFile
 
 ORIGINAL_CONFIG_PATH = Path("~/some-project/some-other-config-file.ini")
@@ -68,7 +70,7 @@ print(config.get("section.first_key", return_type=int))
 >>> 5
 
 # This holds true when we retrieve entire sections as well. However, we can
-# also recursively parse the entire section is desired.
+# also recursively parse the entire section if desired.
 print(config.get("section"))
 >>> {'first_key': '5', 'second_key': 'blah', 'third_key': 'true'}
 print(config.get("section", parse_types=True))
@@ -80,34 +82,28 @@ print(config.get("section.unknown", default=False))
 >>> False
 
 # Setting, deleting, and checking if a key exists is just as easy.
-print(config.set("section.first_key", 10))
->>> True
-
-print(config.delete("section.third_key"))
->>> True
+config.set("section.first_key", 10)
+config.delete("section.third_key")
 
 print(config.has("section.third_key"))
 >>> False
 
 # We can also convert the entire configuration file to a string.
 print(config.stringify())
->>> '[section]\nfirst_key = 5\nsecond_key = blah\nthird_key = true\n\n'
+>>> '[section]\nfirst_key = 10\nsecond_key = blah\n\n'
 
-# Lastly, we need to make sure we save our changes. Nothing is written
-# out until we do so.
-print(config.save())
->>> True
+# Lastly, we need to make sure we save our changes.
+# Nothing is written out until we do so.
+config.save()
 
 # If we have, say, a default config file and a user config file, we can easily
 # restore default one. We can specify the file path to it.
-print(config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH))
->>> True
+config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH)
 
 # Otherwise, a config.original.ini file will automatically be looked for in the
 # current directory (because our configuration file we passed in was
 # named config.ini).
-print(config.restore_original())
->>> True
+config.restore_original()
 ```
 
 ## Documentation
