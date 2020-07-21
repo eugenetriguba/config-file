@@ -1,3 +1,5 @@
+name: Python Security
+
 on: [push]
 
 jobs:
