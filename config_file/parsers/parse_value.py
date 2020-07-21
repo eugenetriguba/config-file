@@ -1,5 +1,5 @@
 """
-Parse types allows you to check or parse a string into its native type.
+This module allows you to parse a string into its native type.
 
 Example:
     parse_value('5') -> 5   (int)
@@ -17,6 +17,7 @@ Example:
 "5".isdigit() -> True
 "-5".isdigit() -> False
 can_be_parsed_as_int("-5") -> True
+parse_value("-5") -> -5
 """
 import re
 from distutils.util import strtobool
@@ -65,6 +66,8 @@ def can_be_parsed_as_int(value) -> bool:
 
 
 def can_be_parsed_as_float(value) -> bool:
+    FLOAT_REGEX = r"^\d*\.\d+$"
+
     if type(value) is float:
         return True
 
@@ -72,9 +75,9 @@ def can_be_parsed_as_float(value) -> bool:
         return False
 
     if value.startswith("-"):
-        return bool(re.match(r"^\d*\.\d+$", value[1:]))
+        return bool(re.match(FLOAT_REGEX, value[1:]))
 
-    return bool(re.match(r"^\d*\.\d+$", value))
+    return bool(re.match(FLOAT_REGEX, value))
 
 
 def can_be_parsed_as_bool(value) -> bool:
