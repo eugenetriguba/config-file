@@ -65,9 +65,7 @@ def nested_update(document, key, value, in_place=False, treat_as_element=True):
     # from the scalar value
     # check the length of the list and provide it to _nested_update
     if not treat_as_element and not isinstance(value, list):
-        raise Exception(
-            "The value must be a list when treat_as_element is False."
-        )
+        raise Exception("The value must be a list when treat_as_element is False.")
     elif treat_as_element:
         value = [value]
 
@@ -91,18 +89,14 @@ def _nested_update(document, key, value):
     """
     if isinstance(document, list):
         for list_items in document:
-            _nested_update(
-                document=list_items, key=key, value=value
-            )
+            _nested_update(document=list_items, key=key, value=value)
     elif isinstance(document, dict):
         for dict_key, dict_value in document.items():
             if dict_key == key:
                 document[key] = value[0]
                 if len(value) > 1:
                     value.pop(0)
-            _nested_update(
-                document=dict_value, key=key, value=value
-            )
+            _nested_update(document=dict_value, key=key, value=value)
     return document
 
 

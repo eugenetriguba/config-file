@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-
 values_list = []
 
 
@@ -98,15 +97,14 @@ def get_occurrences_and_values(items, value):
     value_list = []
 
     for item in items:
-        occurrence_result, values = _get_occurrence_with_values(dictionary=item, item="value", keyword=value)
+        occurrence_result, values = _get_occurrence_with_values(
+            dictionary=item, item="value", keyword=value
+        )
         occurrence = occurrence + occurrence_result
         if occurrence_result:
             value_list.extend(values)
 
-    occurrences[value] = {
-        'occurrences': occurrence,
-        'values': value_list
-    }
+    occurrences[value] = {"occurrences": occurrence, "values": value_list}
 
     return occurrences
 
