@@ -1,8 +1,8 @@
-from pathlib import Path, PurePath
-from typing import Type, Union
+from pathlib import Path
+from typing import List, Union
 
 
-def split_on_dot(line: Union[str, Type[PurePath]], only_last_dot=False) -> str:
+def split_on_dot(line: Union[str, Path], only_last_dot=False) -> List[str]:
     """
     Split a string on the dot character (.).
 
@@ -11,7 +11,7 @@ def split_on_dot(line: Union[str, Type[PurePath]], only_last_dot=False) -> str:
 
     :raises ValueError: if the line does not have a dot.
     """
-    if isinstance(line, PurePath):
+    if isinstance(line, Path):
         line = str(line)
 
     if "." not in line:
@@ -20,12 +20,12 @@ def split_on_dot(line: Union[str, Type[PurePath]], only_last_dot=False) -> str:
     return line.rsplit(".", 1) if only_last_dot else line.split(".")
 
 
-def read_file(path: Union[str, Type[PurePath]]):
+def read_file(path: Union[str, Path]) -> str:
     with open(path, "r") as file:
         return file.read()
 
 
-def create_config_path(file_path: Type[PurePath], original: bool = False) -> Path:
+def create_config_path(file_path: Path, original: bool = False) -> Path:
     if len(file_path.parts) >= 1 and file_path.parts[0] == "~":
         return file_path.expanduser()
 
@@ -38,3 +38,11 @@ def create_config_path(file_path: Type[PurePath], original: bool = False) -> Pat
         raise ValueError(f"The specified config file ({file_path}) is a directory.")
 
     return file_path
+
+
+class Default:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return "Default Value: {} ({})".format(self.value, type(self.value))
