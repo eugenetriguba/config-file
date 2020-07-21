@@ -1,11 +1,11 @@
 from unittest import TestCase
 
 from config_file.nested_lookup import (
-    nested_lookup,
     get_all_keys,
     get_occurrence_of_key,
     get_occurrence_of_value,
-    get_occurrences_and_values
+    get_occurrences_and_values,
+    nested_lookup,
 )
 
 
@@ -39,7 +39,13 @@ class TestNestedLookup(TestCase):
             "name": "Test",
             "date": "YYYY-MM-DD HH:MM:SS",
         }
-        self.subject_dict4 = {1: "a", 2: {"b": 44, "C": 55}, 3: "d", 4: "e", "6776": "works"}
+        self.subject_dict4 = {
+            1: "a",
+            2: {"b": 44, "C": 55},
+            3: "d",
+            4: "e",
+            "6776": "works",
+        }
 
     def test_nested_lookup(self):
         results = nested_lookup("d", self.subject_dict)
@@ -357,7 +363,7 @@ class TestGetOccurrence(TestCase):
                 "core_details": {
                     "total_numberof_cores": "4",
                     "l2_cache(per_core)": "256 KB",
-                }
+                },
             }
         ]
 
@@ -368,7 +374,7 @@ class TestGetOccurrence(TestCase):
                 "core_details": {
                     "total_numberof_cores": "4",
                     "l2_cache(per_core)": "256 KB",
-                }
+                },
             },
             {
                 "processor_name": "4",
@@ -376,8 +382,8 @@ class TestGetOccurrence(TestCase):
                 "core_details": {
                     "total_numberof_cores": "4",
                     "l2_cache(per_core)": "256 KB",
-                }
-            }
+                },
+            },
         ]
 
     def test_sample_data1(self):
@@ -417,28 +423,28 @@ class TestGetOccurrence(TestCase):
         self.assertEqual(2, get_occurrence_of_key(self.sample5, "memory"))
 
     def test_sample_data6(self):
-        value = '4'
+        value = "4"
         result = get_occurrences_and_values(self.sample6, value)
-        self.assertEqual(2, result[value]['occurrences'])
-        self.assertEqual(2, len(result[value]['values']))
+        self.assertEqual(2, result[value]["occurrences"])
+        self.assertEqual(2, len(result[value]["values"]))
 
     def test_sample_data7(self):
-        value = '2.7 GHz'
+        value = "2.7 GHz"
         result = get_occurrences_and_values(self.sample6, value)
-        self.assertEqual(1, result[value]['occurrences'])
-        self.assertEqual(1, len(result[value]['values']))
+        self.assertEqual(1, result[value]["occurrences"])
+        self.assertEqual(1, len(result[value]["values"]))
 
     def test_sample_data8(self):
-        value = '4'
+        value = "4"
         result = get_occurrences_and_values(self.sample7, value)
-        self.assertEqual(4, result[value]['occurrences'])
-        self.assertEqual(4, len(result[value]['values']))
+        self.assertEqual(4, result[value]["occurrences"])
+        self.assertEqual(4, len(result[value]["values"]))
 
     def test_sample_data9(self):
-        value = '5'
+        value = "5"
         result = get_occurrences_and_values(self.sample7, value)
-        self.assertEqual(0, result[value]['occurrences'])
-        self.assertEqual(0, len(result[value]['values']))
+        self.assertEqual(0, result[value]["occurrences"])
+        self.assertEqual(0, len(result[value]["values"]))
 
 
 if __name__ == "__main__":

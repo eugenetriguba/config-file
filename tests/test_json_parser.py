@@ -1,9 +1,6 @@
-import json
-
 import pytest
 
 from config_file.exceptions import ParsingError
-from config_file.parsers import JsonParser
 
 
 def test_invalid_json(templated_parser):
@@ -73,25 +70,6 @@ def test_that_json_parser_can_get_keys_without_parsing_types(
 
 
 @pytest.mark.parametrize(
-    "key, value",
-    [
-        ("glossary.title", "str_value"),
-        ("glossary.dict.str_number", 5),
-        (
-            "glossary.dict_within_dict",
-            {
-                "str_number": 16,
-                "another_dict": {"str_bool": False, "list_of_values": [5, False, True]},
-            },
-        ),
-    ],
-)
-def test_that_json_parser_can_get_keys_with_parsing_types(templated_parser, key, value):
-    parser = templated_parser("json", "glossary")
-    assert parser.get(key, parse_types=True) == value
-
-
-@pytest.mark.parametrize(
     "key, value", [("zip", "zipzip"), ("foo.bar.foobar", 5), ("foo.baz", "bar")]
 )
 def test_that_json_parser_can_set_keys(templated_parser, key, value):
@@ -116,53 +94,9 @@ def test_that_json_parser_can_set_keys(templated_parser, key, value):
     "key",
     ["glossary", "dict_within_dict", "glossary.GlossDiv.GlossList.GlossEntry.Abbrev"],
 )
-def test_that_json_parser_can_delete_keys(
-    template_and_parser, key, test_json, expected_json
-):
+def test_that_json_parser_can_delete_keys(template_and_parser, key):
     template, parser = template_and_parser("json", "glossary")
 
     parser.delete(key)
 
     assert parser.stringify() == template.read_text(encoding="utf-8")
-
-
-@pytest.mark.parametrize(
-    "test_json, key, expected_output",
-    [({"foo": {"bar": 5, "baz": {"bar": 10, "bam": {"bar": 15}}}}, "bar", [5, 10, 15])],
-)
-def test_that_json_parser_can_retrieve_all_keys(test_json, key, expected_output):
-    parser = JsonParser(json.dumps(test_json))
-    assert parser.get(key, all=True) == expected_output
-
-
-@pytest.mark.parametrize(
-    "test_json, key, value, expected_output",
-    [
-        (
-            {"foo": {"bar": 5, "baz": {"bar": 10, "bam": {"bar": 15}}}},
-            "bar",
-            "new_value",
-            ["new_value", "new_value", "new_value"],
-        )
-    ],
-)
-def test_that_json_parser_can_set_all_keys(test_json, key, value, expected_output):
-    parser = JsonParser(json.dumps(test_json))
-    parser.set(key, value, all=True)
-    assert parser.get(key, all=True) == expected_output
-
-
-@pytest.mark.parametrize(
-    "test_json, key, expected_output",
-    [
-        (
-            {"foo": {"bar": 5, "baz": {"bar": 10, "bam": {"bar": 15}}}},
-            "bar",
-            {"foo": {"baz": {"bam": {}}}},
-        )
-    ],
-)
-def test_that_json_parser_can_delete_all_keys(test_json, key, expected_output):
-    parser = JsonParser(json.dumps(test_json))
-    parser.delete(key, all=True)
-    assert parser.stringify() == json.dumps(expected_output)

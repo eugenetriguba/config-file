@@ -1,7 +1,7 @@
 import pytest
 
 from config_file.exceptions import ParsingError
-from config_file.parsers import IniParser
+from config_file.parsers.ini_parser import IniParser
 
 
 @pytest.mark.parametrize("ini_file", ["blahblahblah", "{ 'key1': 5 }"])
@@ -11,29 +11,19 @@ def test_incorrect_ini_formats(ini_file):
 
 
 @pytest.mark.parametrize(
-    "section_key,expected_value,parse_type",
+    "section_key,expected_value",
     [
-        ("test_section.intkey", 5, True),
-        ("test_section.strkey", "blah", True),
-        ("test_section.boolkey", False, True),
-        ("test_section.floatkey", 5.3, True),
-        ("test_section.intkey", "5", False),
-        ("test_section.strkey", "blah", False),
-        ("test_section.boolkey", "false", False),
-        ("test_section.floatkey", "5.3", False),
+        ("test_section.intkey", "5"),
+        ("test_section.strkey", "blah"),
+        ("test_section.boolkey", "false"),
+        ("test_section.floatkey", "5.3"),
         (
             "test_section",
             {"intkey": "5", "strkey": "blah", "boolkey": "false", "floatkey": "5.3"},
-            False,
-        ),
-        (
-            "test_section",
-            {"intkey": 5, "strkey": "blah", "boolkey": False, "floatkey": 5.3},
-            True,
         ),
     ],
 )
-def test_that_ini_parser_can_get_values(section_key, expected_value, parse_type):
+def test_that_ini_parser_can_get_values(section_key, expected_value):
     ini_file = """[test_section]
 intkey = 5
 strkey = blah
@@ -42,7 +32,7 @@ floatkey = 5.3
 
 """
     parser = IniParser(ini_file)
-    assert parser.get(section_key, parse_types=parse_type) == expected_value
+    assert parser.get(section_key) == expected_value
 
 
 @pytest.mark.parametrize(

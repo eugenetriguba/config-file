@@ -1,6 +1,6 @@
 import pytest
 
-from config_file.parsers import can_be_parsed_as_bool, parse_value
+from config_file.parsers.parse_value import can_be_parsed_as_bool, parse_value
 
 
 @pytest.mark.parametrize(

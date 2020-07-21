@@ -1,9 +1,9 @@
 from pathlib import Path
-from typing import Callable, Type
+from typing import Callable, Tuple, Type, Union
 
 import pytest
 
-from config_file.parsers import AbstractParser, IniParser, JsonParser
+from config_file import AbstractParser, ConfigFile
 from config_file.utils import create_config_path
 
 
@@ -33,7 +33,10 @@ def template_file(tmp_file: Callable[[str, str], Path]) -> Callable[[str, str], 
 
 @pytest.fixture
 def template_original_file() -> Callable[[Path], Path]:
-    def func(template_path: str):
+    def func(template_path: Union[str, Path]):
+        if isinstance(template_path, str):
+            template_path = Path(template_path)
+
         original_path = create_config_path(template_path, original=True)
         original_path.touch()
         original_path.write_text(template_path.read_text(encoding="utf-8"))
@@ -44,17 +47,19 @@ def template_original_file() -> Callable[[Path], Path]:
 
 
 @pytest.fixture
-def template_and_parser(template_file: Callable[[str, str], Path]) -> tuple:
+def template_and_parser(
+    template_file: Callable[[str, str], Path]
+) -> Callable[[str, str], Tuple[Path, Type[AbstractParser]]]:
     def func(
         file_type: str, template_name: str = "default"
-    ) -> Callable[[str, str], Type[AbstractParser]]:
+    ) -> Tuple[Path, Type[AbstractParser]]:
         test_file = template_file(file_type, template_name)
         text = test_file.read_text(encoding="utf-8")
 
-        if file_type == "ini":
-            return test_file, IniParser(text)
-        elif file_type == "json":
-            return test_file, JsonParser(text)
+        parser = ConfigFile._ConfigFile__find_parser_by_file_type(
+            file_contents=text, file_type=file_type, file_path=test_file
+        )
+        return test_file, parser
 
     return func
 
