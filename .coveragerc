@@ -1,2 +1,4 @@
 [run]
-source=config_file
+source=config_file/
+branch = True
+omit = config_file/parsers/abstract_parser.py
