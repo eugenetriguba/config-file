@@ -37,49 +37,132 @@ You can also use [Poetry](https://python-poetry.org).
 $ poetry install config-file -E yaml -E toml
 ```
 
-## Usage
+## Usage Overview
 
-Say you have an INI file you want to manipulate. It must have an .ini
-extension in order for the package to recognize it.
+For this overview, let's say you have the following `ini` file
+you want to manipulate.
 
 ```ini
 [section]
-first_key = 5
-second_key = blah
-third_key = true
+num_key = 5
+str_key = blah
+bool_key = true
+list_key = [1, 2]
+
+[second_section]
+dict_key = { "another_num": 5 }
 ```
 
-Then we can manipulate it as follows.
+It must have a `.ini` extension in order
+for the package to recognize it and use the correct parser for it.
+
+### Setting up ConfigFile
+
+To use the package, we import in the `ConfigFile` object.
+
+We can set it up by giving it a string or `pathlib.Path` as the argument.
+Any home tildes `~` in the string or `Path` are recognzied and converted
+to the full path for us.
 
 ```python
-from pathlib import Path
-
 from config_file import ConfigFile
 
-ORIGINAL_CONFIG_PATH = Path("~/some-project/some-other-config-file.ini")
-CONFIG_PATH = Path("~/some-project/config.ini")
+config = ConfigFile("~/some-project/config.ini")
+```
 
-# Our path can be a string or a Path object.
-# The "~" will be automatically expanded to the full path for us.
-config = ConfigFile(CONFIG_PATH)
+### Using `get()`
 
-# All the types will be retrieved as strings unless specified otherwise.
-print(config.get("section.first_key"))
->>> "5"
-print(config.get("section.first_key", return_type=int))
+A recurring pattern you'll see here is that all methods that
+need to specify something inside your configuration file will
+do so using a dot syntax.
+
+#### Retrieving keys and sections
+
+So to retrieve our `num_key`, we'd specify the heading and the
+key separated by a dot. All values will then be retrieved as
+strings.
+
+```python
+config.get('section.num_key')
+>>> '5'
+```
+
+While we can retrieves keys, we can also retrieve the entire
+section, which will be returned back to us as a dictionary.
+
+```python
+config.get('section')
+>>> {'num_key': '5', 'str_key': 'blah', 'bool_key': 'true', 'list_key': '[1, 2]'}
+```
+
+#### Coercing the return types
+
+However, some of these keys are obviously not strings natively.
+If we are retrieving a particular value of a key, we may want to 
+coerce it right away without doing clunky type conversions after 
+each time we retrieve a value. To do this, we can utilize the
+`return_type` keyword argument.
+
+```python
+config.get('section.num_key', return_type=int)
 >>> 5
+```
 
-# This holds true when we retrieve entire sections as well. However, we can
-# also recursively parse the entire section if desired.
-print(config.get("section"))
->>> {'first_key': '5', 'second_key': 'blah', 'third_key': 'true'}
-print(config.get("section", parse_types=True))
->>> {'first_key': 5, 'second_key': 'blah', 'third_key': True}
+Sometimes we don't have structures quite that simple though. What
+if we wanted all the values in `section` coerced? For that, we can
+utilize a `parse_types` keyword argument.
 
-# Sometimes we want to retrieve a key but don't know whether or not
-# it will be set. In that case, we can set a default.
-print(config.get("section.unknown", default=False))
->>> False
+```python
+config.get('section', parse_types=True)
+>>> {'num_key': 5, 'str_key': 'blah', 'bool_key': True, 'list_key': [1, 2]}
+```
+
+It also works for regular keys.
+
+```python
+config.get('section.num_key', parse_types=True)
+>>> 5
+```
+
+#### Handling non-existant keys
+
+Sometimes we want to retrieve a key but are unsure of if it will exist.
+There are two ways we could handle that.
+
+The first is the one we're used to seeing: catch the error.
+
+```python
+from config_file import MissingKeyError
+
+try:
+    important_value = config.get('section.i_do_not_exist')
+except MissingKeyError:
+    important_value = 42
+```
+
+However, the `get` method comes with a `default` keyword argument that we 
+can utilze for this purpose.
+
+```python
+config.get('section.i_do_not_exist', default=42)
+>>> 42
+```
+
+This can be handy if you already know what you want to be the fallback case
+if you have a default for a particular configuration value.
+
+### Using `set()`
+
+We can use `set()` to set a existing key's value.
+
+```python
+config.set('section.num_key', 6)
+```
+
+The method does not return anything, since there is nothing
+useful to return.
+
+
 
 # Setting, deleting, and checking if a key exists is just as easy.
 config.set("section.first_key", 10)
