@@ -1,12 +1,7 @@
 try:
-    import yaml
+    from ruamel.yaml import YAML, YAMLError, round_trip_dump, round_trip_load
 
     YAML_AVAILABLE = True
-
-    # Conform yaml to json and
-    # toml package syntax
-    yaml.loads = yaml.load
-    yaml.dumps = yaml.dump
 except ImportError:
     YAML_AVAILABLE = False
 
@@ -23,7 +18,11 @@ class YamlParser(BaseParser):
                 "file was attempted to be used. Install the `toml` "
                 "extra first with `pip install config-file[toml]`."
             )
+        
+        yaml = YAML(typ='safe')
+        yaml.loads = round_trip_load
+        yaml.dumps = round_trip_dump
 
         super().__init__(
-            file_contents=file_contents, module=yaml, decode_error=yaml.YAMLError
+            file_contents=file_contents, module=yaml, decode_error=YAMLError
         )
