@@ -75,7 +75,7 @@ def can_be_parsed_as_float(value) -> bool:
         return False
 
     if value.startswith("-"):
-        return bool(re.match(FLOAT_REGEX, value[1:]))
+        value = value[1:]
 
     return bool(re.match(FLOAT_REGEX, value))
 
