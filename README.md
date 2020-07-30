@@ -252,8 +252,8 @@ config.stringify()
 If we have a initial configuration file state, we could keep a copy of that
 initial file and restore back to it whenever needed using `restore_original()`.
 
-By default, if we created our `ConfigFile` with the path of "~/some-project/config.ini",
-`restore_original()` will look for our original file at "~/some-project/config.original.ini".
+By default, if we created our `ConfigFile` with the path of `~/some-project/config.ini`,
+`restore_original()` will look for our original file at `~/some-project/config.original.ini`.
 
 ```python
 config.restore_original()
