@@ -167,22 +167,19 @@ config.set('section.num_key', 6)
 The method does not return anything, since there is nothing
 useful to return.
 
+### Using `delete()`
 
 
-# Setting, deleting, and checking if a key exists is just as easy.
-config.set("section.first_key", 10)
-config.delete("section.third_key")
+### Using `has()`
 
-print(config.has("section.third_key"))
->>> False
 
-# We can also convert the entire configuration file to a string.
-print(config.stringify())
->>> '[section]\nfirst_key = 10\nsecond_key = blah\n\n'
+### Using `stringify()`
 
-# Lastly, we need to make sure we save our changes.
-# Nothing is written out until we do so.
-config.save()
+
+### Using `save()`
+
+
+### Using `restore_original()`
 
 # If we have, say, a default config file and a user config file, we can easily
 # restore default one. We can specify the file path to it.
@@ -192,7 +189,7 @@ config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH)
 # current directory (because our configuration file we passed in was
 # named config.ini).
 config.restore_original()
-```
+
 
 ## Documentation
 
