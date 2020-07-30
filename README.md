@@ -15,7 +15,7 @@ The Config File project is designed to allow you to easily manipulate your
 configuration files with the same simple API whether they are in INI, JSON,
 YAML, or TOML.
 
-The code for this package grew origically out of developing command
+The code for this package grew organically out of developing command
 line tools in Python. I had felt like I was writing similar code over and over
 again to abstract away Python's configparser so it was a little nicer to work with
 for my uses. Therefore, I had ended up making a package out of it and adding a lot more
