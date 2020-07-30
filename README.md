@@ -166,7 +166,8 @@ config.set('section.num_key', 6)
 
 The method does not return anything, since there is nothing
 useful to return. If someone goes wrong where it is unable to set
-the value, an exception will be raised instead.
+the value, an exception will be raised instead. This is the case
+for most methods on `ConfigFile`.
 
 With `set()`, we can also create and set keys that don't exist yet.
 
@@ -182,8 +183,9 @@ new_key = New key value!
 ```
 
 The exact behavior of how these new keys or sections are added are a bit
-dependent on the file format we're using. See the [full documentation](#Documentation) for
-more information there.
+dependent on the file format we're using, since every format is a little
+different in it's structure and in what it supports. See the
+[full documentation](#Documentation) for more information there.
 
 ### Using `delete()`
 
@@ -223,23 +225,45 @@ config.has('str_key', wild=True)
 >>> True
 ```
 
+### Using `save()`
+
+For any changes we make to our configuration file, they are not written out
+to the file on our filesystem until we call `save()`. This is to avoid
+unnecessary write calls to our filesystem until we need to.
+
+```python
+config.delete('section.list_key')
+config.save()
+```
+
 ### Using `stringify()`
 
+`stringify()` allows us to show us our internal configuration file, with
+any changes we've made, as a string.
 
-### Using `save()`
+```python
+config.stringify()
+>>> '[section]\nnum_key = 5\nstr_key = blah\nbool_key = true\nlist_key = [1, 2]\n\n[second_section]\ndict_key = { "another_num": 5 }\n\n'
+```
 
 
 ### Using `restore_original()`
 
-```python
-# If we have, say, a default config file and a user config file, we can easily
-# restore default one. We can specify the file path to it.
-config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH)
+If we have a initial configuration file state, we could keep a copy of that
+initial file and restore back to it whenever needed using `restore_original()`.
 
-# Otherwise, a config.original.ini file will automatically be looked for in the
-# current directory (because our configuration file we passed in was
-# named config.ini).
+By default, if we created our `ConfigFile` with the path of "~/some-project/config.ini",
+`restore_original()` will look for our original file at "~/some-project/config.original.ini".
+
+```python
 config.restore_original()
+```
+
+However, if we have a specific path elsewhere that it is or it is named differently, we can
+utilize the `original_file_path` keyword argument.
+
+```python
+config.restore_original(original_file_path="~/some-project/original-configs/config.ini")
 ```
 
 
