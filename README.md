@@ -15,6 +15,12 @@ The Config File project is designed to allow you to easily manipulate your
 configuration files with the same simple API whether they are in INI, JSON,
 YAML, or TOML.
 
+The code for this package grew origically out of developing command
+line tools in Python. I had felt like I was writing similar code over and over
+again to abstract away Python's configparser so it was a little nicer to work with
+for my uses. Therefore, I had ended up making a package out of it and adding a lot more
+niceties, polish, and flexibility to it so others may find it useful as well.
+
 ## Installation
 
 Config File is available to download through PyPI.
@@ -98,8 +104,8 @@ config.get('section')
 #### Coercing the return types
 
 However, some of these keys are obviously not strings natively.
-If we are retrieving a particular value of a key, we may want to 
-coerce it right away without doing clunky type conversions after 
+If we are retrieving a particular value of a key, we may want to
+coerce it right away without doing clunky type conversions after
 each time we retrieve a value. To do this, we can utilize the
 `return_type` keyword argument.
 
@@ -124,7 +130,7 @@ config.get('section.num_key', parse_types=True)
 >>> 5
 ```
 
-#### Handling non-existant keys
+#### Handling non-existent keys
 
 Sometimes we want to retrieve a key but are unsure of if it will exist.
 There are two ways we could handle that.
@@ -140,7 +146,7 @@ except MissingKeyError:
     important_value = 42
 ```
 
-However, the `get` method comes with a `default` keyword argument that we 
+However, the `get` method comes with a `default` keyword argument that we
 can utilze for this purpose.
 
 ```python
@@ -148,8 +154,7 @@ config.get('section.i_do_not_exist', default=42)
 >>> 42
 ```
 
-This can be handy if you already know what you want to be the fallback case
-if you have a default for a particular configuration value.
+This can be handy if you have a default for a particular configuration value.
 
 ### Using `set()`
 
