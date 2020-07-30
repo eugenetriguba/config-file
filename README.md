@@ -181,6 +181,7 @@ useful to return.
 
 ### Using `restore_original()`
 
+```python
 # If we have, say, a default config file and a user config file, we can easily
 # restore default one. We can specify the file path to it.
 config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH)
@@ -189,6 +190,7 @@ config.restore_original(original_file_path=ORIGINAL_CONFIG_PATH)
 # current directory (because our configuration file we passed in was
 # named config.ini).
 config.restore_original()
+```
 
 
 ## Documentation
