@@ -165,13 +165,63 @@ config.set('section.num_key', 6)
 ```
 
 The method does not return anything, since there is nothing
-useful to return.
+useful to return. If someone goes wrong where it is unable to set
+the value, an exception will be raised instead.
+
+With `set()`, we can also create and set keys that don't exist yet.
+
+```python
+config.set('new_section.new_key', 'New key value!')
+```
+
+Would then result in the following section being added to our original file:
+
+```ini
+[new_section]
+new_key = New key value!
+```
+
+The exact behavior of how these new keys or sections are added are a bit
+dependent on the file format we're using. See the [full documentation](#Documentation) for
+more information there.
 
 ### Using `delete()`
 
+`delete()` allows us to delete entire sections or specific keys.
+
+```python
+config.delete('section')
+```
+
+Would result in the entire section being removed from our configuration file.
+However, we can also just delete a single key.
+
+```python
+config.delete('section.num_key')
+```
 
 ### Using `has()`
 
+`has()` allows us to check whether a given key exists in our file. There
+are two ways to use `has()`.
+
+The first is using the dot syntax.
+
+```python
+config.has('section.str_key')
+>>> True
+config.has('does_not_exist')
+>>> False
+```
+
+This will check if our specific key or section exists. However, we can
+also just check in general if a given key exists anywhere in our file
+with the `wild` keyword argument.
+
+```python
+config.has('str_key', wild=True)
+>>> True
+```
 
 ### Using `stringify()`
 
