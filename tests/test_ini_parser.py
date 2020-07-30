@@ -1,6 +1,6 @@
 import pytest
 
-from config_file.exceptions import ParsingError
+from config_file.exceptions import ParsingError, MissingKeyError
 from config_file.parsers.ini_parser import IniParser
 
 
@@ -81,10 +81,10 @@ def test_that_ini_parser_can_delete(section_key, expected_result):
 @pytest.mark.parametrize(
     "section_key", ["section_is_not_present", "test_section.but_key_is_not_present"],
 )
-def test_that_ini_parser_delete_raises_value_errors(section_key):
+def test_that_ini_parser_delete_raises_missing_key_errors(section_key):
     ini_file = """[test_section]\nkey1 = value\n\n"""
     parser = IniParser(ini_file)
-    with pytest.raises(ValueError):
+    with pytest.raises(MissingKeyError):
         parser.delete(section_key)
 
 

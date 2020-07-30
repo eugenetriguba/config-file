@@ -26,9 +26,7 @@
             "str_number": "16",
             "another_dict": {
                 "str_bool": "false",
-                "list_of_values": [
-                    "5", "false", "trUe"
-                ]
+                "list_of_values": ["5", "false", "trUe"]
             }
         }
     }
