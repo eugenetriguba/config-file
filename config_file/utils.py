@@ -6,10 +6,12 @@ def split_on_dot(line: Union[str, Path], only_last_dot=False) -> List[str]:
     """
     Split a string on the dot character (.).
 
-    :param line: The line ot split on.
-    :param only_last_dot: Only split on the last occurrence of the dot.
+    Args:
+        line: The line ot split on.
+        only_last_dot: Only split on the last occurrence of the dot.
 
-    :raises ValueError: if the line does not have a dot.
+    Raises:
+        ValueError: if the line does not have a dot.
     """
     if isinstance(line, Path):
         line = str(line)
