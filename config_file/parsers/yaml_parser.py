@@ -14,12 +14,12 @@ class YamlParser(BaseParser):
     def __init__(self, file_contents: str):
         if not YAML_AVAILABLE:
             raise MissingDependencyError(
-                "It doesn't appear `PyYaml` is installed, but a yaml "
-                "file was attempted to be used. Install the `toml` "
-                "extra first with `pip install config-file[toml]`."
+                "It doesn't appear `ruamel.yaml` is installed, but a yaml "
+                "file was attempted to be used. Install the `yaml` "
+                "extra first with `pip install config-file[yaml]`."
             )
-        
-        yaml = YAML(typ='safe')
+
+        yaml = YAML(typ="safe")
         yaml.loads = round_trip_load
         yaml.dumps = round_trip_dump
 
