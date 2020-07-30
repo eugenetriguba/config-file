@@ -9,7 +9,6 @@ from config_file.exceptions import MissingDependencyError
 
 from .base_parser import BaseParser
 
-
 class TomlParser(BaseParser):
     def __init__(self, file_contents: str):
         if not TOML_AVAILABLE:
