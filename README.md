@@ -67,7 +67,7 @@ for the package to recognize it and use the correct parser for it.
 To use the package, we import in the `ConfigFile` object.
 
 We can set it up by giving it a string or `pathlib.Path` as the argument.
-Any home tildes `~` in the string or `Path` are recognzied and converted
+Any home tildes `~` in the string or `Path` are recognized and converted
 to the full path for us.
 
 ```python
@@ -165,9 +165,10 @@ config.set('section.num_key', 6)
 ```
 
 The method does not return anything, since there is nothing
-useful to return. If someone goes wrong where it is unable to set
+useful to return. If something goes wrong where it is unable to set
 the value, an exception will be raised instead. This is the case
-for most methods on `ConfigFile`.
+for most methods on `ConfigFile`, such as `delete()` or `save()`,
+where there would be no useful return value to utilize.
 
 With `set()`, we can also create and set keys that don't exist yet.
 
@@ -217,8 +218,8 @@ config.has('does_not_exist')
 ```
 
 This will check if our specific key or section exists. However, we can
-also just check in general if a given key exists anywhere in our file
-with the `wild` keyword argument.
+also check in general if a given key or sections exists anywhere in our
+file with the `wild` keyword argument.
 
 ```python
 config.has('str_key', wild=True)
@@ -228,8 +229,8 @@ config.has('str_key', wild=True)
 ### Using `save()`
 
 For any changes we make to our configuration file, they are not written out
-to the file on our filesystem until we call `save()`. This is to avoid
-unnecessary write calls to our filesystem until we need to.
+to the filesystem until we call `save()`. This is to avoid unnecessary write
+calls after each operation until we actually need to save.
 
 ```python
 config.delete('section.list_key')
@@ -238,8 +239,10 @@ config.save()
 
 ### Using `stringify()`
 
-`stringify()` allows us to show us our internal configuration file, with
-any changes we've made, as a string.
+`stringify()` shows us our configuration file, with any changes we've made,
+as a string. `stringify()` will always show us our latest changes since it
+is stringify-ing our internal representation of the configuration file, not
+just the file we've read in.
 
 ```python
 config.stringify()
@@ -252,15 +255,16 @@ config.stringify()
 If we have a initial configuration file state, we could keep a copy of that
 initial file and restore back to it whenever needed using `restore_original()`.
 
-By default, if we created our `ConfigFile` with the path of `~/some-project/config.ini`,
+By default, if we created our `ConfigFile` object with the path of `~/some-project/config.ini`,
 `restore_original()` will look for our original file at `~/some-project/config.original.ini`.
 
 ```python
 config.restore_original()
 ```
 
-However, if we have a specific path elsewhere that it is or it is named differently, we can
-utilize the `original_file_path` keyword argument.
+However, if we have a specific path elsewhere that this original configuration file is or it
+is named differently than what the default expects, we can utilize the `original_file_path`
+keyword argument.
 
 ```python
 config.restore_original(original_file_path="~/some-project/original-configs/config.ini")
