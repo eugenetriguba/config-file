@@ -4,8 +4,8 @@ class ConfigFileError(Exception):
 
 class MissingDependencyError(ConfigFileError):
     """
-    PyYaml or toml is not installed, but the parsers
-    for them were attempted to be used.
+    yaml or toml dependencies were not installed,
+    but the parsers for them were attempted to be used.
     """
 
 
