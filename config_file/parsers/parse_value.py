@@ -1,7 +1,13 @@
-"""
-This module allows you to parse a string into its native type.
+"""This module allows you to parse a string into its native type."""
+import ast
+import re
+from distutils.util import strtobool
+from typing import Any
 
-Example:
+
+def parse_value(value: Any) -> Any:
+    """Parse a value into native type.
+
     parse_value('5') -> 5   (int)
     parse_value('-5') -> -5 (int)
 
@@ -13,20 +19,7 @@ Example:
     parse_value('true') -> True (bool)
     parse_value('FALSE') -> False (bool)
 
-
-"5".isdigit() -> True
-"-5".isdigit() -> False
-can_be_parsed_as_int("-5") -> True
-parse_value("-5") -> -5
-"""
-import ast
-import re
-from distutils.util import strtobool
-from typing import Any
-
-
-def parse_value(value: Any) -> Any:
-    """Parse a value into native type.
+    parse_value("  [ [ [ [] ]] ]  ") -> [[[[]]]] (list)
 
     Args:
         value: The value to parse.
@@ -74,13 +67,18 @@ def parse_value(value: Any) -> Any:
 def can_be_parsed_as_int(value: Any) -> bool:
     """Check whether a value can be parsed as a integer.
 
+    can_be_parsed_as_int(5) -> True
+    can_be_parsed_as_int("5") -> True
+    can_be_parsed_as_int("-5") -> True
+    can_be_parsed_as_int(True) -> False
+
     Args:
         value: The value to check if it can be parsed as an integer.
 
     Returns:
         True if we can parse the value as a integer. False otherwise.
     """
-    if isinstance(value, int) and not type(value) is bool:
+    if isinstance(value, int) and not isinstance(value, bool):
         return True
 
     if not isinstance(value, str):
@@ -95,6 +93,20 @@ def can_be_parsed_as_int(value: Any) -> bool:
 
 
 def can_be_parsed_as_float(value: Any) -> bool:
+    """Checks whether a value can be parsed as a float.
+
+    can_be_parsed_as_float(45) -> False
+    can_be_parsed_as_float(1.1) -> True
+    can_be_parsed_as_float("1.1") -> True
+    can_be_parsed_as_float("-1.1") -> True
+    can_be_parsed_as_float(".1") -> True
+
+    Args:
+        value: The value to be parsed.
+
+    Returns:
+        True if the value can be parsed as a float. False otherwise.
+    """
     FLOAT_REGEX = r"^\d*\.\d+$"
 
     if isinstance(value, float):
@@ -112,6 +124,20 @@ def can_be_parsed_as_float(value: Any) -> bool:
 
 
 def can_be_parsed_as_bool(value: Any) -> bool:
+    """Checks whether a value can be parsed as a boolean.
+
+    can_be_parsed_as_bool(True) -> True
+    can_be_parsed_as_bool("true") -> True
+    can_be_parsed_as_bool("false") -> True
+    can_be_parsed_as_bool("TRUE") -> True
+    can_be_parsed_as_bool(0) -> False
+
+    Args:
+        value: The value to be parsed.
+
+    Returns:
+        True if the value can be parsed as a boolean. False otherwise.
+    """
     if isinstance(value, bool):
         return True
 
@@ -124,6 +150,21 @@ def can_be_parsed_as_bool(value: Any) -> bool:
 
 
 def can_be_parsed_as_dict(value: Any) -> bool:
+    """Checks whether a value can be parsed as a dictionary.
+
+    can_be_parsed_as_dict({}) -> True
+    can_be_parsed_as_dict("{}") -> True
+    can_be_parsed_as_dict("  {  }  ") -> True
+    can_be_parsed_as_dict("{ 'hello': 5 }") -> True
+    can_be_parsed_as_dict([]]) -> False
+    can_be_parsed_as_dict(" { invalid } ") -> False
+
+    Args:
+        value: The value to be parsed.
+
+    Returns:
+        True if the value can be parsed as a dictionary. False otherwise.
+    """
     if isinstance(value, dict):
         return True
 
@@ -142,7 +183,23 @@ def can_be_parsed_as_dict(value: Any) -> bool:
     return False
 
 
-def can_be_parsed_as_list(value) -> bool:
+def can_be_parsed_as_list(value: Any) -> bool:
+    """Checks whether a value can be parsed as a list.
+
+    can_be_parsed_as_list([]) -> True
+    can_be_parsed_as_list([1, 2]) -> True
+    can_be_parsed_as_list("[]") -> True
+    can_be_parsed_as_list("  []  ") -> True
+    can_be_parsed_as_list("[1, 2]") -> True
+    can_be_parsed_as_list({}) -> False
+    can_be_parsed_as_list(" [ invalid ] ") -> False
+
+    Args:
+        value: The value to be parsed.
+
+    Returns:
+        True if the value can be parsed as a list. False otherwise.
+    """
     if isinstance(value, list):
         return True
 

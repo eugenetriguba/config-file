@@ -50,6 +50,7 @@ def test_parse_value_parses_ints_floats_and_bools(test_input, expected):
         ),
         (" [1, 2, 3] ", [1, 2, 3]),
         ("  [True, [1, 5], {}, 5.5]", [True, [1, 5], {}, 5.5]),
+        ("  [ [ [ [] ]] ]  ", [[[[]]]]),
     ],
 )
 def test_parse_value_parses_dicts_and_lists(test_input, expected):
