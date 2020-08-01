@@ -55,5 +55,4 @@ Here are some guidelines to keep in mind when submitting a pull request:
 
   - All it does is ensure that all the tests pass.
 
-To get started, make sure you have poetry installed and run `poetry install` and
-`poetry shell` to enter the virtual environment.
+To get started, make sure you have poetry installed and run `poetry install -E yaml -E toml` and `poetry shell` to enter the virtual environment.
