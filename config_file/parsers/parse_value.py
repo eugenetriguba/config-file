@@ -22,10 +22,22 @@ parse_value("-5") -> -5
 import ast
 import re
 from distutils.util import strtobool
+from typing import Any
 
 
-def parse_value(value):
-    if type(value) is dict:
+def parse_value(value: Any) -> Any:
+    """Parse a value into native type.
+
+    Args:
+        value: The value to parse.
+
+    Returns:
+        The parsed value, if it could be parsed
+        as a dictionary, list, int, float, or bool.
+        Otherwise, it simply returns the original
+        passed in value.
+    """
+    if isinstance(value, dict):
         parsed = {}
 
         for item in value:
@@ -33,7 +45,7 @@ def parse_value(value):
 
         return parsed
 
-    if type(value) is list:
+    if isinstance(value, list):
         parsed = []
 
         for item in value:
@@ -42,29 +54,39 @@ def parse_value(value):
         return parsed
 
     if can_be_parsed_as_int(value):
-        return int(value)
+        return int(value.strip()) if isinstance(value, str) else int(value)
 
     if can_be_parsed_as_float(value):
-        return float(value)
+        return float(value.strip()) if isinstance(value, str) else float(value)
 
     if can_be_parsed_as_bool(value):
-        return value if type(value) is bool else bool(strtobool(value))
+        return bool(value) if isinstance(value, bool) else bool(strtobool(value))
 
     if can_be_parsed_as_dict(value):
-        return parse_value(ast.literal_eval(value))
+        return parse_value(ast.literal_eval(value.strip()))
 
     if can_be_parsed_as_list(value):
-        return parse_value(ast.literal_eval(value))
+        return parse_value(ast.literal_eval(value.strip()))
 
     return value
 
 
-def can_be_parsed_as_int(value) -> bool:
-    if type(value) is int:
+def can_be_parsed_as_int(value: Any) -> bool:
+    """Check whether a value can be parsed as a integer.
+
+    Args:
+        value: The value to check if it can be parsed as an integer.
+
+    Returns:
+        True if we can parse the value as a integer. False otherwise.
+    """
+    if isinstance(value, int) and not type(value) is bool:
         return True
 
-    if type(value) is not str:
+    if not isinstance(value, str):
         return False
+
+    value = value.strip()
 
     if value.startswith("-"):
         return value[1:].isdigit()
@@ -72,14 +94,16 @@ def can_be_parsed_as_int(value) -> bool:
     return value.isdigit()
 
 
-def can_be_parsed_as_float(value) -> bool:
+def can_be_parsed_as_float(value: Any) -> bool:
     FLOAT_REGEX = r"^\d*\.\d+$"
 
-    if type(value) is float:
+    if isinstance(value, float):
         return True
 
-    if type(value) is not str:
+    if not isinstance(value, str):
         return False
+
+    value = value.strip()
 
     if value.startswith("-"):
         value = value[1:]
@@ -87,47 +111,51 @@ def can_be_parsed_as_float(value) -> bool:
     return bool(re.match(FLOAT_REGEX, value))
 
 
-def can_be_parsed_as_bool(value) -> bool:
-    if type(value) is bool:
+def can_be_parsed_as_bool(value: Any) -> bool:
+    if isinstance(value, bool):
         return True
 
-    if type(value) is not str:
+    if not isinstance(value, str):
         return False
 
-    return value.lower() == "true" or value.lower() == "false"
+    value = value.lower().strip()
+
+    return value == "true" or value == "false"
 
 
-def can_be_parsed_as_dict(value) -> bool:
-    if type(value) is dict:
+def can_be_parsed_as_dict(value: Any) -> bool:
+    if isinstance(value, dict):
         return True
 
-    if type(value) is not str:
+    if not isinstance(value, str):
         return False
 
     value = value.strip()
+
     if value[0] == "{" and value[-1] == "}":
         try:
             ast.literal_eval(value)
             return True
-        except SyntaxError:
+        except Exception:
             return False
 
     return False
 
 
 def can_be_parsed_as_list(value) -> bool:
-    if type(value) is dict:
+    if isinstance(value, list):
         return True
 
-    if type(value) is not str:
+    if not isinstance(value, str):
         return False
 
     value = value.strip()
+
     if value[0] == "[" and value[-1] == "]":
         try:
             ast.literal_eval(value)
             return True
-        except SyntaxError:
+        except Exception:
             return False
 
     return False
