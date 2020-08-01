@@ -39,6 +39,11 @@ def create_config_path(file_path: Path, original: bool = False) -> Path:
     if file_path.is_dir():
         raise ValueError(f"The specified config file ({file_path}) is a directory.")
 
+    if not file_path.exists():
+        raise FileNotFoundError(
+            f"The specified config file ({file_path}) does not exist."
+        )
+
     return file_path
 
 
