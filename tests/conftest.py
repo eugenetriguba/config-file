@@ -4,7 +4,7 @@ from typing import Callable, Tuple, Type, Union
 import pytest
 
 from config_file import AbstractParser, ConfigFile
-from config_file.utils import create_config_path
+from config_file.config_file_path import ConfigFilePath
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ def template_original_file() -> Callable[[Path], Path]:
         if isinstance(template_path, str):
             template_path = Path(template_path)
 
-        original_path = create_config_path(template_path, original=True)
+        original_path = ConfigFilePath(template_path).original_path
         original_path.touch()
         original_path.write_text(template_path.read_text(encoding="utf-8"))
 
@@ -54,12 +54,7 @@ def template_and_parser(
         file_type: str, template_name: str = "default"
     ) -> Tuple[Path, Type[AbstractParser]]:
         test_file = template_file(file_type, template_name)
-        text = test_file.read_text(encoding="utf-8")
-
-        parser = ConfigFile._ConfigFile__find_parser_by_file_type(
-            file_contents=text, file_type=file_type, file_path=test_file
-        )
-        return test_file, parser
+        return test_file, ConfigFile(test_file)._ConfigFile__parser
 
     return func
 

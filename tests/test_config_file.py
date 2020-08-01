@@ -30,7 +30,7 @@ def templated_config_file(template_and_config_file):
 def test_that_config_file_is_initialized_correctly(template_and_config_file):
     template_file, config = template_and_config_file()
 
-    assert config.path == template_file
+    assert config.file_path == template_file
     assert config.stringify() == template_file.read_text()
     assert isinstance(config._ConfigFile__parser, AbstractParser)
 
@@ -41,7 +41,7 @@ def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
 
     try:
         Path(config_path).expanduser().touch()
-        assert ConfigFile(config_path).path == Path.home() / config_name
+        assert ConfigFile(config_path).file_path == Path.home() / config_name
     finally:
         Path(config_path).expanduser().unlink()
 
@@ -66,7 +66,7 @@ def test_that_config_file_can_restore_the_original(
     templated_config_file, template_original_file
 ):
     config = templated_config_file()
-    original_file = template_original_file(config.path)
+    original_file = template_original_file(config.file_path)
 
     config.set("header_one.number_key", 5)
     config.restore_original()
@@ -80,7 +80,8 @@ def test_missing_config_file_during_restore(templated_config_file):
     with pytest.raises(FileNotFoundError) as error:
         config.restore_original()
 
-    assert "file to restore to does not exist" in str(error)
+    assert "The specified config file" in str(error)
+    assert "does not exist" in str(error)
 
 
 @pytest.mark.parametrize(

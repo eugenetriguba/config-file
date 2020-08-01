@@ -3,14 +3,11 @@ from pathlib import Path
 from shutil import copyfile
 from typing import Any, Optional, Type, Union
 
-from config_file.exceptions import ParsingError, UnrecognizedFileError
+from config_file.config_file_path import ConfigFilePath
+from config_file.default import Default
+from config_file.exceptions import ParsingError
 from config_file.parsers.abstract_parser import AbstractParser
-from config_file.parsers.ini_parser import IniParser
-from config_file.parsers.json_parser import JsonParser
 from config_file.parsers.parse_value import parse_value
-from config_file.parsers.toml_parser import TomlParser
-from config_file.parsers.yaml_parser import YamlParser
-from config_file.utils import Default, create_config_path, read_file, split_on_dot
 
 
 class ConfigFile:
@@ -29,53 +26,22 @@ class ConfigFile:
         Raises:
             ValueError: If the specified file path does not have an extension
                         that is supported or it is a directory.
+            FileNotFoundError: If the specified file path does not exist.
         """
-        if not isinstance(file_path, Path):
-            file_path = Path(file_path)
-
-        self.__path = create_config_path(file_path)
-        self.__parser = self.__determine_parser(self.__path, parser)
-
-    @property
-    def path(self) -> Path:
-        return self.__path
-
-    def __determine_parser(
-        self, file_path: Path, parser: Optional[Type[AbstractParser]] = None
-    ) -> Type[AbstractParser]:
-        file_contents = read_file(file_path)
+        self.__path = ConfigFilePath(file_path).validate()
 
         if parser is not None and not inspect.isabstract(parser):
-            return parser(file_contents)
-
-        try:
-            file_type = split_on_dot(file_path, only_last_dot=True)[-1]
-        except ValueError:
-            raise UnrecognizedFileError(
-                "Tried to determine a parser to use, but the file at "
-                f"{file_path} does not have an extension."
-            )
-
-        return self.__find_parser_by_file_type(
-            file_type=file_type, file_contents=file_contents, file_path=file_path
-        )
-
-    @staticmethod
-    def __find_parser_by_file_type(
-        file_type: str, file_path: Union[str, Path], file_contents: str
-    ) -> Type[AbstractParser]:
-        if file_type == "ini":
-            return IniParser(file_contents)
-        elif file_type == "json":
-            return JsonParser(file_contents)
-        elif file_type == "yaml" or file_type == "yml":
-            return YamlParser(file_contents)
-        elif file_type == "toml":
-            return TomlParser(file_contents)
+            self.__parser = parser(self.__path.contents)
         else:
-            raise UnrecognizedFileError(
-                f"File path at `{file_path}` contains an unrecognized file type."
-            )
+            self.__parser = self.__path.parser
+
+    @property
+    def file_path(self) -> Path:
+        return Path(self.__path)
+
+    @property
+    def original_file_path(self) -> Path:
+        return Path(self.__path.original_path)
 
     def get(
         self,
@@ -207,17 +173,17 @@ class ConfigFile:
             SameFileError: If current configuration path and the passed in
             original_file_path are the same file.
         """
-        if original_file_path is None:
-            original_file_path = create_config_path(self.__path, original=True)
-
-        if not Path(original_file_path).exists():
+        if original_file_path and not ConfigFilePath(original_file_path).exists():
             raise FileNotFoundError(
                 f"The {original_file_path} file to restore to does not exist."
             )
+        else:
+            original_file_path = self.__path.original_path
+            original_file_path = original_file_path.validate()
 
-        self.__path.expanduser().unlink()
+        self.__path.unlink()
         copyfile(original_file_path, self.__path)
-        self.__parser.reset_internal_contents(read_file(self.__path))
+        self.__parser.reset_internal_contents(self.__path.contents)
 
     def save(self) -> None:
         """
