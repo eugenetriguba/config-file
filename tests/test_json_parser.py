@@ -1,6 +1,9 @@
+import json
+
 import pytest
 
 from config_file.exceptions import ParsingError
+from config_file.parsers.json_parser import JsonParser
 
 
 def test_invalid_json(templated_parser):
@@ -10,6 +13,7 @@ def test_invalid_json(templated_parser):
 
 def test_that_json_parser_can_stringify(template_and_parser):
     template, parser = template_and_parser("json")
+
     assert parser.stringify() == template.read_text()
 
 
@@ -31,7 +35,20 @@ def test_that_json_parser_can_stringify(template_and_parser):
         "GlossSee",
     ],
 )
-def test_that_json_parser_can_find_keys(key, templated_parser):
+def test_that_json_parser_can_find_wild_keys(key, templated_parser):
+    parser = templated_parser("json", "glossary")
+    assert parser.has(key, wild=True)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "glossary",
+        "glossary.title",
+        "glossary.GlossDiv.GlossList.GlossEntry.GlossDef.para"
+    ]
+)
+def test_that_json_parser_can_find_dot_keys(key, templated_parser):
     parser = templated_parser("json", "glossary")
     assert parser.has(key)
 
@@ -50,7 +67,7 @@ def test_that_json_parser_can_find_keys(key, templated_parser):
         "5.5",
     ],
 )
-def test_that_json_parser_does_not_find_value_with_has(value, templated_parser):
+def test_that_json_parser_does_not_find_values(value, templated_parser):
     parser = templated_parser("json", "glossary")
     assert not parser.has(value)
 
@@ -75,28 +92,17 @@ def test_that_json_parser_can_get_keys_without_parsing_types(
 def test_that_json_parser_can_set_keys(templated_parser, key, value):
     parser = templated_parser("json")
 
-    # test_json = {
-    #     "foo": {
-    #         "baz": 5,
-    #         "boo": "4.4",
-    #         "bar": {"test_key": "foobar", "foobar": {"test": True}},
-    #     },
-    #     "bar": {"baz": 10},
-    #     "zip": "piz",
-    # }
-    # parser = JsonParser(json.dumps(test_json))
-
     parser.set(key, value)
     assert parser.get(key) == value
 
 
 @pytest.mark.parametrize(
     "key",
-    ["glossary", "dict_within_dict", "glossary.GlossDiv.GlossList.GlossEntry.Abbrev"],
+    ["glossary", "glossary.dict_within_dict", "glossary.GlossDiv.GlossList.GlossEntry.Abbrev"],
 )
 def test_that_json_parser_can_delete_keys(template_and_parser, key):
     template, parser = template_and_parser("json", "glossary")
 
     parser.delete(key)
 
-    assert parser.stringify() == template.read_text(encoding="utf-8")
+    assert parser.has(key) is False

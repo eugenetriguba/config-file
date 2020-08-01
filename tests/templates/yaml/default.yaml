@@ -2,5 +2,6 @@ header_one:
   number_key: 0
 
 header_two:
-  str_key: "string"
+  # preserves comments
   list_key: [1, 2, 3]
+  str_key: string

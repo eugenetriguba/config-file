@@ -1,4 +1,5 @@
 from typing import Any
+from types import ModuleType
 
 from config_file.exceptions import MissingKeyError, ParsingError
 from config_file.nested_lookup import get_occurrence_of_key
@@ -8,7 +9,9 @@ from .abstract_parser import AbstractParser
 
 
 class BaseParser(AbstractParser):
-    def __init__(self, file_contents: str, module, decode_error):
+    def __init__(
+        self, file_contents: str, module: ModuleType, decode_error: Exception
+    ):
         super().__init__(file_contents)
         self.__module = module
         self.__decode_error = decode_error
@@ -39,9 +42,9 @@ class BaseParser(AbstractParser):
             for key in split_keys:
                 key_causing_error = key
                 result = result[key]
-        except TypeError:
+        except (KeyError, TypeError):
             raise ParsingError(
-                f"Cannot get {search_key} because "
+                f"Cannot `get` {search_key} because "
                 f"{key_causing_error} is not subscriptable."
             )
 
@@ -59,9 +62,13 @@ class BaseParser(AbstractParser):
                 content_reference[key] = value
                 return
 
-            content_reference = content_reference[key]
+            try:
+                content_reference = content_reference[key]
+            except KeyError:
+                content_reference[key] = {}
+                content_reference = content_reference[key]
 
-    def delete(self, key) -> None:
+    def delete(self, key: str) -> None:
         try:
             if "." not in key:
                 del self.parsed_content[key]
@@ -69,18 +76,26 @@ class BaseParser(AbstractParser):
                 indexes = split_on_dot(key)
                 indexes_length = len(indexes)
 
-                ref = self.parsed_content
+                content_reference = self.parsed_content
                 for index, key in enumerate(indexes):
                     if index == indexes_length - 1:
-                        del ref[key]
+                        del content_reference[key]
                         break
 
-                    ref = ref[key]
-        except KeyError:
-            raise MissingKeyError(f"The specified key '{key}' was not found.")
+                    content_reference = content_reference[key]
+        except (KeyError, TypeError):
+            raise MissingKeyError(f"The specified key '{key}' to delete was not found.")
 
     def stringify(self) -> str:
         return self.__module.dumps(self.parsed_content)
 
-    def has(self, search_key: str) -> bool:
-        return get_occurrence_of_key(self.parsed_content, key=search_key) > 0
+    def has(self, search_key: str, wild: bool = False) -> bool:
+        if wild:
+            return get_occurrence_of_key(self.parsed_content, key=search_key) > 0
+        
+        try:
+            self.get(search_key)
+            return True
+        except (KeyError, ParsingError):
+            return False
+            

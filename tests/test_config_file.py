@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from config_file.config_file import ConfigFile
+from config_file.exceptions import MissingKeyError
 from config_file.parsers.abstract_parser import AbstractParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
@@ -47,7 +48,7 @@ def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
 
 @pytest.mark.skip(msg="needs fixing up")
 @pytest.mark.parametrize("path", ["", "invalid", "invalid.conf"])
-def test_invalid_config_paths(path):
+def test_invalid_path_raises_value_error(path):
     with pytest.raises(ValueError):
         ConfigFile(path)
 
@@ -83,21 +84,18 @@ def test_missing_config_file_during_restore(templated_config_file):
 
 
 @pytest.mark.parametrize(
-    "file_extension, file_contents, section_key, expected_result",
+    "key, expected_result",
     [
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.sunday_index", True),
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar.blah", False),
-        ("ini", "[calendar]\nsunday_index = 0\n\n", "calendar", True),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "calendar", True),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "blah", False),
-        ("json", json.dumps({"calendar": {"sunday_index": 0}}), "sunday_index", True),
+        ("header_one", True),
+        ("header_one.number_key", True),
+        ("header_one.blah", False),
     ],
 )
 def test_that_config_file_can_find_sections_and_keys(
-    tmp_file, file_extension, file_contents, section_key, expected_result
+    templated_config_file, key, expected_result
 ):
-    config = ConfigFile(tmp_file(f"file.{file_extension}", file_contents))
-    assert config.has(section_key) == expected_result
+    config = templated_config_file()
+    assert config.has(key) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -171,12 +169,27 @@ def test_that_config_file_can_get(
         assert ret_val == value
 
 
-def test_that_config_file_can_delete(templated_config_file):
+@pytest.mark.parametrize(
+    "key", ["header_one.number_key", "header_one"]
+)
+def test_that_config_file_can_delete(templated_config_file, key):
     config = templated_config_file()
 
-    config.delete("header_one.number_key")
+    config.delete(key)
 
-    assert config.has("header_one.number_key") is False
+    assert config.has(key) is False
+
+
+@pytest.mark.parametrize(
+    "key", ["", 0, False, {}, "header_one.does_not_exist"]
+)
+def test_that_config_file_raises_missing_key_error_on_invalid_input_or_missing_key(
+    templated_config_file, key
+):
+    config = templated_config_file()
+
+    with pytest.raises(MissingKeyError):
+        config.delete(key)
 
 
 # def test_that_custom_parser_can_be_used(template_and_config_file):

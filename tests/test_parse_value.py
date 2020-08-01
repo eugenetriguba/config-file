@@ -19,13 +19,16 @@ from config_file.parsers.parse_value import can_be_parsed_as_bool, parse_value
         (True, True),
         ({"blah": "5"}, {"blah": 5}),
         (
-            {"blah": {"blah2": {"blah3": "false"}, "abc": "5.25", "boo": "tRuE"}},
+            {"blah": {"blah2": {"blah3": "fAlSe"}, "abc": "5.25", "boo": "tRuE"}},
             {"blah": {"blah2": {"blah3": False}, "abc": 5.25, "boo": True}},
         ),
         (
             ["5", "4.4", "faLSe", "trUE", "foo", "-5", "-5.2"],
             [5, 4.4, False, True, "foo", -5, -5.2],
         ),
+        ("[1, 2, 3]", [1, 2, 3]),
+        ("[True, [1, 5], {}, 5.5]", [True, [1, 5], {}, 5.5]),
+        ("{ 'key': '5', 'key2': 'fAlSE' }", {"key": 5, "key2": False}),
     ],
 )
 def test_parse_value(test_input, expected):
