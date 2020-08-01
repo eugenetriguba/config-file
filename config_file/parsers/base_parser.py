@@ -1,5 +1,5 @@
-from typing import Any
 from types import ModuleType
+from typing import Any
 
 from config_file.exceptions import MissingKeyError, ParsingError
 from config_file.nested_lookup import get_occurrence_of_key
@@ -9,9 +9,7 @@ from .abstract_parser import AbstractParser
 
 
 class BaseParser(AbstractParser):
-    def __init__(
-        self, file_contents: str, module: ModuleType, decode_error: Exception
-    ):
+    def __init__(self, file_contents: str, module: ModuleType, decode_error: Exception):
         super().__init__(file_contents)
         self.__module = module
         self.__decode_error = decode_error
@@ -92,10 +90,9 @@ class BaseParser(AbstractParser):
     def has(self, search_key: str, wild: bool = False) -> bool:
         if wild:
             return get_occurrence_of_key(self.parsed_content, key=search_key) > 0
-        
+
         try:
             self.get(search_key)
             return True
         except (KeyError, ParsingError):
             return False
-            

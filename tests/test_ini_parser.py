@@ -1,6 +1,6 @@
 import pytest
 
-from config_file.exceptions import ParsingError, MissingKeyError
+from config_file.exceptions import MissingKeyError, ParsingError
 from config_file.parsers.ini_parser import IniParser
 
 

@@ -15,9 +15,7 @@ from config_file.utils import Default, create_config_path, read_file, split_on_d
 
 class ConfigFile:
     def __init__(
-        self,
-        file_path: Union[str, Path],
-        parser: Optional[Type[AbstractParser]] = None
+        self, file_path: Union[str, Path], parser: Optional[Type[AbstractParser]] = None
     ) -> None:
         """
         Stores the config file path and expands it if needed, reads in
@@ -93,10 +91,10 @@ class ConfigFile:
             key: The key to retrieve.
             parse_types: Automatically parse ints, floats, booleans, dicts, and
                          lists. This recursively parses all types in whatever you're
-                         retrieving, not just a single type. 
-                         
-                         e.g. If you are retrieving a section, all values in that section 
-                         will be parsed.
+                         retrieving, not just a single type.
+
+                         e.g. If you are retrieving a section, all values in that
+                         section will be parsed.
 
             return_type: The type to coerce the return value to.
             default: The default value to return if the value of the key is empty.
@@ -123,14 +121,14 @@ class ConfigFile:
     def set(self, key: str, value: Any) -> None:
         """Sets the value of a key.
 
-        If the given key does not exist, it will be automatically 
-        created for you. That includes if there are multiple keys 
+        If the given key does not exist, it will be automatically
+        created for you. That includes if there are multiple keys
         in a row that do not exist.
         e.g. set('exists.does_not.does_not.also_does_not', 5)
 
-        The behavior of how this is done, however, depends on the 
-        file used. For example, with INI, subsections are not supported. 
-        So it would create a key in the section `exists` called `does_not` 
+        The behavior of how this is done, however, depends on the
+        file used. For example, with INI, subsections are not supported.
+        So it would create a key in the section `exists` called `does_not`
         and set it to the value {'does_not': {'also_does_not': 5}}.
 
         Args:
@@ -144,7 +142,7 @@ class ConfigFile:
 
         Args:
             key: The section, sub-section, or key to delete.
-        
+
         Raises:
             MissingKeyError: If a key is attempted to be deleted that
             does not exist.
@@ -170,9 +168,9 @@ class ConfigFile:
 
         Args:
             key: The section, sub-section, or key to find.
-            wild: Whether or not to search everywhere. 
-            
-            Without `wild`, a single word `key` without a `.` 
+            wild: Whether or not to search everywhere.
+
+            Without `wild`, a single word `key` without a `.`
             will look at the outer most heirarchy of the file for it.
 
             With `wild`, that single word `key` will be searched
@@ -226,7 +224,7 @@ class ConfigFile:
         Save your configuration changes.
 
         This writes the file back out, including any changes
-        you've made, to the specified path given from this 
+        you've made, to the specified path given from this
         object's constructor.
         """
         with open(str(self.__path), "w") as config_file:

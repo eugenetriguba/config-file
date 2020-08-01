@@ -1,9 +1,6 @@
-import json
-
 import pytest
 
 from config_file.exceptions import ParsingError
-from config_file.parsers.json_parser import JsonParser
 
 
 def test_invalid_json(templated_parser):
@@ -45,8 +42,8 @@ def test_that_json_parser_can_find_wild_keys(key, templated_parser):
     [
         "glossary",
         "glossary.title",
-        "glossary.GlossDiv.GlossList.GlossEntry.GlossDef.para"
-    ]
+        "glossary.GlossDiv.GlossList.GlossEntry.GlossDef.para",
+    ],
 )
 def test_that_json_parser_can_find_dot_keys(key, templated_parser):
     parser = templated_parser("json", "glossary")
@@ -98,7 +95,11 @@ def test_that_json_parser_can_set_keys(templated_parser, key, value):
 
 @pytest.mark.parametrize(
     "key",
-    ["glossary", "glossary.dict_within_dict", "glossary.GlossDiv.GlossList.GlossEntry.Abbrev"],
+    [
+        "glossary",
+        "glossary.dict_within_dict",
+        "glossary.GlossDiv.GlossList.GlossEntry.Abbrev",
+    ],
 )
 def test_that_json_parser_can_delete_keys(template_and_parser, key):
     template, parser = template_and_parser("json", "glossary")

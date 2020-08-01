@@ -169,9 +169,7 @@ def test_that_config_file_can_get(
         assert ret_val == value
 
 
-@pytest.mark.parametrize(
-    "key", ["header_one.number_key", "header_one"]
-)
+@pytest.mark.parametrize("key", ["header_one.number_key", "header_one"])
 def test_that_config_file_can_delete(templated_config_file, key):
     config = templated_config_file()
 
@@ -180,9 +178,7 @@ def test_that_config_file_can_delete(templated_config_file, key):
     assert config.has(key) is False
 
 
-@pytest.mark.parametrize(
-    "key", ["", 0, False, {}, "header_one.does_not_exist"]
-)
+@pytest.mark.parametrize("key", ["", 0, False, {}, "header_one.does_not_exist"])
 def test_that_config_file_raises_missing_key_error_on_invalid_input_or_missing_key(
     templated_config_file, key
 ):
@@ -190,36 +186,3 @@ def test_that_config_file_raises_missing_key_error_on_invalid_input_or_missing_k
 
     with pytest.raises(MissingKeyError):
         config.delete(key)
-
-
-# def test_that_custom_parser_can_be_used(template_and_config_file):
-#     class CustomParser(AbstractParser):
-#         def __init__(self, file_contents):
-#             super().__init__(file_contents)
-#
-#         def parse(self, file_contents: str):
-#             return file_contents
-#
-#         def get(self, key, parse_types=True):
-#             return key
-#
-#         def set(self, key, value):
-#             return key, value
-#
-#         def delete(self, section_key):
-#             return section_key
-#
-#         def has(self, section_key: str) -> bool:
-#             return True
-#
-#         def stringify(self) -> str:
-#             return str(self.parsed_content)
-#
-#     template_file, config = template_and_config_file(parser=CustomParser)
-#
-#     assert isinstance(config._ConfigFile__parser, CustomParser)
-#     assert config.get("key") == "key"
-#     assert config.set("key", "value") == ("key", "value")
-#     assert config.delete("section_key") == "section_key"
-#     assert config.has("blah")
-#     assert config.stringify() == template_file.read_text()
