@@ -4,6 +4,12 @@ from config_file.abstract_parser import AbstractParser
 
 
 class ConcreteParser(AbstractParser):
+    """
+    ConcreteParser is a concrete implementation of the
+    AbstractParser that just calls the AbstractParser's
+    methods so we can ensure they raise a NotImplementedError.
+    """
+
     def __init__(self, file_contents):
         super().__init__(file_contents)
 
@@ -27,6 +33,12 @@ class ConcreteParser(AbstractParser):
 
 
 def test_that_abstract_parser_can_not_be_instantiated():
+    """
+    config_file.abstract_parser.abstract_parser
+
+    Ensure the AbstractParser raises a TypeError when it is
+    instantiated.
+    """
     with pytest.raises(TypeError):
         AbstractParser("")
 
@@ -43,6 +55,12 @@ def test_that_abstract_parser_can_not_be_instantiated():
     ],
 )
 def test_that_abstract_parser_raises_not_implemented_errors(function, args):
+    """
+    config_file.abstract_parser.abstract_parser
+
+    Ensure the AbstractParser raises a NotImplementedError
+    for every method in it.
+    """
     with pytest.raises(NotImplementedError):
         if args is None:
             function()
