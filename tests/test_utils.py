@@ -1,6 +1,6 @@
 import pytest
 
-from config_file.utils import split_on_dot
+from config_file.utils import Default, split_on_dot
 
 
 @pytest.mark.parametrize(
@@ -17,3 +17,13 @@ def test_that_split_on_dot_splits_the_line_correctly(
 def test_that_split_on_dot_raises_error_when_there_is_no_dot(test_input):
     with pytest.raises(ValueError):
         split_on_dot(test_input)
+
+
+def test_that_default_is_initialized_correctly():
+    default = Default(5)
+    assert default.value == 5
+
+
+def test_that_default_has_the_correct_repr_format():
+    default = Default("test")
+    assert str(default) == "Default Value: test (<class 'str'>)"
