@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from config_file.parsers.parse_value import (
+from config_file.parse_value import (
     can_be_parsed_as_bool,
     can_be_parsed_as_dict,
     can_be_parsed_as_float,

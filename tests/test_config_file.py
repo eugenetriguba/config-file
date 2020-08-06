@@ -1,11 +1,10 @@
-import json
 from pathlib import Path
 
 import pytest
 
+from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
 from config_file.exceptions import MissingKeyError
-from config_file.parsers.abstract_parser import AbstractParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
 
@@ -46,9 +45,14 @@ def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
         Path(config_path).expanduser().unlink()
 
 
-@pytest.mark.skip(msg="needs fixing up")
-@pytest.mark.parametrize("path", ["", "invalid", "invalid.conf"])
-def test_invalid_path_raises_value_error(path):
+@pytest.mark.parametrize("path", ["invalid", "invalid.conf"])
+def test_invalid_path_raises_file_not_found_error(path):
+    with pytest.raises(FileNotFoundError):
+        ConfigFile(path)
+
+
+@pytest.mark.parametrize("path", [""])
+def test_directory_raises_value_error(path):
     with pytest.raises(ValueError):
         ConfigFile(path)
 
@@ -99,75 +103,21 @@ def test_that_config_file_can_find_sections_and_keys(
     assert config.has(key) == expected_result
 
 
-@pytest.mark.parametrize(
-    "section_key, value, parse_type, return_type, default, file_name, file_contents",
-    [
-        (
-            "calendar.sunday_index",
-            0,
-            True,
-            None,
-            False,
-            "config.ini",
-            "[calendar]\nsunday_index = 0\n\n",
-        ),
-        (
-            "calendar.sunday_index",
-            "0",
-            False,
-            None,
-            False,
-            "config.ini",
-            "[calendar]\nsunday_index = 0\n\n",
-        ),
-        (
-            "calendar.sunday_index",
-            0,
-            False,
-            None,
-            False,
-            "config.json",
-            json.dumps({"calendar": {"sunday_index": 0}}),
-        ),
-        (
-            "calendar.missing",
-            "my default value",
-            False,
-            None,
-            "my default value",
-            "config.json",
-            json.dumps({"calendar": 5}),
-        ),
-        (
-            "calendar.sunday_index",
-            0,
-            False,
-            int,
-            False,
-            "config.ini",
-            "[calendar]\nsunday_index = 0\n\n",
-        ),
-    ],
-)
-def test_that_config_file_can_get(
-    tmpdir,
-    section_key,
-    value,
-    return_type,
-    parse_type,
-    file_name,
-    file_contents,
-    default,
-):
-    config_path = tmpdir / file_name
-    config_path.write_text(file_contents, encoding="utf-8")
-    config = ConfigFile(config_path)
-
-    ret_val = config.get(section_key, parse_types=parse_type, default=default)
-    if return_type is not None:
-        assert return_type(ret_val) == value
-    else:
-        assert ret_val == value
+# @pytest.mark.parametrize(
+#     "key, value",
+#     [
+#         ("header_one.number_key", 0),
+#         ("header_two.list_key", [1, 2, 3]),
+#     ],
+# )
+# def test_that_config_file_can_get_existent_keys(templated_config_file, key, value):
+#     config = templated_config_file()
+#
+#     print(config.get(key))
+#     print(type(config.get(key)))
+#     print(config._ConfigFile__parser)
+#
+#     assert config.get(key) == value
 
 
 @pytest.mark.parametrize("key", ["header_one.number_key", "header_one"])

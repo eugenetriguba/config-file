@@ -9,7 +9,7 @@ class MissingDependencyError(ConfigFileError):
     """
 
 
-class UnrecognizedFileError(ConfigFileError):
+class UnsupportedFileTypeError(ConfigFileError):
     """
     A missing file extension or a file type not supported.
     """

@@ -3,11 +3,11 @@ from pathlib import Path
 from shutil import copyfile
 from typing import Any, Optional, Type, Union
 
+from config_file.abstract_parser import AbstractParser
 from config_file.config_file_path import ConfigFilePath
-from config_file.default import Default
 from config_file.exceptions import ParsingError
-from config_file.parsers.abstract_parser import AbstractParser
-from config_file.parsers.parse_value import parse_value
+from config_file.parse_value import parse_value
+from config_file.utils import Default
 
 
 class ConfigFile:

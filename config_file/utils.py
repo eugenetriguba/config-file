@@ -20,3 +20,19 @@ def split_on_dot(line: Union[str, Path], only_last_dot=False) -> List[str]:
         raise ValueError(f"The given string does not have a dot to split on: {line}")
 
     return line.rsplit(".", 1) if only_last_dot else line.split(".")
+
+
+class Default:
+    """
+    Default is used for the `default` value in ConfigFile's `get`.
+
+    Previously, the default value for `get` was None. However, then
+    the user cannot have `get` return a default value of None. So this
+    class is used instead to get around that limitation.
+    """
+
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return "Default Value: {} ({})".format(self.value, type(self.value))

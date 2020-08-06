@@ -3,12 +3,13 @@ from pathlib import Path as _Path_
 from pathlib import _posix_flavour, _windows_flavour
 from typing import Type
 
-from .exceptions import UnrecognizedFileError
-from .parsers.abstract_parser import AbstractParser
-from .parsers.ini_parser import IniParser
-from .parsers.json_parser import JsonParser
-from .parsers.toml_parser import TomlParser
-from .parsers.yaml_parser import YamlParser
+from config_file.abstract_parser import AbstractParser
+from config_file.ini_parser import IniParser
+from config_file.json_parser import JsonParser
+from config_file.toml_parser import TomlParser
+from config_file.yaml_parser import YamlParser
+
+from .exceptions import UnsupportedFileTypeError
 from .utils import split_on_dot
 
 
@@ -20,7 +21,7 @@ class ConfigFilePath(_Path_):
     that should be use for the given file type.
 
     See https://codereview.stackexchange.com/questions/162426/subclassing-pathlib-path
-    for most details on subclassing the pathlib.Path object.
+    for more details on subclassing the pathlib.Path object.
     """
 
     _flavour = _windows_flavour if os.name == "nt" else _posix_flavour
@@ -57,14 +58,14 @@ class ConfigFilePath(_Path_):
         """Determine what parser should be used for this file.
 
         Raises:
-            UnrecognizedFileError: If the extension of the file
+            UnsupportedFileTypeError: If the extension of the file
             is not recognized.
 
         Returns:
             The instantiated parser that should be used for this file.
         """
         if self.extension == "":
-            raise UnrecognizedFileError(
+            raise UnsupportedFileTypeError(
                 "Tried to determine a parser to use, but the file at "
                 f"{self} does not have an extension."
             )
@@ -78,7 +79,7 @@ class ConfigFilePath(_Path_):
         elif self.extension == "toml":
             return TomlParser(self.contents)
         else:
-            raise UnrecognizedFileError(
+            raise UnsupportedFileTypeError(
                 f"File path at `{self}` contains an unrecognized file type."
             )
 

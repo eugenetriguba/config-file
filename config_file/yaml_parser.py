@@ -5,9 +5,8 @@ try:
 except ImportError:
     YAML_AVAILABLE = False
 
-from config_file.exceptions import MissingDependencyError
-
 from .base_parser import BaseParser
+from .exceptions import MissingDependencyError
 
 
 class YamlParser(BaseParser):

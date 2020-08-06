@@ -1,7 +1,7 @@
 import pytest
 
 from config_file.exceptions import MissingKeyError, ParsingError
-from config_file.parsers.ini_parser import IniParser
+from config_file.ini_parser import IniParser
 
 
 @pytest.mark.parametrize("ini_file", ["blahblahblah", "{ 'key1': 5 }"])
@@ -39,7 +39,7 @@ floatkey = 5.3
     "test_input", ["invalid.invalid_key"],
 )
 def test_that_getting_unknown_sections_or_keys_throws_errors(test_input):
-    with pytest.raises(ParsingError):
+    with pytest.raises(KeyError):
         IniParser("").get(test_input)
 
 

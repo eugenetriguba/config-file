@@ -84,7 +84,7 @@ def test_that_json_parser_can_get_keys_without_parsing_types(
 
 
 @pytest.mark.parametrize(
-    "key, value", [("zip", "zipzip"), ("foo.bar.foobar", 5), ("foo.baz", "bar")]
+    "key, value", [("zip", "zipzip"), ("foo.bar.foobar", "5"), ("foo.baz", "bar")]
 )
 def test_that_json_parser_can_set_keys(templated_parser, key, value):
     parser = templated_parser("json")
