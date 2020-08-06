@@ -58,7 +58,8 @@ for the package to recognize it and use the correct parser for it.
 
 ### Setting up ConfigFile
 
-To use the package, we import in the `ConfigFile` object.
+To use the package, we import in the `ConfigFile` object. This object
+is the only thing considered to be part of the public API.
 
 We can set it up by giving it a string or `pathlib.Path` as the argument.
 Any home tildes `~` in the string or `Path` are recognized and converted
@@ -132,11 +133,9 @@ There are two ways we could handle that.
 The first is the one we're used to seeing: catch the error.
 
 ```python
-from config_file import MissingKeyError
-
 try:
     important_value = config.get('section.i_do_not_exist')
-except MissingKeyError:
+except KeyError:
     important_value = 42
 ```
 
