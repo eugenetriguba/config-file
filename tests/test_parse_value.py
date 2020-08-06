@@ -27,7 +27,7 @@ from config_file.parse_value import (
 )
 def test_parse_value_parses_ints_floats_and_bools(test_input, expected):
     """
-    config_file.parsers.parse_value
+    config_file.parse_value.parse_value
 
     Parses string values that contain ints, floats, and booleans into
     their native representation.
@@ -55,7 +55,7 @@ def test_parse_value_parses_ints_floats_and_bools(test_input, expected):
 )
 def test_parse_value_parses_dicts_and_lists(test_input, expected):
     """
-    config_file.parsers.parse_value
+    config_file.parse_value.parse_value
 
     Parses string values that contain dictionaries or lists into
     their native representation.
@@ -66,7 +66,7 @@ def test_parse_value_parses_dicts_and_lists(test_input, expected):
 @pytest.mark.parametrize("test_input", ["blah", datetime(2020, 1, 1)])
 def test_parse_value_returns_values_that_cannot_be_parsed(test_input):
     """
-    config_file.parsers.parse_value
+    config_file.parse_value.parse_value
 
     If a value is given that cannot be parsed by parse_value,
     it should simply return that value back.
@@ -80,7 +80,7 @@ def test_parse_value_returns_values_that_cannot_be_parsed(test_input):
 )
 def test_parse_value_returns_values_that_are_already_in_their_native_type(test_input):
     """
-    config_file.parsers.parse_value
+    config_file.parse_value.parse_value
 
     Returns back the inputted value if it is already in its native type.
     """
@@ -90,7 +90,7 @@ def test_parse_value_returns_values_that_are_already_in_their_native_type(test_i
 @pytest.mark.parametrize("value", [-1, 0, 1, "1", "-1", "   0   "])
 def test_values_that_can_be_parsed_as_int(value):
     """
-    config_file.parsers.can_be_parsed_as_int
+    config_file.parse_value.can_be_parsed_as_int
 
     Returns True for values that can be parsed as an int.
     """
@@ -102,7 +102,7 @@ def test_values_that_can_be_parsed_as_int(value):
 )
 def test_values_that_cannot_be_parsed_as_int(value):
     """
-    config_file.parsers.can_be_parsed_as_int
+    config_file.parse_value.can_be_parsed_as_int
 
     Returns False for values that cannot be parsed as an int.
     """
@@ -112,7 +112,7 @@ def test_values_that_cannot_be_parsed_as_int(value):
 @pytest.mark.parametrize("value", [5.5, -1.2, ".1", "5.5", "   1.1  ", "-0.0", "0.0"])
 def test_values_that_can_be_parsed_as_float(value):
     """
-    config_file.parsers.can_be_parsed_as_float
+    config_file.parse_value.can_be_parsed_as_float
 
     Returns True for values that can be parsed as an float.
     """
@@ -139,7 +139,7 @@ def test_values_that_can_be_parsed_as_float(value):
 )
 def test_values_that_cannot_be_parsed_as_float(value):
     """
-    config_file.parsers.can_be_parsed_as_float
+    config_file.parse_value.can_be_parsed_as_float
 
     Returns False for values that cannot be parsed as an float.
     """
@@ -151,7 +151,7 @@ def test_values_that_cannot_be_parsed_as_float(value):
 )
 def test_values_that_can_be_parsed_as_bool(value):
     """
-    config_file.parsers.can_be_parsed_as_bool
+    config_file.parse_value.can_be_parsed_as_bool
 
     Returns True for values that can be parsed as a bool.
     """
@@ -161,7 +161,7 @@ def test_values_that_can_be_parsed_as_bool(value):
 @pytest.mark.parametrize("value", [0, 1, -1, 5.3, "ruff", {}, [], datetime.now()])
 def test_values_that_cannot_be_parsed_as_bool(value):
     """
-    config_file.parsers.can_be_parsed_as_bool
+    config_file.parse_value.can_be_parsed_as_bool
 
     Returns False for values that cannot be parsed as a bool.
     """
@@ -171,7 +171,7 @@ def test_values_that_cannot_be_parsed_as_bool(value):
 @pytest.mark.parametrize("value", [{}, {"hello": 5}, "{}", "  {  }  ", "{'test': 5}"])
 def test_values_that_can_be_parsed_as_dict(value):
     """
-    config_file.parsers.can_be_parsed_as_dict
+    config_file.parse_value.can_be_parsed_as_dict
 
     Returns True for values that can be parsed as a dict.
     """
@@ -181,7 +181,7 @@ def test_values_that_can_be_parsed_as_dict(value):
 @pytest.mark.parametrize("value", [0, 5, -1, 5.5, [], "ruff", " { invalid } "])
 def test_values_that_cannot_be_parsed_as_dict(value):
     """
-    config_file.parsers.can_be_parsed_as_dict
+    config_file.parse_value.can_be_parsed_as_dict
 
     Returns False for values that cannot be parsed as a dict.
     """
@@ -191,7 +191,7 @@ def test_values_that_cannot_be_parsed_as_dict(value):
 @pytest.mark.parametrize("value", [[], [1, 2, True, 5.5], "[]", " [] ", " [1, 2, 3]"])
 def test_values_that_can_be_parsed_as_list(value):
     """
-    config_file.parsers.can_be_parsed_as_list
+    config_file.parse_value.can_be_parsed_as_list
 
     Returns True for values that can be parsed as a list.
     """
@@ -201,7 +201,7 @@ def test_values_that_can_be_parsed_as_list(value):
 @pytest.mark.parametrize("value", [0, 5, -1, 5.5, {}, "ruff", " [ invalid ] "])
 def test_values_that_cannot_be_parsed_as_list(value):
     """
-    config_file.parsers.can_be_parsed_as_list
+    config_file.parse_value.can_be_parsed_as_list
 
     Returns False for values that cannot be parsed as a list.
     """
