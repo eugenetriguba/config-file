@@ -4,7 +4,6 @@ import pytest
 
 from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
-from config_file.exceptions import MissingKeyError
 from config_file.ini_parser import IniParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
@@ -126,10 +125,10 @@ def test_that_config_file_can_delete(templated_config_file, key):
 
 
 @pytest.mark.parametrize("key", ["", 0, False, {}, "header_one.does_not_exist"])
-def test_that_config_file_raises_missing_key_error_on_invalid_input_or_missing_key(
+def test_that_config_file_raises_key_error_on_invalid_input_or_missing_key(
     templated_config_file, key
 ):
     config = templated_config_file()
 
-    with pytest.raises(MissingKeyError):
+    with pytest.raises(KeyError):
         config.delete(key)

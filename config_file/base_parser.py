@@ -2,7 +2,7 @@ from types import ModuleType
 from typing import Any, Type
 
 from config_file.abstract_parser import AbstractParser
-from config_file.exceptions import MissingKeyError, ParsingError
+from config_file.exceptions import ParsingError
 from config_file.nested_lookup import get_occurrence_of_key
 from config_file.utils import split_on_dot
 
@@ -123,7 +123,7 @@ class BaseParser(AbstractParser):
 
                     content_reference = content_reference[key]
         except (KeyError, TypeError):
-            raise MissingKeyError(f"The specified key '{key}' to delete was not found.")
+            raise KeyError(f"The specified key '{key}' to delete was not found.")
 
     def stringify(self) -> str:
         return self.__module.dumps(self.parsed_content)

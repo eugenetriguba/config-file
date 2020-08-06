@@ -57,7 +57,7 @@ class AbstractParser(ABC):
             Whatever value the given key happens to contain.
 
         Raises:
-            MissingKeyError: If the key to retrieve does not exist.
+            KeyError: If the key to retrieve does not exist.
         """
         raise NotImplementedError
 
@@ -81,7 +81,7 @@ class AbstractParser(ABC):
             key: The key we would like to remove.
 
         Raises:
-            MissingKeyError: If the key to remove does not exist.
+            KeyError: If the key to remove does not exist.
         """
         raise NotImplementedError
 
