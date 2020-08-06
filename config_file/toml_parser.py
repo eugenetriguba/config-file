@@ -5,7 +5,6 @@ try:
 except ImportError:
     TOML_AVAILABLE = False
 
-from config_file.exceptions import MissingDependencyError
 
 from .base_parser import BaseParser
 
@@ -13,7 +12,7 @@ from .base_parser import BaseParser
 class TomlParser(BaseParser):
     def __init__(self, file_contents: str):
         if not TOML_AVAILABLE:
-            raise MissingDependencyError(
+            raise ImportError(
                 "It doesn't appear `tomlkit` is installed, but a toml "
                 "file was attempted to be used. Install the `toml` "
                 "extra first with `pip install config-file[toml]`."

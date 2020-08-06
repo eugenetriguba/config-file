@@ -102,7 +102,7 @@ class ConfigFilePath(_Path_):
             ValueError: If the path leads to a directory.
 
         Returns:
-            This ConfigFilePath object
+            A ConfigFilePath object with any ~'s expanded.
         """
         if len(self.parts) >= 1 and self.parts[0] == "~":
             self = ConfigFilePath(self.expanduser())

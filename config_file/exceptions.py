@@ -2,13 +2,6 @@ class ConfigFileError(Exception):
     """A generic error from the package."""
 
 
-class MissingDependencyError(ConfigFileError):
-    """
-    yaml or toml dependencies were not installed,
-    but the parsers for them were attempted to be used.
-    """
-
-
 class UnsupportedFileTypeError(ConfigFileError):
     """
     A missing file extension or a file type not supported.
