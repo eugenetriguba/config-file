@@ -9,23 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A generic `ConfigFileError`.
-- More type hints from `typings` have been added to `ConfigFile` for better type information.
-- `YamlParser` and `TomlParser`. This means `ConfigFile` can now accept yaml and toml files,
-  as long as `PyYaml` is also installed if you're trying to use a yaml file and `toml` is
-  installed if you're trying to use a toml file.
+- `ConfigFile` can now accept yaml and toml files as optional extra file types.
+  As long as the extras (`yaml` and `toml`) are installed, those file types can also
+  be used.
 
 ### Changed
 
-- `ParsingError` now inherits from `ConfigFileError` rather than `Exception`.
-- Errors have been moved to `exceptions.py`.
-- The `get_all`, `set_all`, and `delete_all` optional parameter options in `JsonParser` have
-  been renamed to just `all`. This shouldn't have any effect since `JsonParser` is not intended
-  to be used directly, and that option was not in `ConfigFile`.
 - `path` on the `ConfigFile` is now a property that can only be retrieved. `contents` is now private
   but you can use `.stringify()` instead to get the contents. `parser` is now also private.
+
 - `restore_original` in `ConfigFile` now raises a `FileNotFoundError` instead of an `OSError` if the original
   file path does not exist.
+
+### Fixed
+
+- `default` in `ConfigFile`'s `get` method can now be `None`. Previously, it was defaulted to the
+  value `None` so there was no way of distinguishing between the default value and a user inputted
+  value of `None`.
 
 ## 0.10.0 - 2020-05-10
 
