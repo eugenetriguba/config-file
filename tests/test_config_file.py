@@ -5,6 +5,7 @@ import pytest
 from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
 from config_file.exceptions import MissingKeyError
+from config_file.ini_parser import IniParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
 
@@ -103,21 +104,16 @@ def test_that_config_file_can_find_sections_and_keys(
     assert config.has(key) == expected_result
 
 
-# @pytest.mark.parametrize(
-#     "key, value",
-#     [
-#         ("header_one.number_key", 0),
-#         ("header_two.list_key", [1, 2, 3]),
-#     ],
-# )
-# def test_that_config_file_can_get_existent_keys(templated_config_file, key, value):
-#     config = templated_config_file()
-#
-#     print(config.get(key))
-#     print(type(config.get(key)))
-#     print(config._ConfigFile__parser)
-#
-#     assert config.get(key) == value
+@pytest.mark.parametrize(
+    "key, value", [("header_one.number_key", 0), ("header_two.list_key", [1, 2, 3])],
+)
+def test_that_config_file_can_get_existent_keys(templated_config_file, key, value):
+    config = templated_config_file()
+
+    if isinstance(config._ConfigFile__parser, IniParser):
+        value = str(value)
+
+    assert config.get(key) == value
 
 
 @pytest.mark.parametrize("key", ["header_one.number_key", "header_one"])
