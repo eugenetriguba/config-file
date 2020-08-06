@@ -11,17 +11,17 @@ SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
 
 @pytest.fixture(params=SUPPORTED_FILE_TYPES)
 def template_and_config_file(request, template_file):
-    def func(template_name: str = "default", parser: AbstractParser = None):
+    def func(template_name: str = "default"):
         template = template_file(request.param, template_name)
-        return template, ConfigFile(template, parser=parser)
+        return template, ConfigFile(template)
 
     return func
 
 
 @pytest.fixture(params=SUPPORTED_FILE_TYPES)
 def templated_config_file(template_and_config_file):
-    def func(template_name: str = "default", parser: AbstractParser = None):
-        return template_and_config_file(template_name, parser)[1]
+    def func(template_name: str = "default"):
+        return template_and_config_file(template_name)[1]
 
     return func
 
