@@ -137,7 +137,7 @@ class ConfigFile:
             wild: Whether or not to search everywhere.
 
             Without `wild`, a single word `key` without a `.`
-            will look at the outer most heirarchy of the file for it.
+            will look at the outer most hierarchy of the file for it.
 
             With `wild`, that single word `key` will be searched
             for throughout the entire file.

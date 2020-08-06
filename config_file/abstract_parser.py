@@ -100,7 +100,7 @@ class AbstractParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def has(self, key: str) -> bool:
+    def has(self, key: str, wild: bool = False) -> bool:
         """Check whether the given key is in the parsed working file.
 
         This should not behave like a wild card, as in check
@@ -110,6 +110,7 @@ class AbstractParser(ABC):
 
         Args:
             key: The key to search for.
+            wild: Optionally search for any occurrence of key in the file.
 
         Returns:
             True if the working file has the key. False otherwise.
