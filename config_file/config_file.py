@@ -1,9 +1,7 @@
-import inspect
 from pathlib import Path
 from shutil import copyfile
-from typing import Any, Optional, Type, Union
+from typing import Any, Union
 
-from config_file.abstract_parser import AbstractParser
 from config_file.config_file_path import ConfigFilePath
 from config_file.exceptions import ParsingError
 from config_file.parse_value import parse_value
@@ -11,9 +9,7 @@ from config_file.utils import Default
 
 
 class ConfigFile:
-    def __init__(
-        self, file_path: Union[str, Path], parser: Optional[Type[AbstractParser]] = None
-    ) -> None:
+    def __init__(self, file_path: Union[str, Path]) -> None:
         """
         Stores the config file path and expands it if needed, reads in
         the file contents, and determines what parser should be used for
@@ -21,7 +17,6 @@ class ConfigFile:
 
         Args:
             file_path: The path to your configuration file.
-            parser: A custom parser you'd like used for your config file.
 
         Raises:
             ValueError: If the specified file path does not have an extension
@@ -29,11 +24,7 @@ class ConfigFile:
             FileNotFoundError: If the specified file path does not exist.
         """
         self.__path = ConfigFilePath(file_path).validate()
-
-        if parser is not None and not inspect.isabstract(parser):
-            self.__parser = parser(self.__path.contents)
-        else:
-            self.__parser = self.__path.parser
+        self.__parser = self.__path.parser
 
     @property
     def file_path(self) -> Path:
@@ -42,6 +33,15 @@ class ConfigFile:
     @property
     def original_file_path(self) -> Path:
         return Path(self.__path.original_path)
+
+    def __getitem__(self, key: str):
+        return self.__parser.parsed_content[key]
+
+    def __setitem__(self, key: str, value: Any):
+        self.__parser.parsed_content[key] = value
+
+    def __delitem__(self, key: str):
+        del self.__parser.parsed_content[key]
 
     def get(
         self,
