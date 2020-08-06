@@ -3,7 +3,8 @@ from typing import Callable, Tuple, Type, Union
 
 import pytest
 
-from config_file import AbstractParser, ConfigFile
+from config_file import ConfigFile
+from config_file.abstract_parser import AbstractParser
 from config_file.config_file_path import ConfigFilePath
 
 

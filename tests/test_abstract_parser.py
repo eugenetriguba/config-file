@@ -1,6 +1,6 @@
 import pytest
 
-from config_file import AbstractParser
+from config_file.abstract_parser import AbstractParser
 
 
 class ConcreteParser(AbstractParser):
