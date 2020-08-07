@@ -69,6 +69,7 @@ class ConfigFile:
             The value of the key.
 
         Raises:
+            KeyError: If a key is attempted to be retrieved that does not exist.
             ValueError: If the value is not able to be coerced into return_type.
         """
         try:
@@ -110,7 +111,7 @@ class ConfigFile:
             key: The section, sub-section, or key to delete.
 
         Raises:
-            MissingKeyError: If a key is attempted to be deleted that
+            KeyError: If a key is attempted to be deleted that
             does not exist.
         """
         self.__parser.delete(key)
