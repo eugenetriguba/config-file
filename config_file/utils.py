@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import List, Union
 
 
-def split_on_dot(line: Union[str, Path], only_last_dot=False) -> List[str]:
+def split_on_dot(line: Union[str, Path], only_last_dot: bool = False) -> List[str]:
     """
     Split a string on the dot character (.).
 
