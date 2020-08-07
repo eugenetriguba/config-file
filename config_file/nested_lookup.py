@@ -59,11 +59,11 @@ def _nested_lookup(key, document, wild=False, with_keys=False):
 
 def get_all_keys(dictionary):
     """
-        Method to get all keys from a nested dictionary as a List
-        Args:
-            dictionary: Nested dictionary
-        Returns:
-            List of keys in the dictionary
+    Method to get all keys from a nested dictionary as a List
+    Args:
+        dictionary: Nested dictionary
+    Returns:
+        List of keys in the dictionary
     """
     result_list = []
 
