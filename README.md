@@ -96,6 +96,14 @@ config.get('section')
 >>> {'num_key': '5', 'str_key': 'blah', 'bool_key': 'true', 'list_key': '[1, 2]'}
 ```
 
+Furthermore, you can also index into the `ConfigFile` object
+to retrieve keys if that is preferred.
+
+```python
+config['section']['num_key']
+>>> '5'
+```
+
 #### Coercing the return types
 
 However, some of these keys are obviously not strings natively.
@@ -181,6 +189,20 @@ dependent on the file format we're using, since every format is a little
 different in it's structure and in what it supports. See the
 [full documentation](#Documentation) for more information there.
 
+Lastly, we can set values using an array notation as well. The underlying
+content is all manipulated as a dictionary for every file type. If we wanted
+to create a new section, we'd simply set it to be an empty dictionary.
+
+```python
+config['new_section'] = {}
+```
+
+Which would result to be an empty section:
+
+```ini
+[new_section]
+```
+
 ### Using `delete()`
 
 `delete()` allows us to delete entire sections or specific keys.
@@ -194,6 +216,12 @@ However, we can also just delete a single key.
 
 ```python
 config.delete('section.num_key')
+```
+
+We can also use the array notation here as well.
+
+```python
+del config['section']['num_key']
 ```
 
 ### Using `has()`
