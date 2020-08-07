@@ -9,7 +9,6 @@ from config_file.json_parser import JsonParser
 from config_file.toml_parser import TomlParser
 from config_file.yaml_parser import YamlParser
 
-from .exceptions import UnsupportedFileTypeError
 from .utils import split_on_dot
 
 
@@ -58,14 +57,13 @@ class ConfigFilePath(_Path_):
         """Determine what parser should be used for this file.
 
         Raises:
-            UnsupportedFileTypeError: If the extension of the file
-            is not recognized.
+            ValueError: If the extension of the file is not recognized.
 
         Returns:
             The instantiated parser that should be used for this file.
         """
         if self.extension == "":
-            raise UnsupportedFileTypeError(
+            raise ValueError(
                 "Tried to determine a parser to use, but the file at "
                 f"{self} does not have an extension."
             )
@@ -79,7 +77,7 @@ class ConfigFilePath(_Path_):
         elif self.extension == "toml":
             return TomlParser(self.contents)
         else:
-            raise UnsupportedFileTypeError(
+            raise ValueError(
                 f"File path at `{self}` contains an unrecognized file type."
             )
 
