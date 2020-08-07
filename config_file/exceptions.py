@@ -1,19 +1,9 @@
-class ConfigFileError(Exception):
-    """A generic error from the package."""
-
-
-class UnsupportedFileTypeError(ConfigFileError):
+class ParsingError(ValueError):
     """
-    A missing file extension or a file type not supported.
-    """
+    Unable to parse the configuration file.
 
-
-class ParsingError(ConfigFileError):
-    """Unable to parse the configuration file."""
-
-
-class MissingKeyError(ParsingError):
-    """
-    A key that was specified (to retrieve, delete, etc.)
-    is not in the file.
+    Since every module that parses the different
+    files has it's own decode error, this standardizes
+    it for the package to only raise a ParsingError
+    if a error occurs in those instances.
     """
