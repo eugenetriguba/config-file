@@ -8,12 +8,13 @@
 # Python
 *.egg-info/
 __pycache__/
-venv/
+.venv/
 
-# Pytest
+# Testing / Linting
 .pytest_cache/
 .coverage
 .benchmarks/
+.mypy_cache/
 
 # Package Publishing
 dist/

@@ -1,155 +1,188 @@
-import inspect
-from pathlib import Path, PurePath
+from pathlib import Path
 from shutil import copyfile
+from typing import Any, Union
 
-from config_file.parsers.base_parser import BaseParser, ParsingError
-from config_file.parsers.ini_parser import IniParser
-from config_file.parsers.json_parser import JsonParser
-from config_file.utils import split_on_dot
+from config_file.config_file_path import ConfigFilePath
+from config_file.parse_value import parse_value
+from config_file.utils import Default
 
 
 class ConfigFile:
-    def __init__(self, file_path, parser: BaseParser = None):
+    def __init__(self, file_path: Union[str, Path]) -> None:
         """
-        Saves the config file path and expands it if needed, reads in
+        Stores the config file path and expands it if needed, reads in
         the file contents, and determines what parser should be used for
         the given file.
 
-        :param file_path: The path to your configuration file.
-        :param parser: A custom parser you'd like used for your config file.
-                      It must be a concrete implementation of BaseParser.
+        Args:
+            file_path: The path to your configuration file.
 
-        :raises ValueError: If the specified file path does not have an extension
-                            that is supported or it is a directory.
+        Raises:
+            ValueError: If the specified file path does not have an extension
+                        that is supported or it is a directory.
+            FileNotFoundError: If the specified file path does not exist.
         """
-        self.path = self.__create_config_path(file_path)
-        self.contents = self.__read_config_file()
-        self.parser = self.__determine_parser(file_path, parser)
+        self.__path = ConfigFilePath(file_path).validate()
+        self.__parser = self.__path.parser
 
-    @staticmethod
-    def __create_config_path(file_path, original: bool = False) -> str:
-        if isinstance(file_path, PurePath):
-            file_path = str(file_path)
+    @property
+    def path(self) -> Path:
+        return Path(self.__path)
 
-        if len(file_path) > 1 and file_path[0] == "~":
-            return str(Path(file_path).expanduser())
+    @property
+    def original_path(self) -> Path:
+        return Path(self.__path.original_path)
 
-        if original:
-            file_parts = split_on_dot(file_path, only_last_dot=True)
-            file_parts.insert(-1, "original")
-            file_path = ".".join(file_parts)
+    def __getitem__(self, key: str):
+        return self.__parser.parsed_content[key]
 
-        if Path(file_path).is_dir():
-            raise ValueError(f"The specified config file ({file_path}) is a directory.")
+    def __setitem__(self, key: str, value: Any):
+        self.__parser.parsed_content[key] = value
 
-        return file_path
+    def __delitem__(self, key: str):
+        del self.__parser.parsed_content[key]
 
-    def __determine_parser(self, file_path, parser: BaseParser):
-        if isinstance(file_path, PurePath):
-            file_path = str(file_path)
-
-        if parser is not None and not inspect.isabstract(parser):
-            return parser(self.contents)
-
-        file_type = split_on_dot(file_path, only_last_dot=True)[-1]
-        if file_type == "ini":
-            return IniParser(self.contents)
-        elif file_type == "json":
-            return JsonParser(self.contents)
-        else:
-            raise ValueError(
-                f"File path contains an unsupported or "
-                f"unrecognized file type: {file_path}"
-            )
-
-    def __read_config_file(self):
-        with open(self.path, "r") as file:
-            return file.read()
-
-    def get(self, key: str, parse_types: bool = False, return_type=None, default=None):
+    def get(
+        self,
+        key: str,
+        parse_types: bool = False,
+        return_type: Any = None,
+        default: Any = Default(None),
+    ) -> Any:
         """
         Retrieve the value of a key.
 
-        :param key: The key to retrieve.
-        :param parse_types: Automatically parse ints, floats, booleans, dicts, and
-                           lists. This recursively parses all types in whatever you're
-                           retrieving, not just a single type. e.g. If you are
-                           retrieving a section, all values in that section with be
-                           parsed.
-        :param return_type: The type to coerce the return value to.
-        :param default: The default value to return if the value of the key is empty.
+        Args:
+            key: The key to retrieve.
+            parse_types: Automatically parse ints, floats, booleans, dicts, and
+                         lists. This recursively parses all types in whatever you're
+                         retrieving, not just a single type.
 
-        :return: The value of the key.
+                         e.g. If you are retrieving a section, all values in that
+                         section will be parsed.
+
+            return_type: The type to coerce the return value to.
+            default: The default value to return if the value of the key is empty.
+
+        Returns:
+            The value of the key.
+
+        Raises:
+            KeyError: If a key is attempted to be retrieved that does not exist.
+            ValueError: If the value is not able to be coerced into return_type.
         """
-        if default is None:
-            key_value = self.parser.get(key, parse_types=parse_types)
-        else:
-            try:
-                key_value = self.parser.get(key, parse_types=parse_types)
-            except ParsingError:
-                return default
+        try:
+            key_value = self.__parser.get(key)
+        except KeyError as error:
+            if isinstance(default, Default) and default.value is None:
+                raise KeyError(error)
+            else:
+                key_value = default
+
+        if parse_types:
+            key_value = parse_value(key_value)
 
         return return_type(key_value) if return_type else key_value
 
-    def set(self, key: str, value):
-        """Sets the value of a key."""
-        return self.parser.set(key, value)
+    def set(self, key: str, value: Any) -> None:
+        """Sets the value of a key.
 
-    def delete(self, section_key: str):
-        """Deletes a key/value pair or entire sections."""
-        return self.parser.delete(section_key)
+        If the given key does not exist, it will be automatically
+        created for you. That includes if there are multiple keys
+        in a row that do not exist.
+        e.g. set('exists.does_not.does_not.also_does_not', 5)
+
+        The behavior of how this is done, however, depends on the
+        file used. For example, with INI, subsections are not supported.
+        So it would create a key in the section `exists` called `does_not`
+        and set it to the value {'does_not': {'also_does_not': 5}}.
+
+        Args:
+            key: The section, sub-section, or key to delete.
+            value: The value to set the key to.
+        """
+        self.__parser.set(key, value)
+
+    def delete(self, key: str) -> None:
+        """Deletes a section or key.
+
+        Args:
+            key: The section, sub-section, or key to delete.
+
+        Raises:
+            KeyError: If a key is attempted to be deleted that
+            does not exist.
+        """
+        self.__parser.delete(key)
 
     def stringify(self) -> str:
-        """Convert the parsed internal representation of the file back into a string."""
-        return self.parser.stringify()
+        """Retrieves file contents as a string.
 
-    def has(self, section_key: str) -> bool:
+        Returns:
+            The internal representation of the file
+            that has been read in converted to a string.
         """
-        Check if a section, sub-section, or key exists in the file
-        using a section.key format.
+        return self.__parser.stringify()
 
-        Some formats, like JSON, do not have sections and therefore,
-        it would only be checking if the key exists.
+    def has(self, key: str, wild: bool = False) -> bool:
         """
-        return self.parser.has(section_key)
+        Check if a section, sub-section, or key exists.
 
-    def restore_original(self, original_file_path=None):
+        Some formats, like JSON, do not have sections and
+        therefore, it would only be checking if a particular
+        key exists.
+
+        Args:
+            key: The section, sub-section, or key to find.
+            wild: Whether or not to search everywhere.
+
+            Without `wild`, a single word `key` without a `.`
+            will look at the outer most hierarchy of the file for it.
+
+            With `wild`, that single word `key` will be searched
+            for throughout the entire file.
+
+        Returns:
+            True if the key exists. False otherwise.
         """
-        Restores the original the config file by deleting it and copying the original
-        back in its place. The internal contents of this config file object are then set
-        to the newly reset config file.
+        return self.__parser.has(key, wild=wild)
 
-        :param original_file_path: The path to the original config file to reset it to.
-        If this is not provided and, say, your configuration file is config.json, the
-        method would look for a config.original.json in the same folder by default.
+    def restore_original(self, original_path: Union[str, Path, None] = None) -> None:
+        """Restores the original the configuration file.
 
-        :return: True if the reset succeeded
-        :raises OSError: If the original configuration file is not present or if an
-                         error occurred when trying to copy the file.
+        The current one is deleted and the original is copied back
+        in its place. The internal contents are then reset to the
+        new file.
+
+        Args:
+            original_path: The original file to reset to.
+
+            Defaults to the original_path property if it is not
+            provided.
+
+        Raises:
+            FileNotFoundError: If the original configuration file (whether
+            calculated or passed in) does not exist or if the current
+            configuration path is passed in as the original_path (since
+            it is deleted before the original file is copied over).
+
+            OSError: If the current configuration path is not writable.
         """
-        if original_file_path is None:
-            original_file_path = self.__create_config_path(
-                str(self.path), original=True
-            )
+        original_path = ConfigFilePath(
+            original_path if original_path else self.original_path
+        ).validate()
 
-        if not Path(original_file_path).exists():
-            raise OSError(
-                f"The {original_file_path} file to restore to does not exist."
-            )
+        self.__path.unlink()
+        copyfile(original_path, self.__path)
+        self.__parser.reset_internal_contents(self.__path.contents)
 
-        Path(self.path).expanduser().unlink()
-        copyfile(original_file_path, self.path)
-        self.contents = self.__read_config_file()
-        self.parser.parsed_content = self.parser.parse(self.contents)
-
-        return True
-
-    def save(self):
+    def save(self) -> None:
         """
-        Save the configuration changes by writing the file out to the specified path
-        :return: True if the save succeeded.
-        """
-        with open(self.path, "w") as config_file:
-            config_file.write(self.parser.stringify())
+        Save your configuration changes.
 
-        return True
+        This writes the file back out, including any changes
+        you've made, to the specified path given from this
+        object's constructor.
+        """
+        with open(str(self.__path), "w") as config_file:
+            config_file.write(self.stringify())

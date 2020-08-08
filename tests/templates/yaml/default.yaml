@@ -1,0 +1,7 @@
+header_one:
+  number_key: 0
+
+header_two:
+  # preserves comments
+  list_key: [1, 2, 3]
+  str_key: string

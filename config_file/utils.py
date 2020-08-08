@@ -1,21 +1,38 @@
-def split_on_dot(line: str, only_last_dot=False):
+from pathlib import Path
+from typing import List, Union
+
+
+def split_on_dot(line: Union[str, Path], only_last_dot: bool = False) -> List[str]:
     """
     Split a string on the dot character (.).
 
-    :param line: The line ot split on.
-    :param only_last_dot: Only split on the last occurrence of the dot.
+    Args:
+        line: The line ot split on.
+        only_last_dot: Only split on the last occurrence of the dot.
 
-    :raises ValueError: if the line does not have a dot.
+    Raises:
+        ValueError: if the line does not have a dot.
     """
+    if isinstance(line, Path):
+        line = str(line)
+
     if "." not in line:
-        # TODO: This is used in the parser for section.keys where a more specific
-        # error message would be nice, but it is only used more generically to, say,
-        # split a file path. We may just have to insert some try-catches to catch the
-        # ValueError and insert a more specific error message or create a custom error
-        # for this method?
-        raise ValueError(
-            "section_key must contain the section and key separated by a dot. "
-            + "e.g. 'section.key'"
-        )
+        raise ValueError(f"The given string does not have a dot to split on: {line}")
 
     return line.rsplit(".", 1) if only_last_dot else line.split(".")
+
+
+class Default:
+    """
+    Default is used for the `default` value in ConfigFile's `get`.
+
+    Previously, the default value for `get` was None. However, then
+    the user cannot have `get` return a default value of None. So this
+    class is used instead to get around that limitation.
+    """
+
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return "Default Value: {} ({})".format(self.value, type(self.value))

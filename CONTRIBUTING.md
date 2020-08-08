@@ -14,33 +14,34 @@ Here are some guidelines to keep in mind when submitting a pull request:
   paragraphs of explanation as you need. This is the place to clarify any subtleties
   you have in your implemeƒntation, document other approaches you tried that didn't
   end up working, any limitations on your implementation, etc. The most important
-  part here is to describe *why* you made the change you did, not simply *what* the
+  part here is to describe _why_ you made the change you did, not simply _what_ the
   change you made is.
 
 - Changelog: Please ensure to update the changelog by adding a new bullet under
-  an ``Added``, ``Changed``, ``Deprecated``, ``Removed``, ``Fixed``, or ``Security`` section
-  headers under the ``Unreleased`` version. If any of those sections are not present,
+  an `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, or `Security` section
+  headers under the `Unreleased` version. If any of those sections are not present,
   feel free to add the one you need. See
   [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) if you need guidance
   on what makes a good entry since this project follows those principles. If you're
   not comfortable with your English, we'd be happy to write it for you.
 
-- Ensure the tests pass: ``poetry run task test`` to run all tests.
+- Ensure the tests pass: `poetry run task test` to run all tests.
 
 - New features should be accompanied with tests for them:
+
   - Unit tests are written using [pytest](https://docs.pytest.org/en/latest/).
 
 - Pre-commit pipeline: We use a pre-commit pipeline to ensure standard code format.
 
-   - Unused imports are automatically removed using `autoflake <https://github.com/myint/autoflake>`_
-   
-   - The remaining imports are sorted using `isort <https://github.com/timothycrosley/isort>`_. 
-   
-   - All code is automatically formatted with `black <https://github.com/psf/black>`_ 
-   
-   - Lastly, everything is checked by `flake8 <https://gitlab.com/pycqa/flake8>`_. 
-   
-   Make sure to install pre-commit before making commits.
+  - Unused imports are automatically removed using `autoflake <https://github.com/myint/autoflake>`\_
+
+  - The remaining imports are sorted using `isort <https://github.com/timothycrosley/isort>`\_.
+
+  - All code is automatically formatted with `black <https://github.com/psf/black>`\_
+
+  - Lastly, everything is checked by `flake8 <https://gitlab.com/pycqa/flake8>`\_.
+
+  Make sure to install pre-commit before making commits.
 
   Note: if any of the items had to do any reformatting, sorting, etc., the commit will
   fail. You'll have to re-add the items it fixed and try again.
@@ -48,11 +49,10 @@ Here are some guidelines to keep in mind when submitting a pull request:
   ```bash
     pre-commit install
   ```
-  
+
 - CI Pipeline: There is a CI pipeline that is run by Travis CI on commits to master and
   on pull requests.
-  
+
   - All it does is ensure that all the tests pass.
 
-To get started, make sure you have poetry installed and run ``poetry install`` and
-``poetry shell`` to enter the virtual environment.
+To get started, make sure you have poetry installed and run `poetry install -E yaml -E toml` and `poetry shell` to enter the virtual environment.
