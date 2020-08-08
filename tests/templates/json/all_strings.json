@@ -1,0 +1,9 @@
+{
+  "header": {
+    "list": "[]",
+    "dict": "{}",
+    "num": "5",
+    "bool": "false",
+    "float": "5.5"
+  }
+}

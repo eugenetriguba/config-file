@@ -6,6 +6,7 @@ import pytest
 
 from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
+from config_file.exceptions import ParsingError
 from config_file.ini_parser import IniParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
@@ -47,7 +48,7 @@ def templated_config_file(template_and_config_file) -> Callable[[str], ConfigFil
     return func
 
 
-def test_that_config_file_is_initialized_correctly(template_and_config_file):
+def test_config_file_init_has_correct_path_and_parser(template_and_config_file):
     """
     config_file.config_file.ConfigFile.__init__
 
@@ -56,11 +57,22 @@ def test_that_config_file_is_initialized_correctly(template_and_config_file):
     """
     template_file, config = template_and_config_file()
 
-    assert config.file_path == template_file
+    assert config.path == template_file
     assert isinstance(config._ConfigFile__parser, AbstractParser)
 
 
-def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
+@pytest.mark.parametrize("file_type", SUPPORTED_FILE_TYPES)
+def test_config_file_raises_error_on_malformed_file(template_file, file_type):
+    """
+    config_file.config_file.ConfigFile.__init__
+
+    Ensure that a ParsingError is raised on a malformed file.
+    """
+    with pytest.raises(ParsingError):
+        ConfigFile(template_file(file_type, template_name="invalid"))
+
+
+def test_config_file_expands_home_tildes_in_path():
     """
     config_file.config_file.ConfigFile.__init__
 
@@ -72,13 +84,13 @@ def test_that_a_tidle_in_the_config_path_expands_to_the_absolute_path():
 
     try:
         Path(config_path).expanduser().touch()
-        assert ConfigFile(config_path).file_path == Path.home() / config_name
+        assert ConfigFile(config_path).path == Path.home() / config_name
     finally:
         Path(config_path).expanduser().unlink()
 
 
 @pytest.mark.parametrize("path", ["invalid", "invalid.conf"])
-def test_invalid_path_raises_file_not_found_error(path):
+def test_config_file_raises_error_on_non_existent_path(path):
     """
     config_file.config_file.ConfigFile.__init__
 
@@ -89,7 +101,7 @@ def test_invalid_path_raises_file_not_found_error(path):
         ConfigFile(path)
 
 
-def test_directory_raises_value_error():
+def test_config_file_raises_error_if_path_is_directory():
     """
     config_file.config_file.ConfigFile.__init__
 
@@ -100,7 +112,17 @@ def test_directory_raises_value_error():
         ConfigFile(".")
 
 
-def test_that_config_file_can_save(template_and_config_file):
+@pytest.mark.parametrize(
+    "key, value", [("header_one.list_key", "different value"), ("header_one", {})],
+)
+def test_set_can_add_to_or_alter_the_file(templated_config_file, key, value):
+    config = templated_config_file()
+    config.set(key, value)
+
+    assert config.get(key) == value
+
+
+def test_config_file_can_save(template_and_config_file):
     """
     config_file.config_file.ConfigFile.save
 
@@ -115,33 +137,60 @@ def test_that_config_file_can_save(template_and_config_file):
     assert config.stringify() == template_file.read_text()
 
 
-def test_that_config_file_can_restore_the_original(
+def test_restore_original_can_restore_with_calculated_in_path(
     templated_config_file, template_original_file
 ):
     """
     config_file.config_file.ConfigFile.restore_original
 
     Ensure that we can restore the "original" configuration
-    file, using the calculated path and after altering the
-    internal config contents. Those internal contents and file
-    should be reset to the original file.
+    file, using the *calculated* path, after altering the
+    internal config contents.
+
+    Those internal contents and file should be reset to the
+    original file.
     """
     config = templated_config_file()
-    original_file = template_original_file(config.file_path)
+    original_file = template_original_file(config.path)
 
     config.set("header_one.number_key", 5)
     config.restore_original()
 
     assert config.stringify() == original_file.read_text()
-    assert config.file_path.read_text() == original_file.read_text()
+    assert config.path.read_text() == original_file.read_text()
 
 
-def test_missing_config_file_during_restore(templated_config_file):
+@pytest.mark.parametrize("file_type", SUPPORTED_FILE_TYPES)
+def test_restore_original_can_restore_with_passed_in_path(
+    template_file, tmp_file, file_type
+):
+    """
+    config_file.config_file.ConfigFile.restore_original
+
+    Ensure that we can restore the "original" configuration
+    file, using the *passed* in path, after altering the
+    internal config contents.
+    """
+    config_file = template_file(file_type)
+    config = ConfigFile(config_file)
+
+    original_file = tmp_file(f"file.{file_type}", config_file.read_text())
+    original_config = ConfigFile(original_file)
+    original_config.set("some_new_section.some_new_key", 5)
+    original_config.save()
+
+    config.restore_original(original_path=original_file)
+
+    assert config.stringify() == original_config.stringify()
+    assert config.path.read_text() == original_file.read_text()
+
+
+def test_restore_original_raises_error_on_missing_file(templated_config_file):
     """
     config_file.config_file.ConfigFile.restore_original
 
     Ensure that if we try to restore_original without using
-    the optional original_file_path argument but we do not
+    the optional original_path argument but we do not
     have a file at the calculated default path, a FileNotFoundError
     is raised.
     """
@@ -155,9 +204,7 @@ def test_missing_config_file_during_restore(templated_config_file):
 
 
 @pytest.mark.parametrize("key", ["header_one", "header_one.number_key"])
-def test_that_config_file_has_can_find_sections_and_keys_that_exist(
-    templated_config_file, key
-):
+def test_has_can_find_sections_and_keys(templated_config_file, key):
     """
     config_file.config_file.ConfigFile.has
 
@@ -168,7 +215,7 @@ def test_that_config_file_has_can_find_sections_and_keys_that_exist(
     assert config.has(key)
 
 
-def test_that_config_file_has_returns_false_for_sections_and_keys_that_do_not_exist(
+def test_has_returns_false_for_sections_and_keys_that_do_not_exist(
     templated_config_file,
 ):
     """
@@ -181,6 +228,11 @@ def test_that_config_file_has_returns_false_for_sections_and_keys_that_do_not_ex
     assert not config.has("header_one.blah")
 
 
+def test_has_can_search_for_a_key_anywhere(templated_config_file):
+    config = templated_config_file()
+    assert config.has("list_key", wild=True)
+
+
 @pytest.mark.parametrize(
     "key, value",
     [
@@ -189,7 +241,7 @@ def test_that_config_file_has_returns_false_for_sections_and_keys_that_do_not_ex
         ("header_one", {"number_key": 0}),
     ],
 )
-def test_that_config_file_can_get_existent_keys(templated_config_file, key, value):
+def test_get_can_retrieve_existent_keys(templated_config_file, key, value):
     """
     config_file.config_file.ConfigFile.get
 
@@ -216,8 +268,27 @@ def test_that_config_file_can_get_existent_keys(templated_config_file, key, valu
     assert config.get(key) == value
 
 
+def test_get_can_parse_all_types(templated_config_file):
+    config = templated_config_file(template_name="all_strings")
+    output = {"list": [], "dict": {}, "num": 5, "bool": False, "float": 5.5}
+
+    assert config.get("header", parse_types=True) == output
+
+
+def test_get_can_use_a_default(templated_config_file):
+    config = templated_config_file()
+    assert config.get("does_not_exist", default="default!") == "default!"
+
+
+def test_get_raises_a_key_error_on_invalid_key(templated_config_file):
+    config = templated_config_file()
+
+    with pytest.raises(KeyError):
+        config.get("does_not_exist")
+
+
 @pytest.mark.parametrize("key", ["header_one.number_key", "header_one"])
-def test_that_config_file_can_delete(templated_config_file, key):
+def test_delete_can_remove_sections_and_keys(templated_config_file, key):
     """
     config_file.config_file.ConfigFile.delete
 
@@ -232,7 +303,7 @@ def test_that_config_file_can_delete(templated_config_file, key):
 
 
 @pytest.mark.parametrize("key", ["", 0, False, {}, "header_one.does_not_exist"])
-def test_that_config_file_raises_key_error_on_invalid_input_or_missing_key(
+def test_delete_raises_key_error_on_invalid_input_or_missing_key(
     templated_config_file, key
 ):
     """
@@ -247,3 +318,43 @@ def test_that_config_file_raises_key_error_on_invalid_input_or_missing_key(
 
     with pytest.raises(KeyError):
         config.delete(key)
+
+
+def test_keys_can_be_set_with_array_notation(template_and_config_file):
+    """
+    config_file.config_file.ConfigFile.__setitem__
+
+    Ensure that the ConfigFile exposes its parsed contents
+    using an array notation so we can set keys that way.
+    """
+    template_file, config = template_and_config_file()
+
+    config["header_one"] = {}
+    config.save()
+
+    assert config.stringify() == template_file.read_text()
+
+
+def test_keys_can_be_retrieved_with_array_notation(templated_config_file):
+    """
+    config_file.config_file.ConfigFile.__getitem__
+
+    Ensure that the ConfigFile exposes its parsed contents
+    using an array notation so we can retrieve keys that way.
+    """
+    config = templated_config_file()
+    assert int(config["header_one"]["number_key"]) == 0
+
+
+def test_keys_can_be_deleted_with_array_notation(templated_config_file):
+    """
+    config_file.config_file.ConfigFile.__delitem__
+
+    Ensure that the ConfigFile exposes its parsed contents
+    using an array notation so we can delete keys that way.
+    """
+    config = templated_config_file()
+    del config["header_one"]
+
+    with pytest.raises(KeyError):
+        config["header_one"]
