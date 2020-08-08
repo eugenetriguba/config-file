@@ -37,10 +37,16 @@ You can also use [Poetry](https://python-poetry.org).
 $ poetry install config-file -E yaml -E toml
 ```
 
-## Usage Overview
+## Usage
 
 For this overview, let's say you have the following `ini` file
 you want to manipulate.
+
+Do note, however, that the `ini` format is the oddest format that
+`ConfigFile` supports in that it has no formal specification and is
+not type aware. When retrieving items from the file, it will return
+them as strings by default. Others are more type aware and do not
+require as much type coercion.
 
 ```ini
 [section]
@@ -284,17 +290,26 @@ config.restore_original()
 ```
 
 However, if we have a specific path elsewhere that this original configuration file is or it
-is named differently than what the default expects, we can utilize the `original_file_path`
+is named differently than what the default expects, we can utilize the `original_path`
 keyword argument.
 
 ```python
-config.restore_original(original_file_path="~/some-project/original-configs/config.ini")
+config.restore_original(original_path="~/some-project/original-configs/config.ini")
 ```
 
 
-## Documentation
+## Format Versions Supported
 
-Full documentation and API reference is available at https://config-file.readthedocs.io
+| Format  | Specification version supported |
+| ------------- | ------------- |
+| INI  | No official specification. |
+| JSON  | [RFC 7159](https://tools.ietf.org/html/rfc7159.html)  |
+| YAML  | [v1.2](https://yaml.org/spec/1.2/spec.html)  |
+| TOML  | [v1.0.0-rc.1](https://github.com/toml-lang/toml/releases/tag/v1.0.0-rc.1)  |
+
+For `ini` and `json`, Python's standard library modules are used.
+Regarding `ini`, there is no formal specification so the syntax that configparser
+supports is what is supported here.
 
 ## License
 
