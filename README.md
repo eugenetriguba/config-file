@@ -192,8 +192,20 @@ new_key = New key value!
 
 The exact behavior of how these new keys or sections are added are a bit
 dependent on the file format we're using, since every format is a little
-different in it's structure and in what it supports. See the
-[full documentation](#Documentation) for more information there.
+different in it's structure and in what it supports. Mostly though, `ini`
+is just the odd one.
+
+If we try the following in `ini`, which does not support subsections or
+nested keys, we simply get a single section.
+
+```python
+config.set("section.sub_section.sub_sub_section.key", 5)
+```
+
+```ini
+[section.sub_section.sub_sub_section]
+key = 5
+```
 
 Lastly, we can set values using an array notation as well. The underlying
 content is all manipulated as a dictionary for every file type. If we wanted
