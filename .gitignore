@@ -10,10 +10,11 @@
 __pycache__/
 .venv/
 
-# Pytest
+# Testing / Linting
 .pytest_cache/
 .coverage
 .benchmarks/
+.mypy_cache/
 
 # Package Publishing
 dist/
