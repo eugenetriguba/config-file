@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   As long as the extras (`yaml` and `toml`) are installed, those file types can also
   be used.
 
+- `ConfigFile` can now be indexed into using an array notation to get, set, and delete keys.
+
+- `path` property to `ConfigFile`
+
+- `original_path` property to `ConfigFile`
+
+- `wild` optional argument to `has` on `ConfigFile` to check if the file has an
+  occurrence of the key anywhere in the file.
+
+### Removed
+
+- `BaseParser` from the public API.
+
+- `parser` optional argument from the `ConfigFile` constructor.
+
 ### Changed
 
 - `path` on the `ConfigFile` is now a property that can only be retrieved. `contents` is now private
@@ -20,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `restore_original` in `ConfigFile` now raises a `FileNotFoundError` instead of an `OSError` if the original
   file path does not exist.
+
+- `restore_original`'s optional argument is now called `original_path` rather than `original_file_path`.
 
 ### Fixed
 
