@@ -3,7 +3,6 @@ from shutil import copyfile
 from typing import Any, Union
 
 from config_file.config_file_path import ConfigFilePath
-from config_file.exceptions import ParsingError
 from config_file.parse_value import parse_value
 from config_file.utils import Default
 
@@ -74,11 +73,11 @@ class ConfigFile:
         """
         try:
             key_value = self.__parser.get(key)
-        except ParsingError as error:
-            if default is not type(Default):
-                key_value = default
+        except KeyError as error:
+            if isinstance(default, Default) and default.value is None:
+                raise KeyError(error)
             else:
-                raise ParsingError(error)
+                key_value = default
 
         if parse_types:
             key_value = parse_value(key_value)
