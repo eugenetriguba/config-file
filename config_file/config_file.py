@@ -27,11 +27,11 @@ class ConfigFile:
         self.__parser = self.__path.parser
 
     @property
-    def file_path(self) -> Path:
+    def path(self) -> Path:
         return Path(self.__path)
 
     @property
-    def original_file_path(self) -> Path:
+    def original_path(self) -> Path:
         return Path(self.__path.original_path)
 
     def __getitem__(self, key: str):
@@ -148,9 +148,7 @@ class ConfigFile:
         """
         return self.__parser.has(key, wild=wild)
 
-    def restore_original(
-        self, original_file_path: Union[str, Path, None] = None
-    ) -> None:
+    def restore_original(self, original_path: Union[str, Path, None] = None) -> None:
         """Restores the original the configuration file.
 
         The current one is deleted and the original is copied back
@@ -158,32 +156,25 @@ class ConfigFile:
         new file.
 
         Args:
-            original_file_path: The original file to reset to.
+            original_path: The original file to reset to.
 
-            If this is not provided, it is calculated for you.
-            e.g. if your configuration file is named config.json,
-            this will look for aa config.original.json in the same
-            directory.
+            Defaults to the original_path property if it is not
+            provided.
 
         Raises:
             FileNotFoundError: If the original configuration file (whether
-            calculated or passed in) does not exist.
+            calculated or passed in) does not exist or if the current
+            configuration path is passed in as the original_path (since
+            it is deleted before the original file is copied over).
 
             OSError: If the current configuration path is not writable.
-
-            SameFileError: If current configuration path and the passed in
-            original_file_path are the same file.
         """
-        if original_file_path and not ConfigFilePath(original_file_path).exists():
-            raise FileNotFoundError(
-                f"The {original_file_path} file to restore to does not exist."
-            )
-        else:
-            original_file_path = self.__path.original_path
-            original_file_path = original_file_path.validate()
+        original_path = ConfigFilePath(
+            original_path if original_path else self.original_path
+        ).validate()
 
         self.__path.unlink()
-        copyfile(original_file_path, self.__path)
+        copyfile(original_path, self.__path)
         self.__parser.reset_internal_contents(self.__path.contents)
 
     def save(self) -> None:
