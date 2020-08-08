@@ -22,7 +22,7 @@ class ConcreteParser(AbstractParser):
     def delete(self, section_key):
         super().delete(section_key)
 
-    def has(self, section_key: str):
+    def has(self, section_key: str, wild: bool = False):
         super().has(section_key)
 
     def stringify(self):
