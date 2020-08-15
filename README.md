@@ -5,7 +5,6 @@
 ![Python Version](https://img.shields.io/pypi/pyversions/config-file.svg)
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
 [![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
-[![Documentation Status](https://readthedocs.org/projects/config-file/badge/?version=latest)](https://config-file.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://github.com/eugenetriguba/config-file/workflows/python%20package%20CI/badge.svg?branch=master)](https://github.com/eugenetriguba/config-file/actions/)
 [![Codecov](https://codecov.io/gh/eugenetriguba/config-file/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config-file)
 
