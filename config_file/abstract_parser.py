@@ -25,6 +25,21 @@ class AbstractParser(ABC):
     def __init__(self, file_contents: str) -> None:
         self.file_contents = file_contents
 
+    @property
+    @abstractmethod
+    def parsed_content(self) -> dict:
+        """To be able to index into the ConfigFile object,
+        we have to expose the parsed dictionary object.
+
+        Raises:
+            KeyError: If the key we are trying to index into
+            does not exist.
+
+        Returns:
+            The internal contents parsed as a dictionary.
+        """
+        raise NotImplementedError
+
     @abstractmethod
     def reset_internal_contents(self, file_contents: str) -> None:
         """Reset the state of this parser to a new file.

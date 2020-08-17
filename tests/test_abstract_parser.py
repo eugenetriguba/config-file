@@ -31,6 +31,9 @@ class ConcreteParser(AbstractParser):
     def reset_internal_contents(self, file_contents: str) -> None:
         super().reset_internal_contents(file_contents)
 
+    def parsed_content(self) -> dict:
+        super().parsed_content()
+
 
 def test_that_abstract_parser_can_not_be_instantiated():
     """
@@ -52,6 +55,7 @@ def test_that_abstract_parser_can_not_be_instantiated():
         (ConcreteParser("").stringify, None),
         (ConcreteParser("").has, ("",)),
         (ConcreteParser("").reset_internal_contents, ("",)),
+        (ConcreteParser("").parsed_content, None),
     ],
 )
 def test_that_abstract_parser_raises_not_implemented_errors(function, args):

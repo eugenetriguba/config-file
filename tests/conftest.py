@@ -3,7 +3,6 @@ from typing import Callable, Tuple, Type, Union
 
 import pytest
 
-from config_file import ConfigFile
 from config_file.abstract_parser import AbstractParser
 from config_file.config_file_path import ConfigFilePath
 
@@ -55,7 +54,7 @@ def template_and_parser(
         file_type: str, template_name: str = "default"
     ) -> Tuple[Path, Type[AbstractParser]]:
         test_file = template_file(file_type, template_name)
-        return test_file, ConfigFile(test_file)._ConfigFile__parser
+        return test_file, ConfigFilePath(test_file).parser
 
     return func
 

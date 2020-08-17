@@ -24,7 +24,7 @@ class BaseParser(AbstractParser):
             ParsingError: If the decode_error is raised.
         """
         super().__init__(file_contents)
-        self.parsed_content = self.parse_file_contents()
+        self.__parsed_content = self.parse_file_contents()
 
     @abstractmethod
     def loads(self, contents: str) -> dict:
@@ -66,7 +66,16 @@ class BaseParser(AbstractParser):
     @property
     @abstractmethod
     def decode_error(self) -> Type[Exception]:
+        """The decoding error raised by the subclass on loads/dumps.
+
+        Returns:
+            The decoding error
+        """
         raise NotImplementedError
+
+    @property
+    def parsed_content(self) -> dict:
+        return self.__parsed_content
 
     def parse_file_contents(self) -> dict:
         """Parse the file contents by running the `loads`  method on the module.
@@ -97,7 +106,7 @@ class BaseParser(AbstractParser):
             ParsingError: If we're unable to parse the new file contents.
         """
         self.file_contents = file_contents
-        self.parsed_content = self.parse_file_contents()
+        self.__parsed_content = self.parse_file_contents()
 
     def get(self, search_key: str) -> Any:
         key_causing_error = None
@@ -105,11 +114,11 @@ class BaseParser(AbstractParser):
         try:
             if "." not in search_key:
                 key_causing_error = search_key
-                return self.parsed_content[search_key]
+                return self.__parsed_content[search_key]
             else:
                 split_keys = split_on_dot(search_key)
 
-            content_reference = self.parsed_content
+            content_reference = self.__parsed_content
             for key in split_keys:
                 key_causing_error = key
                 content_reference = content_reference[key]
@@ -124,11 +133,11 @@ class BaseParser(AbstractParser):
 
     def set(self, key: str, value: Any) -> None:
         if "." not in key:
-            self.parsed_content[key] = value
+            self.__parsed_content[key] = value
             return
 
         keys = split_on_dot(key)
-        content_reference = self.parsed_content
+        content_reference = self.__parsed_content
         for index, key in enumerate(keys):
             if index == len(keys) - 1:
                 content_reference[key] = value
@@ -143,12 +152,12 @@ class BaseParser(AbstractParser):
     def delete(self, key: str) -> None:
         try:
             if "." not in key:
-                del self.parsed_content[key]
+                del self.__parsed_content[key]
             else:
                 indexes = split_on_dot(key)
                 indexes_length = len(indexes)
 
-                content_reference = self.parsed_content
+                content_reference = self.__parsed_content
                 for index, key in enumerate(indexes):
                     if index == indexes_length - 1:
                         del content_reference[key]
@@ -159,11 +168,11 @@ class BaseParser(AbstractParser):
             raise KeyError(f"The specified key '{key}' to delete was not found.")
 
     def stringify(self) -> str:
-        return self.dumps(self.parsed_content)
+        return self.dumps(self.__parsed_content)
 
     def has(self, search_key: str, wild: bool = False) -> bool:
         if wild:
-            return get_occurrence_of_key(self.parsed_content, key=search_key) > 0
+            return get_occurrence_of_key(self.__parsed_content, key=search_key) > 0
 
         try:
             self.get(search_key)
