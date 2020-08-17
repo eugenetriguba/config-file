@@ -3,7 +3,7 @@
 The preferred workflow is via pull requests for code changes.
 
 If you find a bug or want to suggest an improvement, etc., please open a issue.
-This will make sure we notice it. You're also welcome to submit a pull request in this repository.
+This will make sure it gets noticed. You're also welcome to submit a pull request in this repository.
 
 Here are some guidelines to keep in mind when submitting a pull request:
 
@@ -19,11 +19,10 @@ Here are some guidelines to keep in mind when submitting a pull request:
 
 - Changelog: Please ensure to update the changelog by adding a new bullet under
   an `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, or `Security` section
-  headers under the `Unreleased` version. If any of those sections are not present,
-  feel free to add the one you need. See
+  headers under the `Unreleased` version when applicable. If any of those sections
+  are not present, feel free to add the one you need. See
   [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) if you need guidance
-  on what makes a good entry since this project follows those principles. If you're
-  not comfortable with your English, we'd be happy to write it for you.
+  on what makes a good entry since this project follows those principles.
 
 - Ensure the tests pass: `poetry run task test` to run all tests.
 
@@ -31,28 +30,18 @@ Here are some guidelines to keep in mind when submitting a pull request:
 
   - Unit tests are written using [pytest](https://docs.pytest.org/en/latest/).
 
-- Pre-commit pipeline: We use a pre-commit pipeline to ensure standard code format.
-
-  - Unused imports are automatically removed using `autoflake <https://github.com/myint/autoflake>`\_
-
-  - The remaining imports are sorted using `isort <https://github.com/timothycrosley/isort>`\_.
-
-  - All code is automatically formatted with `black <https://github.com/psf/black>`\_
-
-  - Lastly, everything is checked by `flake8 <https://gitlab.com/pycqa/flake8>`\_.
+- Pre-commit pipeline: There is a pre-commit pipeline to enforce standard code format.
 
   Make sure to install pre-commit before making commits.
+
+  ```
+  $ pre-commit install
+  ```
 
   Note: if any of the items had to do any reformatting, sorting, etc., the commit will
   fail. You'll have to re-add the items it fixed and try again.
 
-  ```bash
-    pre-commit install
-  ```
-
-- CI Pipeline: There is a CI pipeline that is run by Travis CI on commits to master and
-  on pull requests.
-
-  - All it does is ensure that all the tests pass.
+- CI Pipeline: There is a CI pipeline that is run on commits and pull requests that
+  ensures the tests pass.
 
 To get started, make sure you have poetry installed and run `poetry install -E yaml -E toml` and `poetry shell` to enter the virtual environment.

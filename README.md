@@ -1,6 +1,6 @@
 # Config File
 
-> Modify configuration files of various formats with the same simple API
+> Simple manipulation of ini, json, yaml, or toml files
 
 ![Python Version](https://img.shields.io/pypi/pyversions/config-file.svg)
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
