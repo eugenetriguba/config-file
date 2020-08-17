@@ -58,14 +58,11 @@ black = "^19.10b0"
 mypy = "^0.782"
 
 [tool.black]
-line-length = 88
 target_version = ['py36']
 include = '\.pyi?$'
 
 [tool.isort]
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
+profile = "black"
 known_third_party = ["pytest"]
 known_first_party = ["config_file"]
 
