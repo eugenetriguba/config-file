@@ -76,6 +76,21 @@ from config_file import ConfigFile
 config = ConfigFile("~/some-project/config.ini")
 ```
 
+#### Handling ConfigFile Initialization Errors
+
+```python
+from config_file import ConfigFile, ParsingError
+
+try:
+    config = ConfigFile("~/some-file.ini")
+except ParsingError:
+    print("could not parse the file")
+except ValueError:
+    print("extension that isn't supported was used or is a directory")
+except FileNotFoundError:
+    print("file does not exist")
+```
+
 ### Using `get()`
 
 A recurring pattern you'll see here is that all methods that

@@ -58,6 +58,7 @@ class ConfigFilePath(_Path_):
 
         Raises:
             ValueError: If the extension of the file is not recognized.
+            ParsingError: If the contents could not be parsed.
 
         Returns:
             The instantiated parser that should be used for this file.

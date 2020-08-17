@@ -21,6 +21,7 @@ class ConfigFile:
             ValueError: If the specified file path does not have an extension
                         that is supported or it is a directory.
             FileNotFoundError: If the specified file path does not exist.
+            ParsingError: If the file_path could not be parsed.
         """
         self.__path = ConfigFilePath(file_path).validate()
         self.__parser = self.__path.parser
