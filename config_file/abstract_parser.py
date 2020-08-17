@@ -3,7 +3,8 @@ from typing import Any
 
 
 class AbstractParser(ABC):
-    """Abstract Parser is the API contract for all parsers.
+    """Abstract Parser is the API contract for a parser for
+    use in the ConfigFile object.
 
     Every parser in ConfigFile implements this parser, and
     any user created parsers must implement this parser in
@@ -17,9 +18,6 @@ class AbstractParser(ABC):
     be an entire section.
 
     Args:
-        file_contents: The stringified version of a file.
-
-    Attributes:
         file_contents: The stringified version of a file.
     """
 

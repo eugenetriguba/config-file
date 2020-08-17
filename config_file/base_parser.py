@@ -1,4 +1,4 @@
-from types import ModuleType
+from abc import abstractmethod
 from typing import Any, Type
 
 from config_file.abstract_parser import AbstractParser
@@ -8,32 +8,67 @@ from config_file.utils import split_on_dot
 
 
 class BaseParser(AbstractParser):
-    def __init__(
-        self, file_contents: str, module: ModuleType, decode_error: Type[Exception]
-    ):
-        """The BaseParser implements the AbstractParser for us by giving it any module.
+    def __init__(self, file_contents: str):
+        """The BaseParser implements the AbstractParser for us, as long as the
+        subclasses implement `loads`, `dumps`, and `decode_error` methods.
 
-        As long as the module has a `loads` and `dumps` method, the BaseParser can use
-        it. Every file is then represented and worked with as a dictionary.
+        Internally, every parser uses the BaseParser so it does not
+        have to re-implement common dictionary manipulation logic. However,
+        there is nothing about the BaseParser that is a requirement for
+        using ConfigFile.
 
         Args:
             file_contents: The contents of the file to parse.
-
-            module: The module to use to parse the files.
-            Must have a `loads` and `dumps` method.
-
-            decode_error: The error the module raises when the
-            file cannot be decoded.
 
         Raises:
             ParsingError: If the decode_error is raised.
         """
         super().__init__(file_contents)
-        self.__module = module
-        self.__decode_error = decode_error
-        self.parsed_content = self.parse_file_contents(module, decode_error)
+        self.parsed_content = self.parse_file_contents()
 
-    def parse_file_contents(self, module: ModuleType, decode_error: Exception) -> dict:
+    @abstractmethod
+    def loads(self, contents: str) -> dict:
+        """Transforms the file contents into a dictionary.
+
+        Args:
+            contents: The file contents to transform.
+
+        Raises:
+            self.decode_error: If there is a decoding error
+            while attempting to parse the string.
+
+        Returns:
+            The contents of a particular file as a dictionary
+            we can manipulate.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def dumps(self, loaded_contents: dict) -> str:
+        """Transform the parsed contents back into a string.
+
+        Args:
+            loaded_contents: The file contents from a self.loads call.
+
+            It doesn't necessary need to be from a loads call, could just
+            be a valid dictionary for the given format, but that is the
+            typical usecase.
+
+        Raises:
+            self.decode_error: If there is a decoding error
+            while attempting to transform the dict back into a string.
+
+        Returns:
+            The dictionary parsed back into a string.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def decode_error(self) -> Type[Exception]:
+        raise NotImplementedError
+
+    def parse_file_contents(self) -> dict:
         """Parse the file contents by running the `loads`  method on the module.
 
         Args:
@@ -48,8 +83,8 @@ class BaseParser(AbstractParser):
             The parsed file as a dictionary.
         """
         try:
-            return module.loads(self.file_contents)
-        except decode_error as error:
+            return self.loads(self.file_contents)
+        except self.decode_error as error:
             raise ParsingError(error)
 
     def reset_internal_contents(self, file_contents: str) -> None:
@@ -62,9 +97,7 @@ class BaseParser(AbstractParser):
             ParsingError: If we're unable to parse the new file contents.
         """
         self.file_contents = file_contents
-        self.parsed_content = self.parse_file_contents(
-            self.__module, self.__decode_error
-        )
+        self.parsed_content = self.parse_file_contents()
 
     def get(self, search_key: str) -> Any:
         key_causing_error = None
@@ -126,7 +159,7 @@ class BaseParser(AbstractParser):
             raise KeyError(f"The specified key '{key}' to delete was not found.")
 
     def stringify(self) -> str:
-        return self.__module.dumps(self.parsed_content)
+        return self.dumps(self.parsed_content)
 
     def has(self, search_key: str, wild: bool = False) -> bool:
         if wild:
