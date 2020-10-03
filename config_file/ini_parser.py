@@ -1,6 +1,6 @@
 import configparser
 from io import StringIO
-from typing import Type
+from typing import Type, Any
 
 from .base_parser import BaseParser
 
@@ -36,3 +36,9 @@ class IniParser(BaseParser):
             result.update({str(section): dict(items[section])})
 
         return result
+
+    def get(self, search_key: str) -> Any:
+        retrieved_value = super().get(search_key)
+        return (
+            retrieved_value if type(retrieved_value) is dict else str(retrieved_value)
+        )

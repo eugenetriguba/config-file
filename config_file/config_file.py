@@ -34,14 +34,23 @@ class ConfigFile:
     def original_path(self) -> Path:
         return Path(self.__path.original_path)
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> Any:
         return self.__parser.parsed_content[key]
 
-    def __setitem__(self, key: str, value: Any):
+    def __setitem__(self, key: str, value: Any) -> None:
         self.__parser.parsed_content[key] = value
 
-    def __delitem__(self, key: str):
+    def __delitem__(self, key: str) -> None:
         del self.__parser.parsed_content[key]
+
+    def __contains__(self, key: str) -> bool:
+        return self.has(key)
+
+    def __str__(self) -> str:
+        return self.stringify()
+
+    def __repr__(self) -> str:
+        return f"{self.path}\n\n{self.stringify()}"
 
     def get(
         self,
@@ -122,6 +131,9 @@ class ConfigFile:
         Returns:
             The internal representation of the file
             that has been read in converted to a string.
+        
+        Depreciated: 
+            Use str() on the ConfigFile object instead.
         """
         return self.__parser.stringify()
 

@@ -1,9 +1,12 @@
+from typing import Type
+
 import pytest
 
 from config_file.abstract_parser import AbstractParser
+from config_file.base_parser import BaseParser
 
 
-class ConcreteParser(AbstractParser):
+class ConcreteAbstractParser(AbstractParser):
     """
     ConcreteParser is a concrete implementation of the
     AbstractParser that just calls the AbstractParser's
@@ -46,23 +49,35 @@ def test_that_abstract_parser_can_not_be_instantiated():
         AbstractParser("")
 
 
+def test_that_base_parser_can_not_be_instantiated():
+    """
+    config_file.base_parser.BaseParser
+
+    Ensure the BaseParser raises a TypeError when it is
+    instantiated.
+    """
+    with pytest.raises(TypeError):
+        BaseParser("")
+
+
 @pytest.mark.parametrize(
     "function, args",
     [
-        (ConcreteParser("").get, ("",)),
-        (ConcreteParser("").set, ("", "")),
-        (ConcreteParser("").delete, ("",)),
-        (ConcreteParser("").stringify, None),
-        (ConcreteParser("").has, ("",)),
-        (ConcreteParser("").reset_internal_contents, ("",)),
-        (ConcreteParser("").parsed_content, None),
+        (ConcreteAbstractParser("").get, ("",)),
+        (ConcreteAbstractParser("").set, ("", "")),
+        (ConcreteAbstractParser("").delete, ("",)),
+        (ConcreteAbstractParser("").stringify, None),
+        (ConcreteAbstractParser("").has, ("",)),
+        (ConcreteAbstractParser("").reset_internal_contents, ("",)),
+        (ConcreteAbstractParser("").parsed_content, None),
     ],
 )
-def test_that_abstract_parser_raises_not_implemented_errors(function, args):
+def test_that_abstract_and_base_parser_raises_not_implemented_errors(function, args):
     """
     config_file.abstract_parser.AbstractParser
+    config_file.base_parser.BaseParser
 
-    Ensure the AbstractParser raises a NotImplementedError
+    Ensure the AbstractParser and BaseParser raises a NotImplementedError
     for every method in it.
     """
     with pytest.raises(NotImplementedError):

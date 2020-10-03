@@ -290,14 +290,16 @@ config.delete('section.list_key')
 config.save()
 ```
 
-### Using `stringify()`
+### Stringifying our ConfigFile
 
-`stringify()` shows us our configuration file, with any changes we've made,
-as a string. `stringify()` will always show us our latest changes since it
-is stringify-ing our internal representation of the configuration file, not
-just the file we've read in.
+To retrieve the file as a string, with any changes we've made, we can use the
+built-in `str()` method on the ConfigFile. This will always show us our latest changes since it is stringify-ing our internal representation of the configuration file, not just the file we've read in.
 
 ```python
+str(config)
+>>> '[section]\nnum_key = 5\nstr_key = blah\nbool_key = true\nlist_key = [1, 2]\n\n[second_section]\ndict_key = { "another_num": 5 }\n\n'
+
+# Depreciated but also works.
 config.stringify()
 >>> '[section]\nnum_key = 5\nstr_key = blah\nbool_key = true\nlist_key = [1, 2]\n\n[second_section]\ndict_key = { "another_num": 5 }\n\n'
 ```

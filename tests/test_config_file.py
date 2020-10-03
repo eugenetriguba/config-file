@@ -8,6 +8,7 @@ from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
 from config_file.exceptions import ParsingError
 from config_file.ini_parser import IniParser
+from config_file.config_file_path import ConfigFilePath
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
 
@@ -113,13 +114,32 @@ def test_config_file_raises_error_if_path_is_directory():
 
 
 @pytest.mark.parametrize(
-    "key, value", [("header_one.list_key", "different value"), ("header_one", {})],
+    "key, value",
+    [
+        ("header_one.list_key", "different value"),
+        ("header_one", {}),
+        ("header_one.number_key", 1),
+    ],
 )
 def test_set_can_add_to_or_alter_the_file(templated_config_file, key, value):
+    """
+    config_file.config_file.ConfigFile.set
+
+    Ensure that for the keys we can, we retrieve that same value back 
+    (with the exception of ini, which should always be a string).
+    """
     config = templated_config_file()
     config.set(key, value)
 
-    assert config.get(key) == value
+    # configparser treats everything as a string. Make
+    # sure we're entering in files in the dict as a str.
+    if ConfigFilePath(config.path).extension == "ini":
+        if isinstance(value, (int, float)):
+            value = str(value)
+
+        assert config.get(key) == value
+    else:
+        assert config.get(key) == value
 
 
 def test_config_file_can_save(template_and_config_file):
@@ -213,6 +233,7 @@ def test_has_can_find_sections_and_keys(templated_config_file, key):
     """
     config = templated_config_file()
     assert config.has(key)
+    assert key in config
 
 
 def test_has_returns_false_for_sections_and_keys_that_do_not_exist(
@@ -229,6 +250,12 @@ def test_has_returns_false_for_sections_and_keys_that_do_not_exist(
 
 
 def test_has_can_search_for_a_key_anywhere(templated_config_file):
+    """
+    config_file.config_file.ConfigFile.has
+
+    Ensure that the wild=True keyword argument to has()
+    retrieves if we have the key anywhere in the file.
+    """
     config = templated_config_file()
     assert config.has("list_key", wild=True)
 
@@ -269,6 +296,12 @@ def test_get_can_retrieve_existent_keys(templated_config_file, key, value):
 
 
 def test_get_can_parse_all_types(templated_config_file):
+    """
+    config_file.config_file.ConfigFile.get
+
+    Ensure we're able to parse out all the different types that
+    may be used in a configuration file with the parse_types option.
+    """
     config = templated_config_file(template_name="all_strings")
     output = {"list": [], "dict": {}, "num": 5, "bool": False, "float": 5.5}
 
@@ -358,3 +391,19 @@ def test_keys_can_be_deleted_with_array_notation(templated_config_file):
 
     with pytest.raises(KeyError):
         config["header_one"]
+
+
+def test_the_config_file_can_be_stringified(template_and_config_file):
+    """
+    config_file.config_file.ConfigFile.__str__
+    config_file.config_file.ConfigFile.__repr__
+    config_file.config_file.ConfigFile.stringify()
+
+    Ensure that the stringified version of the config file
+    is the string version of the file and that the repr also
+    includes the file path.
+    """
+    template, config = template_and_config_file()
+    assert template.read_text() == str(config)
+    assert template.read_text() == config.stringify()
+    assert f"{str(template)}\n\n{str(config)}" == repr(config)
