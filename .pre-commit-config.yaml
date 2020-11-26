@@ -1,3 +1,6 @@
+# Ignore invalid template test files
+exclude: invalid.*
+
 repos:
   - repo: git@github.com:humitos/mirrors-autoflake.git
     rev: v1.3
