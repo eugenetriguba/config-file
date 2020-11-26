@@ -14,6 +14,7 @@ __all__ = [
 ]
 
 
+# TODO: get rid of this global values_list
 values_list = []
 
 
