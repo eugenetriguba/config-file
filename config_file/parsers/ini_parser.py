@@ -1,6 +1,6 @@
 import configparser
 from io import StringIO
-from typing import Type, Any
+from typing import Any, Type
 
 from .base_parser import BaseParser
 

@@ -3,8 +3,8 @@ from typing import Callable, Tuple, Type, Union
 
 import pytest
 
-from config_file.abstract_parser import AbstractParser
 from config_file.config_file_path import ConfigFilePath
+from config_file.parsers.abstract_parser import AbstractParser
 
 
 @pytest.fixture
@@ -42,7 +42,7 @@ def template_file(tmp_file: Callable[[str, str], Path]) -> Callable[[str, str], 
         template_name: The name of the template to retrieve.
             Defaults to the "default" template. i.e. the template
             with the name "default" with it's respective file extension.
-    
+
     Returns:
         A Path object point to that test template.
     """
@@ -69,7 +69,7 @@ def template_original_file() -> Callable[[Path], Path]:
 
     Args:
         template_path: The path to the temporary template file we're using.
-    
+
     Returns:
         A Path object pointing to the newly created original template file.
     """
@@ -99,9 +99,9 @@ def template_and_parser(
         file_type: The parser type to retrieve i.e. "ini" -> IniParser
         template_name: The template to retrieve. Defaults to the
             "default" template file for each extension.
-    
+
     Returns:
-        The template and parser corresponding to the file_type with 
+        The template and parser corresponding to the file_type with
         the template file read in.
     """
 
@@ -125,7 +125,7 @@ def templated_parser(template_and_parser) -> Callable[[str, str], Type[AbstractP
         file_type: The parser type to retrieve i.e. "ini" -> IniParser
         template_name: The template to retrieve. Defaults to the
             "default" template file for each extension.
-    
+
     Returns:
         The parser corresponding to the file_type with the template file
         read in.

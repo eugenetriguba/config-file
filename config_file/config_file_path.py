@@ -3,11 +3,11 @@ from pathlib import Path as _Path_
 from pathlib import _posix_flavour, _windows_flavour
 from typing import Type
 
-from config_file.abstract_parser import AbstractParser
-from config_file.ini_parser import IniParser
-from config_file.json_parser import JsonParser
-from config_file.toml_parser import TomlParser
-from config_file.yaml_parser import YamlParser
+from config_file.parsers.abstract_parser import AbstractParser
+from config_file.parsers.ini_parser import IniParser
+from config_file.parsers.json_parser import JsonParser
+from config_file.parsers.toml_parser import TomlParser
+from config_file.parsers.yaml_parser import YamlParser
 
 from .utils import split_on_dot
 

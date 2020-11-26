@@ -4,10 +4,10 @@ from pathlib import Path, _posix_flavour, _windows_flavour
 import pytest
 
 from config_file.config_file_path import ConfigFilePath
-from config_file.ini_parser import IniParser
-from config_file.json_parser import JsonParser
-from config_file.toml_parser import TomlParser
-from config_file.yaml_parser import YamlParser
+from config_file.parsers.ini_parser import IniParser
+from config_file.parsers.json_parser import JsonParser
+from config_file.parsers.toml_parser import TomlParser
+from config_file.parsers.yaml_parser import YamlParser
 
 
 def test_config_file_path_is_a_path():

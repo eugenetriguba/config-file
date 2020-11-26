@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from config_file.yaml_parser import YamlParser
+from config_file.parsers.yaml_parser import YamlParser
 
 
 def test_that_import_error_is_raised_if_no_ruamelyaml():

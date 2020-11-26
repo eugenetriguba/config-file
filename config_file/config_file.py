@@ -3,7 +3,7 @@ from shutil import copyfile
 from typing import Any, Union
 
 from config_file.config_file_path import ConfigFilePath
-from config_file.parse_value import parse_value
+from config_file.parsers.parse_value import parse_value
 from config_file.utils import Default
 
 
@@ -131,8 +131,8 @@ class ConfigFile:
         Returns:
             The internal representation of the file
             that has been read in converted to a string.
-        
-        Depreciated: 
+
+        Depreciated:
             Use str() on the ConfigFile object instead.
         """
         return self.__parser.stringify()

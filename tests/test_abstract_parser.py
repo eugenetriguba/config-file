@@ -1,9 +1,7 @@
-from typing import Type
-
 import pytest
 
-from config_file.abstract_parser import AbstractParser
-from config_file.base_parser import BaseParser
+from config_file.parsers.abstract_parser import AbstractParser
+from config_file.parsers.base_parser import BaseParser
 
 
 class ConcreteAbstractParser(AbstractParser):

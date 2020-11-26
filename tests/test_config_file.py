@@ -4,11 +4,11 @@ from typing import Callable, Tuple
 
 import pytest
 
-from config_file.abstract_parser import AbstractParser
 from config_file.config_file import ConfigFile
-from config_file.exceptions import ParsingError
-from config_file.ini_parser import IniParser
 from config_file.config_file_path import ConfigFilePath
+from config_file.exceptions import ParsingError
+from config_file.parsers.abstract_parser import AbstractParser
+from config_file.parsers.ini_parser import IniParser
 
 SUPPORTED_FILE_TYPES = ["ini", "json", "yaml", "toml"]
 
@@ -125,7 +125,7 @@ def test_set_can_add_to_or_alter_the_file(templated_config_file, key, value):
     """
     config_file.config_file.ConfigFile.set
 
-    Ensure that for the keys we can, we retrieve that same value back 
+    Ensure that for the keys we can, we retrieve that same value back
     (with the exception of ini, which should always be a string).
     """
     config = templated_config_file()

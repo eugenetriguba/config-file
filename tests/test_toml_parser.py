@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from config_file.toml_parser import TomlParser
+from config_file.parsers.toml_parser import TomlParser
 
 
 def test_that_import_error_is_raised_if_no_tomlkit():
