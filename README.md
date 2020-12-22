@@ -299,11 +299,6 @@ built-in `str()` method on the ConfigFile. This will always show us our latest c
 str(config)
 >>> '[section]\nnum_key = 5\nstr_key = blah\nbool_key = true\nlist_key = [1, 2]\n\n[second_section]\ndict_key = { "another_num": 5 }\n\n'
 
-# Depreciated but also works.
-config.stringify()
->>> '[section]\nnum_key = 5\nstr_key = blah\nbool_key = true\nlist_key = [1, 2]\n\n[second_section]\ndict_key = { "another_num": 5 }\n\n'
-```
-
 
 ### Using `restore_original()`
 

@@ -154,7 +154,7 @@ def test_config_file_can_save(template_and_config_file):
     config.set("header_one.number_key", 25)
     config.save()
 
-    assert config.stringify() == template_file.read_text()
+    assert str(config) == template_file.read_text()
 
 
 def test_restore_original_can_restore_with_calculated_in_path(
@@ -176,7 +176,7 @@ def test_restore_original_can_restore_with_calculated_in_path(
     config.set("header_one.number_key", 5)
     config.restore_original()
 
-    assert config.stringify() == original_file.read_text()
+    assert str(config) == original_file.read_text()
     assert config.path.read_text() == original_file.read_text()
 
 
@@ -201,7 +201,7 @@ def test_restore_original_can_restore_with_passed_in_path(
 
     config.restore_original(original_path=original_file)
 
-    assert config.stringify() == original_config.stringify()
+    assert str(config) == str(original_config)
     assert config.path.read_text() == original_file.read_text()
 
 
@@ -365,7 +365,7 @@ def test_keys_can_be_set_with_array_notation(template_and_config_file):
     config["header_one"] = {}
     config.save()
 
-    assert config.stringify() == template_file.read_text()
+    assert str(config) == template_file.read_text()
 
 
 def test_keys_can_be_retrieved_with_array_notation(templated_config_file):
@@ -397,7 +397,6 @@ def test_the_config_file_can_be_stringified(template_and_config_file):
     """
     config_file.config_file.ConfigFile.__str__
     config_file.config_file.ConfigFile.__repr__
-    config_file.config_file.ConfigFile.stringify()
 
     Ensure that the stringified version of the config file
     is the string version of the file and that the repr also
@@ -405,5 +404,4 @@ def test_the_config_file_can_be_stringified(template_and_config_file):
     """
     template, config = template_and_config_file()
     assert template.read_text() == str(config)
-    assert template.read_text() == config.stringify()
     assert f"{str(template)}\n\n{str(config)}" == repr(config)

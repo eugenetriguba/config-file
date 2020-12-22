@@ -99,8 +99,9 @@ class AbstractParser(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def stringify(self) -> str:
-        """Stringify the working file.
+    def __str__(self) -> str:
+        """
+        Stringify the working file.
 
         Since the ConfigFile does not write out to disk
         after every operation, this method is what is

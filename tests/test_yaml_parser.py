@@ -13,7 +13,6 @@ def test_that_import_error_is_raised_if_no_ruamelyaml():
     installed.
     """
     with pytest.raises(ImportError) as error:
-
         with patch("builtins.__import__") as mock_import:
             mock_import.side_effect = ImportError
             YamlParser("")

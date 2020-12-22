@@ -26,8 +26,8 @@ class ConcreteAbstractParser(AbstractParser):
     def has(self, section_key: str, wild: bool = False):
         super().has(section_key)
 
-    def stringify(self):
-        super().stringify()
+    def __str__(self):
+        super().__str__()
 
     def reset_internal_contents(self, file_contents: str) -> None:
         super().reset_internal_contents(file_contents)
@@ -64,7 +64,7 @@ def test_that_base_parser_can_not_be_instantiated():
         (ConcreteAbstractParser("").get, ("",)),
         (ConcreteAbstractParser("").set, ("", "")),
         (ConcreteAbstractParser("").delete, ("",)),
-        (ConcreteAbstractParser("").stringify, None),
+        (ConcreteAbstractParser("").__str__, None),
         (ConcreteAbstractParser("").has, ("",)),
         (ConcreteAbstractParser("").reset_internal_contents, ("",)),
         (ConcreteAbstractParser("").parsed_content, None),

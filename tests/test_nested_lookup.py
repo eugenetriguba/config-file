@@ -856,7 +856,6 @@ class TestNestedUpdate(BaseLookUpApi):
 
 class TestNestedAlter(BaseLookUpApi):
     def test_nested_alter_in_place_true(self):
-
         # callback functions
         def callback(data):
             return str(data) + "###"
@@ -870,7 +869,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(vorgangsid, "1###")
 
     def test_nested_alter_in_place_false(self):
-
         # callback functions
         def callback(data):
             return str(data) + "###"
@@ -886,7 +884,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(vorgangsid, "1###")
 
     def test_nested_alter_list_input_in_place_true(self):
-
         # callback functions
         def callback(data):
             return str(data) + "###"
@@ -906,7 +903,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(vorgangsid, "1###")
 
     def test_nested_alter_list_input_with_args_in_place_true(self):
-
         # callback functions
         def callback(data, str1, str2):
             return str(data) + str1 + str2
@@ -930,7 +926,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(vorgangsid, "1abcdef")
 
     def test_nested_alter_list_input_with_args_in_place_false(self):
-
         # callback functions
         def callback(data, str1, str2):
             return str(data) + str1 + str2
@@ -954,7 +949,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(vorgangsid, "1abcdef")
 
     def test_nested_alter_list_input_in_place_false(self):
-
         # callback functions
         def callback(data):
             return str(data) + "###"
@@ -1010,7 +1004,6 @@ class TestNestedAlter(BaseLookUpApi):
         self.assertEqual(altered_document["key"], 150)
 
     def test_sample_data4(self):
-
         result = {
             "modelversion": "1.1.0",
             "vorgangsID": "1",

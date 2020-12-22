@@ -149,7 +149,6 @@ def get_occurrence_of_value(dictionary, value):
 
 
 def _recursion(dictionary, item, keyword, occurrence, with_values=False):
-
     global values_list
 
     if item == "key":
@@ -380,7 +379,6 @@ def _nested_alter(
     in_place,
     key_len,
 ):
-
     # return data if no callback_function is provided
     if callback_function is None:
         warnings.warn("Please provide a callback_function to nested_alter().")

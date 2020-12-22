@@ -47,10 +47,10 @@ class ConfigFile:
         return self.has(key)
 
     def __str__(self) -> str:
-        return self.stringify()
+        return str(self.__parser)
 
     def __repr__(self) -> str:
-        return f"{self.path}\n\n{self.stringify()}"
+        return f"{self.path}\n\n{str(self.__parser)}"
 
     def get(
         self,
@@ -85,7 +85,7 @@ class ConfigFile:
             key_value = self.__parser.get(key)
         except KeyError as error:
             if isinstance(default, Default) and default.value is None:
-                raise KeyError(error)
+                raise error
             else:
                 key_value = default
 
@@ -124,18 +124,6 @@ class ConfigFile:
             does not exist.
         """
         self.__parser.delete(key)
-
-    def stringify(self) -> str:
-        """Retrieves file contents as a string.
-
-        Returns:
-            The internal representation of the file
-            that has been read in converted to a string.
-
-        Depreciated:
-            Use str() on the ConfigFile object instead.
-        """
-        return self.__parser.stringify()
 
     def has(self, key: str, wild: bool = False) -> bool:
         """
@@ -198,4 +186,4 @@ class ConfigFile:
         object's constructor.
         """
         with open(str(self.__path), "w") as config_file:
-            config_file.write(self.stringify())
+            config_file.write(str(self))

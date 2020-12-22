@@ -23,27 +23,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced deprecated use of `ruamel.yaml` methods in the YAML parser (via [#28](https://github.com/eugenetriguba/config-file/pull/28), thanks [@JaWeRn](https://github.com/JaWeRn)).
 
+### Removed
+
+- Depreciated `stringify()` method on `ConfigFile`. Use `str()`
+  on the `ConfigFile` instead.
+
 ## 0.12.0 - 2020-10-03
 
 ### Added
 
-  - Python's built-in `in` keyword now works with a ConfigFile.
+- Python's built-in `in` keyword now works with a ConfigFile.
 
-    Example:
-    ```python
-    config = ConfigFile('./pyproject.toml')
+  Example:
 
-    'tool.poetry' in config
-    >>> True
-    ```
+  ```python
+  config = ConfigFile('./pyproject.toml')
+
+  'tool.poetry' in config
+  >>> True
+  ```
 
 ### Changed
 
- - Depreciated `stringify()` in favor of just using the built-in `str()`.
+- Depreciated `stringify()` in favor of just using the built-in `str()`.
 
 ### Fixed
 
- - Addresses issue #25 (INI parser isn't converting back to string).
+- Addresses issue #25 (INI parser isn't converting back to string).
 
 ## 0.11.0 - 2020-08-07
 
@@ -232,4 +238,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.1.0 - 2020-01-04
 
-  - Initial Release
+- Initial Release
