@@ -1,3 +1,4 @@
+from io import StringIO
 from typing import Type
 
 from .base_parser import BaseParser
@@ -17,15 +18,14 @@ class YamlParser(BaseParser):
     @property
     def decode_error(self) -> Type[Exception]:
         from ruamel.yaml import YAMLError
-
         return YAMLError
 
     def loads(self, contents: str) -> dict:
-        from ruamel.yaml import round_trip_load
-
-        return round_trip_load(contents)
+        from ruamel.yaml import YAML
+        return YAML().load(contents)
 
     def dumps(self, loaded_contents: dict) -> str:
-        from ruamel.yaml import round_trip_dump
-
-        return round_trip_dump(loaded_contents)
+        from ruamel.yaml import YAML
+        buffer = StringIO()
+        YAML().dump(loaded_contents, buffer)
+        return buffer.getvalue()
