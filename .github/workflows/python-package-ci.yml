@@ -26,7 +26,7 @@ jobs:
         run: poetry install -E toml -E yaml
 
       - name: Run tests
-        run: poetry run task test_ci
+        run: poetry run pytest
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
