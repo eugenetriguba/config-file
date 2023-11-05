@@ -5,7 +5,7 @@
 ![Python Version](https://img.shields.io/pypi/pyversions/config-file.svg)
 [![Version](https://img.shields.io/pypi/v/config-file)](https://pypi.org/project/config-file/)
 [![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
-[![Build Status](https://github.com/eugenetriguba/config-file/workflows/python%20package%20CI/badge.svg?branch=master)](https://github.com/eugenetriguba/config-file/actions/)
+[![Build Status](https://github.com/eugenetriguba/config-file/actions/workflows/python-package-ci.yml/badge.svg)](https://github.com/eugenetriguba/config-file/actions/workflows/python-package-ci.yml)
 [![Codecov](https://codecov.io/gh/eugenetriguba/config-file/graph/badge.svg)](https://codecov.io/gh/eugenetriguba/config-file)
 
 ## About Config File
