@@ -4,11 +4,17 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ${{ matrix.versions.os }}
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        versions:
-          - { python-version: '3.12', os: ubuntu-20.04 }
+        python-version:
+          - 3.6
+          - 3.7
+          - 3.8
+          - 3.9
+          - '3.10'
+          - '3.11'
+          - '3.12'
 
     steps:
       - uses: actions/checkout@v3
@@ -16,10 +22,10 @@ jobs:
       - name: Install poetry
         run: pipx install poetry==1.7.0
 
-      - name: Set up Python ${{ matrix.versions.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.versions.python-version }}
+          python-version: ${{ matrix.python-version }}
           cache: 'poetry'
 
       - name: Install dependencies
@@ -29,7 +35,6 @@ jobs:
         run: |
           poetry run pytest --cov=config_file/ --cov-report=term-missing
           poetry run coverage xml -o coverage.xml
-          ls
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
