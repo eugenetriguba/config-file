@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "config_file"
-version = "0.13.0"
+version = "0.13.1"
 description = "Modify configuration files of various formats with the same simple API."
 authors = ["Eugene Triguba <eugenetriguba@gmail.com>"]
 readme = "README.md"
