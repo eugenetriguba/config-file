@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extra `toml` and `yaml` dependencies have been updated.
+  - The `toml` extra now installs `tomlkit` version `0.7.2` on Python 3.6 and constrained to `^0.12.2` on Python 3.7
+    and greater. Previously, it was constrained to `^0.6.0`.
+  - The `yaml` extra now installs `ruamel.yaml` constrained to `^0.17.16`. Previously, it was constrained
+    to `^0.16.10`.
+
 - Replaced deprecated use of `ruamel.yaml` methods in the YAML parser (via [#28](https://github.com/eugenetriguba/config-file/pull/28), thanks [@JaWeRn](https://github.com/JaWeRn)).
 
 ## 0.12.0 - 2020-10-03
