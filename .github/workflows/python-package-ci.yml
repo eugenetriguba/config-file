@@ -27,7 +27,8 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest -cov=config_file/ --cov-report=xml:coverage.xml
+          poetry run pytest -cov=config_file/ --cov-report=term-missing
+          coverage xml -o coverage.xml
           ls
 
       - name: Upload coverage to Codecov
