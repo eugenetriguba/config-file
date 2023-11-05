@@ -1,7 +1,6 @@
 """This module allows you to parse a string into its native type."""
 import ast
 import re
-from distutils.util import strtobool
 from typing import Any
 
 
@@ -147,6 +146,22 @@ def can_be_parsed_as_bool(value: Any) -> bool:
     value = value.lower().strip()
 
     return value == "true" or value == "false"
+
+
+# distutils strtobool backport: https://github.com/yukinarit/strtobool
+def strtobool(val):
+    """Convert a string representation of truth to true (1) or false (0).
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
 
 
 def can_be_parsed_as_dict(value: Any) -> bool:

@@ -1,6 +1,5 @@
 import os
-from pathlib import Path as _Path_
-from pathlib import _posix_flavour, _windows_flavour
+from pathlib import Path
 from typing import Type
 
 from config_file.parsers.abstract_parser import AbstractParser
@@ -12,18 +11,13 @@ from config_file.parsers.yaml_parser import YamlParser
 from .utils import split_on_dot
 
 
-class ConfigFilePath(_Path_):
+class ConfigFilePath(type(Path())):
     """A ConfigFilePath object, which subclasses Path.
 
     It provides us easy ways to grab the original config file
     path, file extension, validate the path, or determine the parser
     that should be use for the given file type.
-
-    See https://codereview.stackexchange.com/questions/162426/subclassing-pathlib-path
-    for more details on subclassing the pathlib.Path object.
     """
-
-    _flavour = _windows_flavour if os.name == "nt" else _posix_flavour
 
     @property
     def original_path(self) -> "ConfigFilePath":

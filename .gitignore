@@ -15,6 +15,7 @@ __pycache__/
 .coverage
 .benchmarks/
 .mypy_cache/
+coverage.xml
 
 # Package Publishing
 dist/
