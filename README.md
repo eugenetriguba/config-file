@@ -336,4 +336,4 @@ supports is what is supported here.
 
 ## License
 
-The [MIT](https://github.com/eugenetriguba/config-file/blob/master/LICENSE) License.
+The [MIT](https://github.com/eugenetriguba/config-file/blob/main/LICENSE) License.
