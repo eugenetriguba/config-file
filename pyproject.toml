@@ -40,7 +40,7 @@ pytest = "poetry run pytest tests/"
 [tool.poetry.dependencies]
 python = "^3.6"
 tomlkit = [
-    { version = "^0.7.0", python = "^3.6,<=3.7", optional = true },
+    { version = "0.7.2", python = ">=3.6,<3.7", optional = true },
     { version = "^0.12.2", python = ">=3.7,<4", optional = true }
 ]
 "ruamel.yaml" = { version = "^0.17.16", optional = true }
