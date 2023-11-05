@@ -29,7 +29,6 @@ packages = [
 [tool.taskipy.tasks]
 test = "task test_cov -- --cov-report term-missing"
 test_cov = "task pytest -- --cov=config_file/"
-test_ci = "task test_cov -- --cov-report=xml"
 lint = "task lint_types && task lint_precommit"
 lint_types = "poetry run mypy config_file/ tests/"
 lint_precommit = "poetry run pre-commit run --all"
