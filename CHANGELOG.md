@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Replaced deprecated use of `ruamel.yaml` methods in the YAML parser (via #28, thanks @JaWeRn).
+- Replaced deprecated use of `ruamel.yaml` methods in the YAML parser (via [#28](https://github.com/eugenetriguba/config-file/pull/28), thanks [@JaWeRn](https://github.com/JaWeRn)).
 
 ## 0.12.0 - 2020-10-03
 
