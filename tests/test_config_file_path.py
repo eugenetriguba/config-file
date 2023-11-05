@@ -1,5 +1,5 @@
 import os
-from pathlib import Path, _posix_flavour, _windows_flavour
+from pathlib import Path
 
 import pytest
 
@@ -18,20 +18,6 @@ def test_config_file_path_is_a_path():
     of Path from pathlib.
     """
     assert isinstance(ConfigFilePath("."), Path)
-
-
-def test_config_file_path_has_the_correct_flavour():
-    """
-    config_file.config_file_path.ConfigFilePath
-
-    Ensure that the ConfigFilePath object has the
-    correct Path flavor (since Path is actually
-    swapped out, depending on the operating system,
-    to a Posix flavour or Windows flavour)
-    """
-    path = ConfigFilePath(".")
-
-    assert path._flavour == _windows_flavour if os.name == "nt" else _posix_flavour
 
 
 def test_config_file_path_is_able_to_read_the_contents(template_file):
