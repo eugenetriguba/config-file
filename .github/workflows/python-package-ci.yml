@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest -cov=config_file/ --cov-report=term-missing
+          poetry run pytest --cov=config_file/ --cov-report=term-missing
           poetry run coverage xml -o coverage.xml
           ls
 
