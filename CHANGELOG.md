@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Depreciated `stringify()` method on `ConfigFile`. Use `str()`
+- Deprecated `stringify()` method on `ConfigFile`. Use `str()`
   on the `ConfigFile` instead.
 
 ## 0.12.0 - 2020-10-03
